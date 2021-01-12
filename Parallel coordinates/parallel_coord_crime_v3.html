@@ -1,0 +1,168 @@
+<!-- Code from d3-graph-gallery.com -->
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style> 
+  #tooltip {
+    border-radius: 25px;
+    background: lightgray; 
+    position:absolute;
+    display:none;
+    padding: 5px;
+    font-family: sans-serif;
+  }
+</style>
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<!-- Create a div where the graph will take place -->
+<div id='tooltip'></div>
+<select id="year" onchange="changeYear(this.value)"></select>
+<div id="my_dataviz"></div>
+
+
+<script>
+  
+//fill the dropmenu
+var select = document.getElementById("year");
+for (let i = 2010; i < 2020; i++) {
+  var el = document.createElement("option");
+  el.textContent = i;
+  el.value = i;
+  select.appendChild(el);
+}
+// set the dimensions and margins of the graph
+var margin = {top: 130, right: 10, bottom: 10, left: 0},
+  width = 5000 - margin.left - margin.right,
+  height = 400 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz")
+.append("svg")
+  .attr("width", width +margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+.append("g")
+  .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+
+function changeYear(year){
+  svg.selectAll("*").remove();
+  draw(year);
+}
+
+test_with_full_name = "https://raw.githubusercontent.com/1655653/visual/main/test_with_full_name.csv"
+test_10_y = "https://raw.githubusercontent.com/1655653/visual/main/10_years_dat.csv"
+test_with_code = "https://raw.githubusercontent.com/1655653/visual/main/test.csv"
+// Parse the Data
+draw(2010) //first draw
+function draw(year) {
+  d3.csv(test_10_y, function(data) {
+    
+    data = filterByYear(year, data)
+    /////d3.keys(data)//       151, il numero di tuple del dataset (0,1,2,3...)
+    /////d3.keys(data[0])//      5, tutte le feature del dataset (["Sepal_Length", "Sepal_Width", "Petal_Length", "Petal_Width", "Species"])   vale per data[0,1,2..] 
+
+    // Extract the list of dimensions we want to keep in the plot. Here I keep all except the column called Species
+    //rispetto a d3.keys(data[0]) ha solo species in meno
+    dimensions = d3.keys(data[0]).filter(function(d) { return d != "Territorio" && d!= "totale" && d!="anno"})//data are rows
+    
+    //dimensions = d3.keys(data[0]).filter(function(d) { return d != "TERRITORIO" && d!= "TOT"})//data are rows
+    //dimensions sono le features, cioè --->["Sepal_Length", "Sepal_Width", "Petal_Length", "Petal_Width"]
+    
+    //////d3.values(data[0]) //   semplicemente ["5.1", "3.5", "1.4", "0.2", "setosa"]
+
+    const tooltip = d3.select('#tooltip');
+
+    // For each dimension, I build a linear scale. I store all in a y object
+    var y = {}
+    for (i in dimensions) {
+      name = dimensions[i]
+      y[name] = d3.scaleLinear()
+      ////////d3.extent     returns the minimum and maximum value in an array, in this case i take from the dataset the i-th feature domain
+        .domain( d3.extent(data, function(d) { return +d[name]; }) )
+        .range([height, 0]) ///general height of the graph
+    }
+
+    // Build the X scale -> it find the best position for each Y axis
+    x = d3.scalePoint() /////Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
+      .domain(dimensions)  ///.domain(["Sepal_Length", "Sepal_Width", "Petal_Length", "Petal_Width"])
+      .range([0, width])///general width of the graph
+      .padding(1);
+
+    // The path function take a row of the csv as input, and return x and y coordinates of the line to draw for this raw.
+    function path(d) {
+      return d3.line()(dimensions.map(function(p) {return [x(p), y[p](d[p])]; })); ///p is Sepal_Length, Sepal_Width,.. 
+      /*if(d["anno"] == document.getElementById("year").value) return 
+      else{
+        return d3.line()(dimensions.map(function(p) {return [x(p), y[p](d[p])]; })); ///p is Sepal_Length, Sepal_Width,.. 
+      }*/
+    }// console.log("x(p)= "+x(p));console.log("y[p](d[p])= "+y[p](d[p]));
+
+    ///tooltip management
+    function drawTooltip(regione) {
+      tooltip.html(regione) //Change the content of all tooltip elements:
+      var d = document.getElementById('tooltip');
+      tooltip.style('display', 'block');
+      d.style.position = "absolute";
+      d.style.left = event.pageX+20+'px';
+      d.style.top = event.pageY+'px';
+    }
+    function removeTooltip() {
+      if (tooltip) tooltip.style('display', 'none');
+    } 
+    
+    function filterByYear(year,data){
+      const data_filtered = []
+      for (let i = 0; i < data.length; i++) {
+        if(data[i].anno == year) data_filtered.push(data[i])
+      }
+      console.log(data_filtered)
+      return data_filtered
+    } 
+  
+    
+
+    // Draw the lines
+    svg
+      .selectAll("myPath")
+      .data(data)
+      .enter().append("path")
+      .attr("d",  path) //The d attribute defines a path to be drawn.
+      .style("fill", "none")
+      .style("stroke", "#0000CD")
+      .style("stroke-width", "3")
+      .style("opacity", 0.5)
+      .on("mouseover", function(d) {
+        d3.select(this).style("stroke", "#FF0000")
+        //drawTooltip(d["TERRITORIO"])
+        drawTooltip(d["Territorio"])
+      })                  
+      .on("mouseout", function(d) {
+        d3.select(this).style("stroke", "#0000CD")
+        removeTooltip()
+        //console.log(d["omicidi volontari consumati"])
+      });
+
+    // Draw the axis:
+    svg.selectAll("myAxis")
+      // For each dimension of the dataset I add a 'g' element:
+      .data(dimensions).enter()
+      .append("g")
+      // I translate this element to its right position on the x axis
+      .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+      // And I build the axis with the call function
+      .each(function(d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })
+      // Add axis title
+      .append("text")
+        .style("text-anchor", "start")
+        .attr("transform", "rotate(-15)")
+        .attr("y", -9)
+        .text(function(d) {return d; })
+        .style("fill", "black")
+})
+}
+
+
+
+</script>
