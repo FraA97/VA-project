@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+  <title>Basic geo (svg)</title>
+ 
+</head>
+
+<style>
+body {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 14px;
+  color: #333;
+}
+
+.numbers {
+  font-family: Tahoma;
+  color: red;
+}
+
+svg {
+  background: skyblue;
+  border:3px solid black;
+}
+
+.greyReg{
+  fill: none;
+  stroke: rgb(36, 36, 36);
+  stroke-opacity: "1";
+  stroke-linecap: "butt";
+  stroke-linejoin: "miter";
+  stroke-miterlimit: "4";
+  stroke-width: 0.5;
+}
+
+.greyProv{
+  fill: #ddd;
+  stroke: rgb(116, 110, 110);
+  stroke-width: 0.5;
+}
+
+.green{
+	fill: green;
+  stroke: #aaa;
+}
+.white{
+  fill-opacity: 1;
+	fill: white;
+  stroke:rgb(116, 110, 110);
+  stroke-opacity: "1";
+  stroke-linecap: "butt";
+  stroke-linejoin: "miter";
+  stroke-miterlimit: "4";
+  stroke-width: 0.5;
+}
+
+div.tooltip {
+      color: #222; 
+      background: #fff; 
+      border-radius: 3px; 
+      box-shadow: 0px 0px 2px 0px #a6a6a6; 
+      padding: .2em; 
+      text-shadow: #f5f5f5 0 1px 0;
+      opacity: 0.9; 
+      position: absolute;
+}
+
+</style> 
+
+<body>
+  <div id="content" width = "700" height = "900">
+    
+      <svg >
+          <g class="mapProv"></g>
+          <g class="mapReg"></g>
+      </svg>
+     <div class="leaflet-control-container">
+      <div class="leaflet-top leaflet-left">
+        <div id="slide" class="leaflet-control-zoom leaflet-bar leaflet-control leaflet-zoom-anim">
+       <!--     <a id="zoom_in" class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in">+</a>
+          <a id="zoom_out" class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out">−</a> -->
+        </div>
+      </div>
+
+    </div>
+
+    
+  </div>
+
+
+<div class="custom-select" style="width:200px;">
+  <select id =computation>
+    <option value="0">Select density-crime method (default: number of crimes)</option>
+    <option value="1">number of crimes</option>
+    <option value="2">number of crimes/region population</option>
+    <option value="3">number of crimes/region area</option>
+  </select>
+</div>
+
+
+
+
+
+
+ 
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+          integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+          crossorigin=""></script>
+  
+  <script src= "./map_script.js"></script>
+  <script src= "./map_script_methods.js"></script>
+
+</body>
+</html>
