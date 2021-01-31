@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      body {
+          font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+          font-size: 14px;
+      }
+      .axis path,
+      .axis line {
+          fill: none;
+          stroke: black;
+          shape-rendering: crispEdges;
+      }
+      
+      text {
+          font-size : 12px;
+      }
+      .axis text {
+          font-size: 10px;
+      }
+      
+      circle {
+          stroke: #1f77b4;
+          fill : #1f77b4;
+      }
+      </style>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
+
+    <script src="mds.js"></script>
+    
+    <title>Multidimensional Scaling</title>
+
+  </head>
+  <body>
+
+    <div id="regions"></div>
+    <script>
+      d3.dsv(";", "../dataset1219.csv").then(function(data) {
+
+        filteredData = data.filter(function(d,i){ return d.territorio.match(/    /) })      //eliminate macro regions
+        regions = filteredData.filter(function(d,i){
+          if(d.territorio.match(/      /)){return false}                                    //eliminate provinces
+          return true;
+        });
+        regions.forEach( d => delete d.popolazione);                            //eliminate column popolazione
+        regions.forEach( d => delete d.totale);                                 //eliminate column totale
+        regions.forEach( d => delete d['altri delitti']);                       //eliminate column altri delitti
+
+        d3.dsv(",", "../coefficienti.csv").then(function(dataCoeff) {
+          //---------------------------------------------Computing dissimilarity matrix------------------------------------------------
+          
+          var m = chooseCharacteristic(dataCoeff, regions, 1, 2019)
+
+          //---------------------------------------------Visualization------------------------------------------------
+          var regionsPosition = numeric.transpose(mds.classic(m));
+          var w = Math.min(720, document.documentElement.clientWidth - 20), 
+          h = w /2;
+
+          mds.drawD3ScatterPlot(d3.select("#regions"),
+          regionsPosition[0],
+          regionsPosition[1],
+          labels,
+          {
+              w :  Math.min(720, document.documentElement.clientWidth - 20),
+              h : w /2,
+              padding : 60,
+              reverseX : false,
+              reverseY : false,
+          });
+          
+
+        });
+
+      })
+
+
+      function chooseCharacteristic(dataCoeff, regions, c, year){
+        if(c == 1){
+            coeff = dataCoeff.map(function(d) { return d.Coeff_reato });   //select only this specific column
+        }
+        else{
+            coeff = dataCoeff.map(function(d) { return d.Coeff_tot_reati });
+        }
+
+        anno = regions.filter(function(d){ return d.anno == year });
+        labels = anno.map(function(d){ return d.territorio});
+        for (var i = 0; i < labels.length; i++){                    //manipulating labels
+            labels[i]=labels[i].replace("    ", "")
+            labels[i] = labels[i].replace(" / Vallée d'Aoste","")
+            labels[i] = labels[i].replace(" / Südtirol","")
+            labels[i] = labels[i].replace(" / Bozen","")
+        }
+
+        console.log(labels)
+
+        anno.forEach( d => delete d.territorio);
+        anno.forEach( d => delete d.anno);
+
+        var avg = [];                                        //creating weighted avarage of crime for each region
+        var denominator = d3.sum(coeff)
+        
+        for (var i = 0; i < anno.length; i++) {
+            var crimes=[];
+            var nominator = 0;
+            for (var cr in anno[i]){
+              crimes.push(anno[i][cr])
+            }
+            for(var j=0; j< crimes.length; j++){
+              nominator += crimes[j]*coeff[j]
+            }
+            avg[i]=nominator/denominator
+        }
+
+        var dissM = [];
+        for(var i=0; i< avg.length; i++) {
+        dissM[i] = [];
+            for(var j=0; j< avg.length; j++) {
+            dissM[i][j] = ~~(Math.abs(avg[i]-avg[j]));
+            }
+        }
+        console.log(dissM)
+        return dissM
+      }
+
+
+      </script>
+  </body>
+</html>
