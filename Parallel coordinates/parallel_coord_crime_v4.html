@@ -66,8 +66,8 @@
       //console.log(data_filtered)
       return data_filtered
     } 
-
-    function filterByRegion(regions,command,data){
+    //filtra in base al territorio, only fa solo le regioni passate, except fa tutte tranne quelle passate
+    function filterByRegion(command,regions,data){
       const indeces = []
       for (let i = 0; i < data.length; i++) {
         for (let r = 0; r < regions.length; r++) {
@@ -90,26 +90,44 @@
       return data_filtered
     }
         
-    
+    function filterByCrime(command,crimes,data){
+      dimensions = d3.keys(data[0]).filter(function(d) { return d != "territorio" && d!= "totale" && d!="anno" && d!= "popolazione"})
+      function filterCrimes(crime){
+        if(command == "except"){
+          if(crimes.includes(crime)) return false
+          return true
+        }
+        else if(command == "only"){
+          if(crimes.includes(crime)) return true
+          return false
+        }
+      }
+      
+      dimensions = dimensions.filter(filterCrimes)
+      console.log(dimensions)
+      
+      return dimensions
+
+    }
     
 
     //per evitare il cross origin
     var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/Parallel%20coordinates/dataset1219.csv"
 
-    function draw(year,command_regions,regions) {
+    function draw(year,command_regions,regions,command_crimes,crimes) {
       const tooltip = d3.select('#tooltip');
       d3.csv(dataset_path, function(data){
         
           
         data = filterByYear(year, data)
-        data = filterByRegion(regions, command_regions, data)
+        data = filterByRegion(command_regions, regions, data)
 
          ////////d3.keys(data[0]) sono le classi ["territorio", "anno", "popolazione",..] della prima riga
          ///////d3.values(data[0]) sono i valori delle classi ["Italia", "2012", "59394207",..] della prima riga
          
          //prendo solo i crimini
-        dimensions = d3.keys(data[0]).filter(function(d) { return d != "territorio" && d!= "totale" && d!="anno" && d!= "popolazione"})
-
+        //dimensions = d3.keys(data[0]).filter(function(d) { return d != "territorio" && d!= "totale" && d!="anno" && d!= "popolazione"})
+        dimensions = filterByCrime("except",["strage"],data)
         //ogni asse verticale delle parallel coo. lo salvo dentro y 
         var y = {}
         for (i in dimensions) {
@@ -184,7 +202,7 @@
 
       })        
     }
-    draw(2019,"except",["Italia"],)//<------ first draw
+    draw(2019,"except",["Italia"])//<------ first draw
 
 
     </script>
