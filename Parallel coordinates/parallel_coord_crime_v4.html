@@ -52,20 +52,139 @@
             "translate(" + margin.left + "," + margin.top + ")");
 
 
-    //----quando cambio anno ridisegno l'intera parallel coord.
+    //quando cambio anno ridisegno l'intera parallel coord.
     function changeYear(year){
       svg.selectAll("*").remove();
       draw(year);
     }
-    //per evitare il cross origin
-    var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
+    //filtra il le P.c. con l'anno scelto dall'utente
+    function filterByYear(year,data){
+      const data_filtered = []
+      for (let i = 0; i < data.length; i++) {
+        if(data[i].anno == year) data_filtered.push(data[i])
+      }
+      //console.log(data_filtered)
+      return data_filtered
+    } 
 
-    function draw(year) {
-      d3.csv(dataset_path, function(data){
-        console.log(d3.keys(data[0]))
-      })
+    function filterByRegion(regions,command,data){
+      const indeces = []
+      for (let i = 0; i < data.length; i++) {
+        for (let r = 0; r < regions.length; r++) {
+          if(data[i].territorio.trim() == regions[r].trim()){
+            indeces.push(i)
+          }
+        }
+      }
+      data_filtered = []
+      indeces.forEach(function(el,i) {
+        if(command == "only"){
+          data_filtered.push(data[el])
+        }
+        else if(command == "except"){
+          data_filtered = data
+          data_filtered.splice(el-i,1) 
+        }
+      });
+      console.log(data_filtered)
+      return data_filtered
     }
-    draw(2019)//<------ first draw
+        
+    
+    
+
+    //per evitare il cross origin
+    var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/Parallel%20coordinates/dataset1219.csv"
+
+    function draw(year,command_regions,regions) {
+      const tooltip = d3.select('#tooltip');
+      d3.csv(dataset_path, function(data){
+        
+          
+        data = filterByYear(year, data)
+        data = filterByRegion(regions, command_regions, data)
+
+         ////////d3.keys(data[0]) sono le classi ["territorio", "anno", "popolazione",..] della prima riga
+         ///////d3.values(data[0]) sono i valori delle classi ["Italia", "2012", "59394207",..] della prima riga
+         
+         //prendo solo i crimini
+        dimensions = d3.keys(data[0]).filter(function(d) { return d != "territorio" && d!= "totale" && d!="anno" && d!= "popolazione"})
+
+        //ogni asse verticale delle parallel coo. lo salvo dentro y 
+        var y = {}
+        for (i in dimensions) {
+          name = dimensions[i]
+          y[name] = d3.scaleLinear()
+          ///////d3.extent  returns the minimum and maximum value in an array, in this case i take from the dataset the i-th feature domain
+            .domain( d3.extent(data, function(d) { return +d[name]; }) )
+            .range([height, 0]) ///general height of the graph
+        }
+        
+        //asse x -> it find the best position for each Y axis
+        x = d3.scalePoint() /////Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
+          .domain(dimensions)  ///.domain(["territorio", "anno", "popolazione",..])
+          .range([0, width])///general width of the graph
+          .padding(1);
+
+
+        function path(d) {
+          return d3.line()(dimensions.map(function(p) {return [x(p), y[p](d[p])]; }));
+          /////per ogni riga del csv (d), per ogni feature assegno la sua x e le sue y
+        }
+        //tooltip management
+        function drawTooltip(regione) {
+          tooltip.html(regione) //Change the content of all tooltip elements:
+          var d = document.getElementById('tooltip');
+          tooltip.style('display', 'block');
+          d.style.position = "absolute";
+          d.style.left = event.pageX+20+'px';
+          d.style.top = event.pageY+'px';
+        }
+        function removeTooltip() {
+          if (tooltip) tooltip.style('display', 'none');
+        } 
+        // Draw the lines
+    svg
+      .selectAll("myPath")
+      .data(data)
+      .enter().append("path")
+      .attr("d",  path) //The d attribute defines a path to be drawn.
+      .style("fill", "none")
+      .style("stroke", "#0000CD")
+      .style("stroke-width", "3")
+      .style("opacity", 0.5)
+      .on("mouseover", function(d) {
+        d3.select(this).style("stroke", "#FF0000")
+        drawTooltip(d["territorio"])
+      })                  
+      .on("mouseout", function(d) {
+        d3.select(this).style("stroke", "#0000CD")
+        removeTooltip()
+      });
+
+    // Draw the axis:
+    svg.selectAll("myAxis")
+      // For each dimension of the dataset I add a 'g' element:
+      .data(dimensions).enter()
+      .append("g")
+      // I translate this element to its right position on the x axis
+      .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+      // And I build the axis with the call function
+      .each(function(d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })
+      // Add axis title
+      .append("text")
+        .style("text-anchor", "start")
+        .attr("transform", "rotate(-15)")
+        .attr("y", -9)
+        .text(function(d) {return d; })
+        .style("fill", "black")
+        
+
+
+
+      })        
+    }
+    draw(2019,"except",["Italia"],)//<------ first draw
 
 
     </script>
