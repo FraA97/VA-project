@@ -22,20 +22,30 @@
     <!-- Create a div where the graph will take place -->
     <div id='tooltip'></div>
 
-    <select id="year" onchange="changeYear(this.value)"></select>
+    <select id="year"  onchange="changeYear(this.value)"></select>
 
     <div id="my_dataviz"></div>
 
 
     <script>
+    //  -------------------------------------------parametri globali che l'utente puo cambiare
+    YEAR = 2019
+    CMD_REGIONS = "except"
+    REGIONS = ["Italia"]
+    CMD_CRIMES = "except"
+    CRIMES = ["strage","omicidi","rapine"]
+    ABSOLUTE = true
+    //CRIMES = []
+
     //fill dropmenu degli anni 
     var select = document.getElementById("year");
-    for (let i = 2012; i < 2019; i++) {
+    for (let i = 2012; i < 2020; i++) {
       var el = document.createElement("option");
       el.textContent = i;
       el.value = i;
       select.appendChild(el);
     }
+    select.value = YEAR
     //-----------
 
     // set the dimensions and margins of the graph
@@ -55,7 +65,8 @@
     //quando cambio anno ridisegno l'intera parallel coord.
     function changeYear(year){
       svg.selectAll("*").remove();
-      draw(year);
+      YEAR = year
+      draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
     }
     //filtra il le P.c. con l'anno scelto dall'utente
     function filterByYear(year,data){
@@ -86,11 +97,14 @@
           data_filtered.splice(el-i,1) 
         }
       });
-      console.log(data_filtered)
+      //console.log(data_filtered)
       return data_filtered
     }
-        
+    
+    //filtra in base al crimie, only fa solo i crimini passati, except fa tutti tranni quelli passati
     function filterByCrime(command,crimes,data){
+      ////////d3.keys(data[0]) sono le classi ["territorio", "anno", "popolazione",..] della prima riga
+      ///////d3.values(data[0]) sono i valori delle classi ["Italia", "2012", "59394207",..] della prima riga
       dimensions = d3.keys(data[0]).filter(function(d) { return d != "territorio" && d!= "totale" && d!="anno" && d!= "popolazione"})
       function filterCrimes(crime){
         if(command == "except"){
@@ -104,7 +118,7 @@
       }
       
       dimensions = dimensions.filter(filterCrimes)
-      console.log(dimensions)
+      //console.log(dimensions)
       
       return dimensions
 
@@ -114,39 +128,52 @@
     //per evitare il cross origin
     var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/Parallel%20coordinates/dataset1219.csv"
 
-    function draw(year,command_regions,regions,command_crimes,crimes) {
+    function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
       const tooltip = d3.select('#tooltip');
       d3.csv(dataset_path, function(data){
         
           
         data = filterByYear(year, data)
         data = filterByRegion(command_regions, regions, data)
+        dimensions = filterByCrime(command_crimes,crimes,data)
 
-         ////////d3.keys(data[0]) sono le classi ["territorio", "anno", "popolazione",..] della prima riga
-         ///////d3.values(data[0]) sono i valori delle classi ["Italia", "2012", "59394207",..] della prima riga
-         
-         //prendo solo i crimini
-        //dimensions = d3.keys(data[0]).filter(function(d) { return d != "territorio" && d!= "totale" && d!="anno" && d!= "popolazione"})
-        dimensions = filterByCrime("except",["strage"],data)
         //ogni asse verticale delle parallel coo. lo salvo dentro y 
         var y = {}
         for (i in dimensions) {
           name = dimensions[i]
           y[name] = d3.scaleLinear()
           ///////d3.extent  returns the minimum and maximum value in an array, in this case i take from the dataset the i-th feature domain
-            .domain( d3.extent(data, function(d) { return +d[name]; }) )
+            .domain( d3.extent(data, function(d) {
+                  
+                  if(!isAbsolute){
+                    return +d[name];
+                  }
+                  else{
+                    r = d[name]/d["popolazione"]
+                    return +r;
+                  }
+               }))
             .range([height, 0]) ///general height of the graph
         }
         
         //asse x -> it find the best position for each Y axis
         x = d3.scalePoint() /////Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
           .domain(dimensions)  ///.domain(["territorio", "anno", "popolazione",..])
-          .range([0, width])///general width of the graph
-          .padding(1);
+          .range([0, (270-6*dimensions.length)*dimensions.length])///general width of the graph, varia a seconda di quanti crimini metti
+          .padding(0.5);
 
 
         function path(d) {
-          return d3.line()(dimensions.map(function(p) {return [x(p), y[p](d[p])]; }));
+          return d3.line()(dimensions.map(function(p) {
+            //console.log(x(p))
+            //p è il nome del crimine
+            //y[p] e x sono le funzioni interpolatrici tra dominio e range, una per asse
+            //d[p] è il valore del crimine nella riga d, tipo d = data[i] e p = omicidio, d[p] = 30
+            if(!isAbsolute) return [x(p), y[p](d[p])]; 
+            else{
+              return [x(p), y[p](d[p]/d["popolazione"])]
+            }
+          }));
           /////per ogni riga del csv (d), per ogni feature assegno la sua x e le sue y
         }
         //tooltip management
@@ -162,6 +189,7 @@
           if (tooltip) tooltip.style('display', 'none');
         } 
         // Draw the lines
+    
     svg
       .selectAll("myPath")
       .data(data)
@@ -202,7 +230,7 @@
 
       })        
     }
-    draw(2019,"except",["Italia"])//<------ first draw
+    draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
 
 
     </script>
