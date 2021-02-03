@@ -50,7 +50,7 @@ d3.text("./datasets/dataset_crimes/dataset1219.csv", function(raw) {
   {
     $(".selectCrimes").select2(
     {
-    maximumSelectionLength: 16
+   // maximumSelectionLength: 16
     });
   });
 

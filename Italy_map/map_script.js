@@ -89,7 +89,7 @@ d3.select("#selectAll").on("change", selectAllTer); //select or unselect all reg
 
 
 //MENU VARIABLES
-var visualization = '0';
+var visualization = '0'; //variable that contain the visualization type of the moment: =0 =>vis. for provinces; =1 => vis. for regions 
 var computationType=0; //variable that contain the computationType of the moment: =0 =>number of crimes; =1 => num.crimes/population 
 var selectedYears=["2012","2013","2014","2015","2016","2017","2018","2019"]; //variable tha contain the years selected (start with all years selected))
 var selected_crimes = []; //variable that contain crimes selected

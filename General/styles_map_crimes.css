@@ -1,0 +1,171 @@
+body {
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 14px;
+    color: #333;
+  }
+
+  #block_container
+  {
+    position: absolute;
+    height: 60%;
+    display: flex;
+    justify-content: left;
+    border:3px solid black;
+  }
+
+  /*CSS ITALY MAP*/
+  .numbers {
+    font-family: Tahoma;
+    color: red;
+  }
+
+  #map {
+    background: lightblue;
+    border:3px solid black;
+    position: relative;
+    height: 100%;
+  }
+
+  .greyOnlyReg{
+    fill: #ddd;
+    stroke: rgb(36, 36, 36);
+    stroke-width: 0.5;
+  }
+
+  .greyReg{
+    fill: none;
+    stroke: rgb(36, 36, 36);
+    stroke-opacity: "1";
+    stroke-linecap: "butt";
+    stroke-linejoin: "miter";
+    stroke-miterlimit: "4";
+    stroke-width: 0.5;
+  }
+
+  .greyProv{
+    fill: #ddd;
+    stroke: rgb(116, 110, 110);
+    stroke-width: 0.5;
+  }
+
+  .white{
+    fill-opacity: 1;
+    fill: white;
+    stroke:rgb(116, 110, 110);
+    stroke-opacity: "1";
+    stroke-linecap: "butt";
+    stroke-linejoin: "miter";
+    stroke-miterlimit: "4";
+    stroke-width: 0.5;
+  }
+
+  #tooltipMap {
+        color: #222; 
+        background: #fff; 
+        border-radius: 3px; 
+        box-shadow: 0px 0px 2px 0px #a6a6a6; 
+        padding: .2em; 
+        text-shadow: #f5f5f5 0 1px 0;
+        opacity: 0.9; 
+        position: absolute;
+  }
+
+/*CSS FOR MENU*/
+  .multiselect {
+    width: 200px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .selectBox {
+    position: relative;
+  }
+
+  .selectBox select {
+    width: 100%;
+    font-weight: bold;
+  }
+
+  .overSelect {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+
+  #yearCheckboxes {
+    display: visible;
+    border: 1px #dadada solid;
+  }
+
+  #yearCheckboxes label {
+    display: block;
+  }
+
+  #yearCheckboxes label:hover {
+    background-color: #1e90ff;
+  }
+
+
+  #menu
+  {
+      position: relative;
+      height: 100%;
+      border:2px solid black;
+      display:inline;
+      text-align:center;
+      vertical-align: middle;
+  }
+
+  #visualizationType 
+  {
+    margin-left:auto;
+    margin-right:auto;
+  
+  }
+
+  #computation 
+  {
+    margin-left:auto;
+    margin-right:auto;
+    text-align: center;
+  }
+
+
+
+/*MDS*/
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+text {
+    font-size : 12px;
+}
+.axis text {
+    font-size: 10px;
+}
+
+circle {
+    stroke: #1f77b4;
+    fill : #1f77b4;
+}
+
+/*PARALLEL COORDINATES*/
+#par-coord{
+  border:3px solid black;
+  position: absolute;
+  margin-top: 40%;
+  bottom: 0px;
+}
+#tooltip {
+  border-radius: 25px;
+  background: lightgray; 
+  position:absolute;
+  display:none;
+  padding: 5px;
+  font-family: sans-serif;
+}
