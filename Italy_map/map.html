@@ -1,99 +1,80 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <head>
-  <title>Basic geo (svg)</title>
- 
+  <title>Italy Crimes</title>
+  <link rel="stylesheet" href="styles_map_crimes.css">
 </head>
 
-<style>
-body {
-  font-family: "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 14px;
-  color: #333;
-}
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/topojson.v2.min.js"></script>
 
-.numbers {
-  font-family: Tahoma;
-  color: red;
-}
-
-svg {
-  background: skyblue;
-  border:3px solid black;
-}
-
-.greyReg{
-  fill: none;
-  stroke: rgb(36, 36, 36);
-  stroke-opacity: "1";
-  stroke-linecap: "butt";
-  stroke-linejoin: "miter";
-  stroke-miterlimit: "4";
-  stroke-width: 0.5;
-}
-
-.greyProv{
-  fill: #ddd;
-  stroke: rgb(116, 110, 110);
-  stroke-width: 0.5;
-}
-
-.green{
-	fill: green;
-  stroke: #aaa;
-}
-.white{
-  fill-opacity: 1;
-	fill: white;
-  stroke:rgb(116, 110, 110);
-  stroke-opacity: "1";
-  stroke-linecap: "butt";
-  stroke-linejoin: "miter";
-  stroke-miterlimit: "4";
-  stroke-width: 0.5;
-}
-
-div.tooltip {
-      color: #222; 
-      background: #fff; 
-      border-radius: 3px; 
-      box-shadow: 0px 0px 2px 0px #a6a6a6; 
-      padding: .2em; 
-      text-shadow: #f5f5f5 0 1px 0;
-      opacity: 0.9; 
-      position: absolute;
-}
-
-</style> 
+ <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <body>
-  <div id="content" width = "700" height = "900">
-    
-      <svg >
+
+<div id="block_container">
+  <div id="content">
+      <svg id='map'>
           <g class="mapProv"></g>
-          <g class="mapReg"></g>
-      </svg>
-     <div class="leaflet-control-container">
-      <div class="leaflet-top leaflet-left">
-        <div id="slide" class="leaflet-control-zoom leaflet-bar leaflet-control leaflet-zoom-anim">
-       <!--     <a id="zoom_in" class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in">+</a>
-          <a id="zoom_out" class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out">−</a> -->
-        </div>
-      </div>
-
-    </div>
-
-    
+          <g class="mapReg"></g>   
+      </svg>      
   </div>
 
 
-<div class="custom-select" style="width:200px;">
-  <select id =computation>
-    <option value="0">Select density-crime method (default: number of crimes)</option>
-    <option value="1">number of crimes</option>
-    <option value="2">number of crimes/region population</option>
-    <option value="3">number of crimes/region area</option>
-  </select>
+  <div id="menu" width='400' height ='400'><br>
+    <div id ="computation" class="custom-select" style="width:200px;">
+      <label for="computationCrimes"><b>Computation type:</b></label>
+      <select id ='computationCrimes'>
+        <option value="0" selected>[number of crimes] (default)</option>
+        <option value="1">[number of crimes/region population]</option>
+      </select>
+    </div>
+
+    <div id ='visualizationType' class="custom-select" style="width:200px;">
+      <label for='visualization'><b>Visualization type:</b></label>
+      <select id ='visualization'>
+        <option value="0" selected>Visualize for Province (default)</option>
+        <option value="1">Visualize for Region</option>
+      </select>
+    </div>
+
+
+    <br><form>
+      <div class="multiselect" style="width:200px;">
+        <div class="selectBox" onclick="showCheckboxes()">
+          <select>
+            <option>Select years of crimes </option>
+          </select>
+          <div class="overSelect"></div>
+        </div>
+        <div id="yearCheckboxes">
+          <label for="tot">
+            <input class ="yearCheckbox" type="checkbox" id="tot" />Select All Years</label>
+          <label for="2012">
+            <input class ="yearCheckbox" type="checkbox" id="2012" />2012</label>
+          <label for="2013">
+            <input class ="yearCheckbox" type="checkbox" id="2013" />2013</label>
+          <label for="2014">
+            <input class ="yearCheckbox" type="checkbox" id="2014" />2014</label>
+          <label for="2015">
+            <input class ="yearCheckbox" type="checkbox" id="2015" />2015</label>
+          <label for="2016">
+            <input class ="yearCheckbox" type="checkbox" id="2016" />2016</label>
+          <label for="2017">
+            <input class ="yearCheckbox" type="checkbox" id="2017" />2017</label>
+          <label for="2018">
+            <input class ="yearCheckbox" type="checkbox" id="2018" />2018</label>
+          <label for="2019">
+            <input class ="yearCheckbox" type="checkbox" id="2019" />2019</label>
+        </div>
+      </div>
+    </form>
+    <br>
+    <div id='crimes'></div>
+   
+  </div>
 </div>
 
 
@@ -101,9 +82,15 @@ div.tooltip {
 
 
 
- 
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+
+
+ <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+  <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="https://d3js.org/topojson.v2.min.js"></script>-->
+<script  src= "./manageCrimesSelection.js" ></script>
+<script  src= "./map_script_methods.js" ></script>
+  <script  src= "./map_script.js"></script>
   
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
@@ -112,8 +99,6 @@ div.tooltip {
           integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
           crossorigin=""></script>
   
-  <script src= "./map_script.js"></script>
-  <script src= "./map_script_methods.js"></script>
-
+  
 </body>
 </html>

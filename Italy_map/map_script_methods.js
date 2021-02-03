@@ -1,9 +1,5 @@
 function createMapReg(geojson) {
-   
-    //var projection = d3.geoEquirectangular().scale(0.013).translate([1500/2, 2000/2]);
-    //fitExtent([ [ 0, 0 ], [ 1500, 2000 ] ], geojson);
-    //var projection = d3.geoEquirectangular().fitSize([width,height*2],geojson).scale(0.017);
-    var projection = d3.geoEquirectangular().fitSize([width,height*1.4],geojson).scale(0.01);
+    var projection = d3.geoEquirectangular().fitSize([width,(height+200)*1.4],geojson).scale(0.01);
     
     var geoGenerator = d3.geoPath()
       .projection(projection);
@@ -28,19 +24,13 @@ function createMapReg(geojson) {
       .attr('shape_area',function(d){return d.properties.SHAPE_AREA;})
       .attr('shape_leng',function(d){return d.properties.SHAPE_LENG;})
       .attr('clicked',"0")
-      .attr("onclick",function(d,i){return "updateMapReg('regione',"+d.properties.COD_REG+");";})
-   //   .on("mousemove", showTooltipReg)
-      //.on("click", showTooltip);
-
-     
-      
+      .attr("onclick",function(d,i){
+              return "updateMapReg('regione',"+d.properties.COD_REG+");" +'' //(valerio)[on '' add function for manage click of a region---possible parameter = 'd3.select(this).attr('name') = nome della regione]]
+           });
 }
 
 function createMapProv(geojson) {
 /*
-  var data = {"type":"FeatureCollection", "features": [
-    {"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[413869.45189999975,5049091.986300001],[413473.9877000004,5049870.983999999],[412450.99459999986,5050244.980599999],[411266.03809999954,5049901.1872000005],[410229.06319999974,5050502.017999999],[409641.1171000004,5049951.1577],[408822.9955000002,5050017.926100001],[407822.0286999997,5049576.984300001],[406814.0373999998,5048932.9891],[406054.0022999998,5048799.067500001],[405943.0438000001,5048278.9936],[405227.0619000001,5047522.895099999],[403900.05730000045,5046705.110200001],[402899.0669999998,5046326.0079],[402354.0125000002,5045937.1448],[401757.0360000003,5045282.195900001],[401078.5832000002,5044869.6534],[400290.19859999977,5045711.7948],[399817.0114000002,5045847.740599999],[398785.0405000001,5045493.3215],[397826.10419999994,5045537.0123],[397623.27249999996,5045704.1776],[396717.5865000002,5045135.462400001],[394341.0795999998,5047052.977700001],[393415.95529999956,5047268.082599999],[392063.96079999954,5046591.007099999],[391451.9837999996,5046422.836999999],[391248.1524,5047533.9964000005],[390703.0692999996,5048166.023700001],[390000.1085999999,5048568.0035],[389344.16640000045,5048661.975099999],[388765.09979999997,5049407.01],[388108.13850000035,5049669.864399999],[386771.1852000002,5049384.9802],[386153.1895000003,5048896.984200001],[385519.0873999996,5048117.1094],[384537.2262000004,5048123.7557],[383949.2056,5048487.9866],[382906.21389999986,5048825.483999999],[382149.2193,5048839.4837],[380698.23039999977,5048264.4869],[380113.2337999996,5047745.490599999],[378888.7440999998,5046322.5012],[378863.91610000003,5045841.3783],[376830.2597000003,5044818.511700001],[375768.5806,5043639.519300001],[374738.7751000002,5043263.5232],[374806.74370000046,5042914.5262],[373748.0957000004,5041941.532299999],[373137.06379999965,5041611.922],[372243.38769999985,5042581.5271000005],[371876.4840000002,5042679.5251],[371112.6933000004,5042269.5285],[369869.9996999996,5042148.529100001],[369011.5281999996,5041469.848200001],[367316.3306,5041813.531099999],[365572.5935000004,5041430.5329],[364836.8278999999,5041583.531400001],[364567.7572999997,5040379.5415],[364310.75989999995,5039815.5448],[363780.85819999967,5039729.545700001],[363072.92530000024,5039331.5483],[362134.9321999997,5038391.5537],[361685.87399999984,5037293.5633000005],[361069.9205,5036752.8991],[360375.0706000002,5036855.5644000005],[359283.2977,5037978.556],[355999.82180000003,5038659.550799999],[355511.8250000002,5038327.5517],[355254.8276000004,5037733.5561999995],[354723.92530000024,5038045.554099999],[354424.02109999955,5039272.5447],[354963.01669999957,5039838.5404],[354795.11110000033,5041390.5298],[354279.2399000004,5041906.5254999995],[353647.2440999998,5041503.528999999],[353268.34049999993,5040905.5317],[353239.34130000044,5040082.538699999],[352688.2516999999,5038790.548900001],[352658.1283,5037630.556],[352532.12930000015,5037226.5601],[351811.1354,5036573.563999999],[351360.6383999996,5035956.569499999],[351542.54279999994,5035166.573799999],[352267.3514999999,5034294.5811],[352555.25540000014,5033652.587099999],[352513.1308000004,5032833.5919],[354006.8696999997,5032001.5986],[355444.6105000004,5031561.6019],[355689.54559999984,5031010.607999999],[356360.5086000003,5030472.6109],[357872.3108000001,5029817.616800001],[358024.31039999984,5029346.621200001],[357749.31319999974,5029100.6214000005],[356203.3250000002,5027004.637399999],[355873.32749999966,5026047.6447],[355944.29669999983,5024965.6514],[355851.2344000004,5024530.655300001],[355276.30179999955,5023897.66],[354181.3406999996,5023648.6614],[353741.43790000025,5023231.664999999],[353548.3459000001,5022323.670399999],[353874.31159999967,5021725.1757],[353610.9389000004,5021275.6798],[353149.94379999954,5021021.680299999],[351843.95210000034,5021093.6788],[351804.9526000004,5020102.6877],[352468.94849999994,5019220.694599999],[352721.94689999986,5017833.703199999],[353755.9402999999,5016017.718800001],[353808.94020000007,5015640.7216],[353435.94299999997,5015088.724099999],[353505.94350000005,5013974.733100001],[353814.9417000003,5013027.741],[352794.94959999993,5011767.7488],[352070.95409999974,5012053.7475000005],[351441.9587000003,5011755.7491],[350621.9665999999,5010656.757200001],[349567.9737,5009558.764699999],[349487.9757000003,5008771.771199999],[348207.79700000025,5008129.275],[346990.9923999999,5009871.761299999],[346294.99909999967,5009887.7619],[345307.0066999998,5008881.768999999],[344500.01269999985,5008698.7689],[343465.02049999963,5009020.767000001],[343227.1469999999,5009335.7633],[342482.02699999977,5008451.7709],[341043.0394000001,5008012.772600001],[340251.04480000027,5008038.773399999],[339834.04870000016,5007522.7773],[340315.0449000001,5006643.782500001],[339653.05030000024,5006267.786699999],[339179.0526999999,5005696.789899999],[338983.05480000004,5004985.7951],[338390.0588999996,5004548.798],[338709.96470000036,5003937.3026],[337494.0658,5004037.800799999],[336341.07519999985,5003654.8047],[335548.0812999997,5003553.8039],[334466.0898000002,5003883.8013],[333718.09470000025,5002631.810699999],[334133.0926000001,5001607.818600001],[334732.3066999996,5000801.824200001],[334451.0920000002,5000377.8279],[332779.1029000003,5000267.8278],[332246.1069,4999839.831599999],[330955.1169999996,4999356.8343],[330548.12090000045,4999619.8322],[330251.1218999997,5000296.826199999],[328962.1322999997,5001120.8199000005],[328085.1377999997,5001776.8136],[326804.1478000004,5002320.8089000005],[326059.1523000002,5002395.809800001],[325494.15610000025,5002898.8049],[324665.1626000004,5003127.801999999],[323727.16970000044,5002189.8102],[323186.1743999999,5001323.8156],[322318.18149999995,5000650.820800001],[321267.19039999973,5000865.8177000005],[320128.1973000001,5001578.812899999],[319259.20469999965,5001397.8136],[318578.2090999996,5001035.8156],[317612.2176999999,5001166.8145],[317101.22140000015,5000133.8211],[316999.22190000024,4999418.8266],[315052.23819999956,4998427.8346],[314580.2411000002,4998592.8323],[313848.2463999996,4998428.8335],[313344.25009999983,4997446.841],[313323.2503000004,4996994.8445999995],[314334.2446999997,4995647.855],[314767.24039999954,4994741.8616],[314724.24120000005,4993979.867900001],[315344.2379999999,4993591.8693],[315922.2324999999,4993573.869899999],[316066.23319999967,4992020.883300001],[315889.23419999983,4991607.884500001],[316490.2302000001,4990491.895099999],[316154.2340000002,4990017.8971],[316101.2346000001,4989113.9044],[316575.2309999997,4988055.911699999],[316851.2297,4987725.915999999],[319392.74170000013,4987884.414799999],[319948.20639999956,4987759.916099999],[320843.1980999997,4987873.9154],[322180.1882999996,4987195.922599999],[322686.18659999967,4985799.932700001],[322635.18599999975,4984951.937999999],[321659.1945000002,4984723.9395],[321684.1944000004,4984339.942399999],[322109.19020000007,4984160.944700001],[322562.1882999996,4983614.948100001],[322632.1886,4982984.953299999],[323653.18099999987,4982211.9604],[323727.1794999996,4980833.970000001],[323122.71740000043,4979642.479],[322178.19350000005,4978598.987400001],[323136.3739,4978332.489800001],[323163.1228,4977839.9925],[322731.0965999998,4977515.995100001],[322505.22250000015,4976981],[322380.1939000003,4975136.013800001],[323159.1880999999,4974599.018200001],[324039.18039999995,4974597.0177],[324586.1769000003,4974028.022399999],[324695.17700000014,4973532.0272],[325086.1743999999,4972973.029999999],[325690.1699999999,4973022.0304000005],[326239.16530000046,4972490.0359000005],[326303.1649000002,4972151.0372],[326938.1612,4971452.044],[327269.15859999973,4971347.0441],[328579.1480999999,4970566.049900001],[328823.1473000003,4970125.053300001],[329386.1425000001,4969637.0578000005],[330509.13439999986,4969366.060799999],[331130.1308000004,4968589.066],[332632.1185999997,4968367.0693],[335056.1009999998,4967835.0736],[335761.0948000001,4968449.0699000005],[336583.96410000045,4969861.6183],[338467.074,4968822.068399999],[339542.06549999956,4967920.074999999],[340580.05790000036,4967875.077199999],[341418.05229999963,4967393.0803],[342032.2675000001,4967391.5814],[342449.04470000044,4967055.0834],[342661.0444,4965592.0934999995],[343771.03589999955,4965224.5976],[342560.04530000035,4962474.119100001],[341798.0521999998,4961462.1258000005],[342672.0460999999,4960870.1296],[343278.0410000002,4959971.138499999],[343675.0394000001,4958446.1501],[343678.0399000002,4957848.152899999],[343365.0426000003,4957010.160599999],[343531.0404000003,4955935.1676],[344194.03699999955,4954605.178099999],[344854.0310000004,4953664.186899999],[345872.0250000004,4953139.1906],[346762.35140000004,4952982.372099999],[347185.7637,4953459.6885],[348477.69180000015,4953081.1928],[349203.99909999967,4953709.187000001],[350555.8633000003,4953956.1866999995],[351180.5147000002,4954235.683499999],[351782.3841000004,4955540.673800001],[352691.00320000015,4955398.677100001],[353496.9338999996,4956106.172],[354297.80150000006,4957989.1567],[355235.1394999996,4958061.6578],[356926.5636999998,4957814.159600001],[357535.02799999993,4958073.1581],[360135.7265999997,4958864.751700001],[360714.59729999956,4958748.654100001],[363107.7344000004,4959481.1493999995],[363808.7921000002,4959968.6457],[365195.50069999974,4960158.144200001],[365773.9643000001,4959917.647500001],[366701.26910000015,4959832.6483],[369044.284,4960191.646299999],[369249.5619000001,4959426.6504999995],[369365.5625,4957429.167400001],[369156.50239999965,4956842.172],[369461.8426000001,4956690.172800001],[370710.7095999997,4956701.672599999],[370832.5828,4957533.666300001],[372590.6627000002,4957767.6655],[373285.34520000033,4957615.6664],[374193.86980000045,4958155.662900001],[376325.41610000003,4958207.663899999],[376639.2263000002,4959363.654999999],[377318.5632999996,4959256.656199999],[378123.9331,4959498.1547],[378520.7117999997,4958951.1587000005],[377545.5005000001,4959082.657400001],[377079.7213000003,4959002.157199999],
-                                                                   [377278.68939999957,4957915.6646],[378194.3085000003,4957796.167099999],[378149.2775999997,4957350.169299999],[378884.86450000014,4956975.1734],[380016.6070999997,4957738.668400001],[380694.8196999999,4957797.167300001],[381246.3786000004,4958286.6644],[381716.53029999975,4958215.1653],[382143.4960000003,4958740.1601],[382024.3727000002,4959217.156199999],[382425.0873999996,4959890.1526],[382949.08249999955,4960038.6521000005],[383637.4530999996,4959863.1523],[384179.69969999976,4960932.145],[384114.2296000002,4961242.1423],[384824.22479999997,4961494.6405],[385639.1568,4961222.142100001],[386484.2123999996,4961624.1391],[386637.77419999987,4962494.133300001],[386215.74590000045,4962729.630799999],[386922.8328999998,4963194.1282],[387377.2681,4963900.6236000005],[387643.2647000002,4963311.127699999],[387614.8920999998,4962725.1318],[388566.88320000004,4962743.1318],[388900.1004999997,4962934.131100001],[388795.9742999999,4964814.616900001],[388827.3492999999,4965487.111500001],[389761.31180000026,4966281.1051],[389962.5920000002,4965561.1117],[390378.02579999994,4964993.115599999],[390857.4589999998,4964875.616699999],[390887.20990000013,4965425.6131],[390487.46160000004,4966045.107799999],[390825.20889999997,4966900.600199999],[391024.4572999999,4966868.600500001],[391008.52020000014,4965631.109999999],[391451.8618000001,4965230.114800001],[392444.4790000003,4965200.1141],[392364.50040000025,4966050.8026],[393042.4737999998,4966170.1073],[393548.7829,4965108.614600001],[393321.3156000003,4964139.123299999],[393372.47229999956,4963718.1252999995],[393820.4382999996,4963432.6283],[394371.5262000002,4963952.6238],[395091.8660000004,4963241.6295],[395997.9517999999,4962711.134099999],[396487.5100999996,4962937.633099999],[397456.53440000024,4963118.632200001],[398082.02969999984,4963433.1291000005],[398722.1497999998,4963202.6306],[399767.2363,4963060.132200001],[401984.62590000033,4963276.6313000005],[402628.7452999996,4964525.1217],[402904.6497999998,4964832.1208],[403273.4280000003,4965696.614],[403687.61230000015,4966245.608999999],[404234.04530000035,4966389.609200001],[404795.79110000003,4966197.111099999],[406108.5306000002,4966244.610200001],[405968.5628000004,4967506.6007],[406362.1854999997,4967245.1019],[407692.80030000024,4965876.1127],[409045.97759999987,4965100.1194],[409803.5658999998,4965171.119200001],[410350.9983999999,4964671.122300001],[411077.2750000004,4965092.620200001],[412417.2653000001,4963975.6293],[413242.1956000002,4963711.1303],[413543.6322999997,4963956.128699999],[413890.59750000015,4964799.122099999],[415047.7455000002,4965199.619999999],[416497.85830000043,4966423.8268],[415946.36170000024,4967200.6055],[415549.3660000004,4967431.603700001],[415211.1185999997,4968723.5931],[414521.7483000001,4969895.5847],[414627.2460000003,4970477.581],[413875.5025000004,4970887.077299999],[412952.7586000003,4970306.0803],[412016.55310000014,4970737.5372],[412111.76580000017,4971469.572899999],[411964.26570000034,4972049.5681],[412688.01109999977,4972109.066299999],[413109.8837000001,4971881.068499999],[414768.3702999996,4971622.5722],[415226.2421000004,4972646.5645],[414760.87009999994,4973388.057700001],[414760.4952999996,4974124.5518],[414399.6218999997,4974316.0506],[413130.75629999954,4974236.5516],[412601.6369000003,4974094.5524],[412141.51400000043,4974889.045399999],[411899.76549999975,4976471.5331],[412341.5116999997,4976399.034600001],[413234.50650000013,4976954.0304000005],[413362.5053000003,4977841.0228],[413423.50409999955,4979741.0097],[414363.4960000003,4980644.0030000005],[415534.4863,4981638.996099999],[416009.35819999967,4983556.481000001],[414555.7380999997,4983864.832699999],[414614.4941999996,4984632.973099999],[415025.73929999955,4986122.9618],[416096.9826999996,4986263.459899999],[417145.4748999998,4986735.956800001],[417588.3454999998,4986778.9564],[417936.2178999996,4988147.946],[417159.22250000015,4988876.4405000005],[416891.4749999996,4989686.9344999995],[416518.22780000046,4989670.9355],[416341.9807000002,4988173.946900001],[415686.8590000002,4988141.947000001],[415643.2346999999,4988951.4395],[415243.11369999964,4989611.934900001],[414581.49179999996,4989733.9332],[413545.50019999966,4990368.929],[412843.50650000013,4990196.9309],[413018.5038999999,4993351.906400001],[413127.5016000001,4994093.9015],[413925.9963999996,4994096.328500001],[414807.74039999954,4991885.4168],[415458.4852,4992732.4122],[416440.6024000002,4992671.4131000005],[416753.5998999998,4993076.91],[416276.22869999986,4994482.398700001],[415703.9826999996,4995142.894099999],[416362.6021999996,4995687.889599999],[417690.5931000002,4996454.3849],[418737.2094999999,4996430.3848],[419445.45359999966,4997065.378900001],[420759.0696999999,4997698.374299999],[421855.56070000026,4997723.374399999],[422492.18090000004,4997334.877900001],[422952.4286000002,4997494.876800001],[423269.17590000015,4998144.872400001],[423782.67119999975,4997841.8752999995],[425041.32820000034,4997628.3083999995],[424871.5399000002,4996257.386600001],[425094.6617999999,4995374.8937],[425795.65639999975,4994788.898],[427233.2720999997,4994185.4022],[427538.6448999997,4994391.9004999995],[428589.8853000002,4996200.387800001],[428822.0098000001,4997562.3774999995],[429184.75710000005,4997660.377699999],[431496.7909000004,4996983.6336],[432069.5789000001,4997628.577500001],[431933.89159999974,4998130.874],[432120.2642000001,4998843.367900001],[432669.8552000001,4999285.366],[432360.88769999985,5001060.8519],[433349.16089999955,5002023.3454],[432874.60199999996,5002021.8442],[432809.85280000046,5002620.8407000005],[432249.82519999985,5003140.836200001],[432021.57739999983,5002753.8387],[430997.70990000013,5003165.8357],[431063.4910000004,5003552.8331],[430257.55989999976,5003735.830700001],[429521.75179999974,5003637.332699999],[428893.6634999998,5004171.328199999],[427841.8596000001,5003831.329700001],[426766.2416000003,5003949.8301],[425775.3119999999,5003635.830800001],[425203.12959999964,5004131.828],[425005.4413999999,5005579.3169],[424354.1967000002,5005725.815199999],[421905.9331,5007360.8028],[421438.84300000034,5007890.798599999],[420781.8799999999,5008904.7905],[420515.16229999997,5010947.775900001],[420302.3520999998,5011301.272399999],[419972.4480999997,5012508.7641],[420524.3799999999,5012488.263800001],[420836.40859999973,5013444.256999999],[420939.5959000001,5015724.239399999],[420824.7834999999,5017601.725299999],[419863.8524000002,5018719.2181],[419378.79339999985,5018725.7162999995],[419029.48510000017,5018190.7212000005],[418256.83380000014,5017685.225099999],[417821.3995000003,5017872.722100001],[418026.5848000003,5018785.7159],[418860.8925999999,5020266.2062],[418876.51659999974,5020572.2038],[418385.95639999956,5021795.6943],[419357.4179999996,5021740.1942],[420871.0630000001,5021825.693700001],[421534.1841000002,5021529.696599999],[423308.45189999975,5020083.2073],[423340.29590000026,5020830.2016],[423145.07770000026,5021534.696],[423248.1710999999,5022192.691],[423583.41789999977,5022549.6896],[423586.26240000036,5023746.1796],[422643.76939999964,5024244.677300001],[422338.64609999955,5025586.666300001],[422341.8652999997,5026418.6601],[422709.6730000004,5027110.156099999],[422426.73759999964,5027630.6514],[422874.29789999966,5028599.1435],[423239.0440999996,5027918.149700001],[423854.1787999999,5028191.7114],[423487.2308,5029966.634199999],[423505.51109999977,5030329.1316],[424403.87990000006,5031235.6251],[424795.53220000025,5032439.1152],[423873.1319000004,5033398.1084],[423344.2929999996,5033769.604699999],[421583.49289999995,5034642.098999999],[419394.07180000003,5036194.085999999],[419214.47979999986,5037020.0813],[417388.7418999998,5038607.5681],[415601.91170000006,5040045.056399999],[415922.4721999997,5041447.5472],[414719.324,5041720.545399999],[414288.8273,5042042.041999999],[412952.9308000002,5042474.5392],[412793.7449000003,5043195.032500001],[413400.20830000006,5044342.0251],[414299.2631000001,5045579.0163],[414272.0144999996,5046223.5109],[413795.95409999974,5046852.5063000005],[413911.8596000001,5047959.4975000005],[413646.8624999998,5048590.493799999],[413869.45189999975,5049091.986300001]],[[378798.55399999954,4957904.1657],[378634.77240000013,4958413.161499999],[379146.0823999997,4958556.661800001],[379300.2363999998,4958039.6646],[378798.55399999954,4957904.1657]]]},"properties":{"COD_RIP":1,"COD_REG":1,"COD_PROV":1,"COD_CM":201,"COD_PCM":201,"DEN_PROV":"-","DEN_CM":"Torino","DEN_PCM":"Torino","SIGLA":"TO","SHAPE_LENG":539249.81232,"SHAPE_AREA":6828137329.3,"SHAPE_LEN":539249.81232}}]}
   var mapboxAccessToken = "pk.eyJ1IjoiZnJhbmNlc2NvYXJ0IiwiYSI6ImNrazViMDFsNTAzcmoyb240b251b3V5Y3cifQ.bsA1I-KVGUcofP0B3a7dvg";
  const container = document.getElementById('map')
 if(container) {
@@ -53,23 +43,14 @@ if(container) {
    L.geoJson(geojson).addTo(map);
 }
 */
+  var projection = d3.geoEquirectangular().fitSize([width,(height+200)*1.4],geojson)
+                                          .scale(0.01);
   
-
-
-  //var projection = d3.geoEquirectangular().scale(0.013).translate([1500/2, 2000/2]);
-  //fitExtent([ [ 0, 0 ], [ 1500, 2000 ] ], geojson);
-  var projection = d3.geoEquirectangular().fitSize([width,height*1.4],geojson).scale(0.01);
-  
-  //var projection = d3.geoEquirectangular().translate([width/2,height/2]).fitSize([width,height*2],geojson)//.translate([width/2,height/2]);//.scale(0.017);
-  //var projection = d3.geoEquirectangular().scaleExtent([2, 6])
-    //                 .translaExtent([[-500, -300], [1500, 1000]])
-  
-  var geoGenerator = d3.geoPath()
-    .projection(projection);
+  var geoGenerator = d3.geoPath().projection(projection);
 
   d3.select('svg')
-      .attr('width', width)
-      .attr('height',height)
+     // .attr('width', width)
+      //.attr('height',height)
   var u = d3.select('#content g.mapProv')
     .selectAll('path')
     .data(geojson.features);
@@ -95,179 +76,65 @@ if(container) {
     .attr('cod_prov',function(d){return d.properties.COD_PROV;})
     .attr('shape_area',function(d){return d.properties.SHAPE_AREA;})
     .attr('shape_leng',function(d){return d.properties.SHAPE_LENG;})
+  // .attr('population',0)
     .attr('clicked',"0")
     .attr("onclick",function(d,i){
-      return "updateMapProv('"+d3.select(this).attr("id")+"');";})
+      return "updateMapProv('"+d3.select(this).attr("id")+"');"+'' //(valerio)[on '' add function for manage click of a province---possible parameter = 'd3.select(this).attr('name') = nome della provincia]
+    })
     .on(["mousemove" || "click"], showTooltipProv);
-    //.on("click", showTooltip);
-
-    zoom.scaleBy(d3.selectAll("svg g").transition().duration(600), 2.3);
-   
+    if(count==0) zoom.scaleTo(d3.selectAll("svg").transition().duration(600), 2.3);
+    count+=1;
 }
 
 function updateMapReg(r,i){  //apply transition + interaction
     var tot = '#'+r+i+''; //id of clicked region
     var reg = d3.select(tot).attr("name"); //name of clicked region
-    
+    console.log(reg);
     if(d3.select(tot).attr("clicked") != 1){
-
-           //read from dataset of delicts[FUNCTION]
-        d3.csv("./datasets/dataset_delitti/target.csv", function(data) {//retrive sum of delicts
-          regions = d3.nest() //create dictionary on regions name
-                   .key(function(d) { 
-                      if(d.Region.includes(reg)) return d.Region; })
-                   .entries(stocks = data);      
-         
-
-          regions[1].values.forEach(function(d) { 
-                     sumDel = d3.sum(regions[1].values, function(d){ //filter per year and crime types
-                                             //es:   if(d.Year == "2011" & d.Code == "CULPINJU")
-                                                       return d.Value;})}
-          )
-//add a listener on menu changes= changeDensityToClickedRegions(density_crime,d3.select("#computation").node().value);
-          //number of crimes
-          if(d3.select("#computation").node().value== "0" || d3.select("#computation").node().value== "1" ){
-           // density_crime=1;
-            d3.select(tot)
-              //interaction with dataset:
-              .style("fill", color(sumDel)) 
-              .attr('clicked','1')
-              .attr('sumDel',sumDel);
-          }
-          //number of crimes/region population
-          else if(d3.select("#computation").node().value == "2"){
-            //density_crime=2;
-            console.log(reg_population[reg]);
-            d3.select(tot)
-              //interaction with dataset:
-              .style("fill", color(sumDel/reg_population[reg])) 
-              .attr('clicked','1')
-              .attr('sumDel',sumDel);
-            
-          }
-          //number of crimes/region area
-          else{
-              
-          }         
-        /*  
-          d3.select(tot)
-            //interaction with dataset:
-            .style("fill", color(sumDel)) 
-            //Scale numDel in proportion to region area 
-                    //sumDel/parseInt(d3.select(tot).attr('shape_area'))
-            .attr('clicked','1')
-            .attr('sumDel',sumDel);
-
-       */   
-        });
-        
-
+      reComputeSumDel(reg,tot,1);
     }
     else{
         d3.select(tot)
             .style('fill',null)
             .attr('class', 'greyReg')
             .attr('sumDel',null)
+            .attr('sumDelPop',null)
+            .attr('population',null)
             .attr('clicked','0');
     }			
 }	
-
 
 function updateMapProv(p,i){  //apply transition + interaction
   var tot = '#'+p; //id of clicked region
   var prov = d3.select(tot).attr("name"); //name of clicked region
   console.log(prov);
   
-  if(d3.select(tot).attr("clicked") != 1){
-
-         //read from dataset of delicts[FUNCTION]
-      d3.csv("./datasets/dataset_delitti/10_years_dat.csv", function(data) {//retrive sum of delicts
-        regions = d3.nest() //create dictionary on regions name
-                 .key(function(d) { 
-                    if(d.Territorio.includes(prov) ) return d.Territorio; })
-                 .entries(stocks = data); 
-
-        //console.log(regions);
-       
-        
-        regions[1].values.forEach(function(d) { 
-                   sumDel = d3.sum(regions[1].values, function(d){ //filter per year and crime types
-                                          //es:   if(d.Year == "2011" & d.Code == "CULPINJU")
-                                          tot_selected_crimes_per_year=0;
-
-                                          if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
-                                            return d.totale;
-                                          }
-                                          else{ //if some crimes are been selected
-                                            for (const [key, value] of Object.entries(d)) {
-                                              if(selected_crimes.includes(key)){ //"selected_crimes" is the array that contain all crimes slected by user (by default it start with all crimes)
-                                                  tot_selected_crimes_per_year+=value;
-                                              }
-                                            }
-                                            return tot_selected_crimes_per_year;
-                                          }
-                    })
-                  //  console.log(sumDel);
-        })
-        
-//add a listener on menu changes= changeDensityToClickedRegions(density_crime,d3.select("#computation").node().value);
-        //number of crimes
-        if(d3.select("#computation").node().value== "0" || d3.select("#computation").node().value== "1" ){
-         // density_crime=1;
-          d3.select(tot)
-            //interaction with dataset:
-            .style("fill", color(sumDel)) 
-            .attr('clicked','1')
-            .attr('sumDel',sumDel);
-        }
-  
-        //number of crimes/region population
-        else if(d3.select("#computation").node().value == "2"){
-          //density_crime=2;
-          d3.select(tot)
-            //interaction with dataset:
-            .style("fill", color(sumDel/reg_population[prov.trim()])) 
-            .attr('clicked','1')
-            .attr('sumDel',sumDel);
-          
-        }
-        //number of crimes/region area
-        else{
-            
-        }         
-      /*  
-        d3.select(tot)
-          //interaction with dataset:
-          .style("fill", color(sumDel)) 
-          //Scale numDel in proportion to region area 
-                  //sumDel/parseInt(d3.select(tot).attr('shape_area'))
-          .attr('clicked','1')
-          .attr('sumDel',sumDel);
-
-       */
-      });
-      
-
+  if(d3.select(tot).attr("clicked") != '1'){
+    if(prov!="Sud Sardegna") reComputeSumDel(prov,tot,0);
+    else d3.select(tot).attr('sumDel',"No Data")
+                       .attr('sumDelPop',"No Data")
+                       .attr('population',"No Data")
+                       .attr('clicked','1')
   }
   else{
       d3.select(tot)
           .style('fill',null)
           .attr('class', 'white')
           .attr('sumDel',null)
+          .attr('sumDelPop',null)
+          .attr('population',null)
           .attr('clicked','0');
   }			
 }	
-
 
 var offsetL = d3.select("#content").offsetLeft+10;
 var offsetT = d3.select("#content").offsetTop+10;
 
 function showTooltipReg(d) {
-    
       region = d3.select(this)
       var mouse = d3.mouse(d3.select('svg').node())
                     .map( function(d) { return parseInt(d); } );
-      if(region.attr('clicked')==0){
+      if(region.attr('clicked')=='0'){
         label = "<b>"+d.properties.DEN_REG+"</b>";
         tooltip.classed("hidden", false)
               .attr("style", "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px")
@@ -276,49 +143,46 @@ function showTooltipReg(d) {
       else{
         label="<center><b>"+d.properties.DEN_REG+"</b></center>"
                 +"Num. Crimes: "+ Number(region.attr('sumDel')).toLocaleString() +"<br>"
-                +"Region Area: "+ Number(region.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup> "
+                +"Region Area: "+ Number(region.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup> "+"<br>"
+                +"Region Population: "+ Number(region.attr('population')).toLocaleString() 
         tooltip.classed("hidden", false)
               .attr("style", "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px")
               .html(label);
-
       }
 }
 
-function showTooltipProv(d) {
-    
+function showTooltipProv(d) { 
   province = d3.select(this);
+  var nameReg=retrieveNameReg(province);
   var mouse = d3.mouse(d3.select('svg').node())
                 .map( function(d) { return parseInt(d); } );
-  if(province.attr('clicked')==0){
+  if(province.attr('clicked')=='0'){
     if(d.properties.DEN_PROV=="-"){
-      label = "<b>"+d.properties.DEN_CM+"</b>";
+      label = "<b>"+d.properties.DEN_CM+"</b>"+" ("+nameReg+")";
     }
     else{
-      label = "<b>"+d.properties.DEN_PROV+"</b>";
-    }
-    
+      label = "<b>"+d.properties.DEN_PROV+ "</b>"+" ("+nameReg+")";
+    } 
     tooltip.classed("hidden", false)
           .attr("style", "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px")
           .html(label);
   }
   else{
     if(d.properties.DEN_PROV=="-"){
-      label="<center><b>"+d.properties.DEN_CM+"</b></center>"
+      label="<center><b>"+d.properties.DEN_CM+"</b> ("+nameReg+")</center>"
             +"Num. Crimes: "+ Number(province.attr('sumDel')).toLocaleString() +"<br>"
             +"Province Area: "+ Number(province.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup> " + "<br>"
-            +"Province Population: "+ Number(reg_population[d.properties.DEN_CM]).toLocaleString() 
+            +"Province Population: "+ Number(province.attr('population')).toLocaleString() 
     }
     else{
-      label="<center><b>"+d.properties.DEN_PROV+"</b></center>"
+      label="<center><b>"+d.properties.DEN_PROV+"</b> ("+nameReg+")</center>"
             +"Num. Crimes: "+ Number(province.attr('sumDel')).toLocaleString() +"<br>"
             +"Province Area: "+ Number(province.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup> " + "<br>"
-            +"Province Population: "+ Number(reg_population[d.properties.DEN_PROV]).toLocaleString() 
+            +"Province Population: "+ Number(province.attr('population')).toLocaleString() 
     }
-
     tooltip.classed("hidden", false)
           .attr("style", "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px")
           .html(label);
-
   }
 }
 
@@ -332,58 +196,473 @@ function removeRegions(array) {
   return x;
 }
 
-
-//ZOOM FUNCTIONS
-/*
-function zoom(){
-    var zoom = d3.zoom()
-                .scaleExtent([1, 10])
-                .on("zoom", zoomed);
-
-    var drag = d3.drag()
-                .subject(function (d) { return d; })
-                .on("start", dragstarted)
-                .on("drag", dragged)
-                .on("end", dragended);
-
-    var slider = d3.select("#slide").append("p").append("input")
-                .datum({})
-                .attr("type", "range")
-                .attr("value", zoom.scaleExtent()[0])
-                .attr("min", zoom.scaleExtent()[0])
-                .attr("max", zoom.scaleExtent()[1])
-                .attr("step", (zoom.scaleExtent()[1] - zoom.scaleExtent()[0]) / 100)
-                .on("input", slided);
-
-    var svg = d3.selectAll("svg")
-            .attr("transform", "translate(" + margin.left + "," + margin.right + ")")
-            .call(zoom);
-
-
-    function zoomed() {
-      const currentTransform = d3.event.transform;
-      container.attr("transform", currentTransform);
-      slider.property("value", currentTransform.k);
-    }
-
-    function dragstarted(d) {
-      d3.event.sourceEvent.stopPropagation();
-      d3.select(this).classed("dragging", true);
-    }
-
-    function dragged(d) {
-      d3.select(this).attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
-    }
-
-    function dragended(d) {
-      d3.select(this).classed("dragging", false);
-    }
-
-    function slided(d) {
-      zoom.scaleTo(d3.select("svg"), d3.select(this).property("value"));
-    }
-    return null;
+function removeProvinces(array) {
+  x=[];
+  x = array.filter(el => (el.startsWith("    ") && !el.startsWith("      ")));
+  return x;
 }
-*/
 
-  
+//load region map(newData=0) or province map (newData=1) 
+function loadMap(newData){
+  if(newData=="1"){ //load region map
+    var mapReg = d3.json('./datasets/dataset_mappa_italiana/mappa_italiana_regioni.json', function(data) {
+      //HIDE THE PROVINCE MAP
+      d3.select("#content g.mapProv").attr('style',"visibility:hidden");
+     
+      var gReg = d3.select('#content g.mapReg')
+      .selectAll('path')
+
+      gReg.attr('class','greyOnlyReg')
+        .on('mousemove',showTooltipReg)
+        .on('mouseover',
+          function(){
+            if(d3.select(this).attr("clicked") != '1'){
+              d3.select(this)
+                .attr('class','white');
+            }
+          }
+        )
+        .on('mouseout',
+              function(){
+                if(d3.select(this).attr("clicked") != '1'){
+                  d3.select(this)
+                  .attr('class','greyOnlyReg');
+                }
+              tooltip.attr('style', null)
+                  .classed("hidden", true)
+                  .node().innerHTML = null;
+              }
+            );
+     });
+
+     d3.select("#selectAll").property('checked',false);//uncheck checkbox for select all territory
+  }
+  else{ //load province map
+    if(count==0){
+      var mapReg = d3.json('./datasets/dataset_mappa_italiana/mappa_italiana_regioni.json', function(data) {
+        createMapReg(data);
+      })
+      var mapProv = d3.json('./datasets/dataset_mappa_italiana/mappa_italiana_provincie.json', function(data) {
+        createMapProv(data);
+      
+        var g=d3.select('#content g.mapProv').selectAll('path')  
+              .on('mouseover',
+                function(){
+                  if(d3.select(this).attr("clicked") != '1'){
+                    d3.select(this)
+                      .attr('class','white');
+                  }
+                }
+              )  
+              .on('mouseout',
+                function(){
+                  if(d3.select(this).attr("clicked") != '1'){
+                    d3.select(this)
+                    .attr('class','greyProv');
+                  }
+                tooltip.attr('style', null)
+                    .classed("hidden", true)
+                    .node().innerHTML = null;        
+                }
+              );  
+      })
+    }
+    var gReg = d3.select('#content g.mapReg')
+      .selectAll('path')
+
+    gReg.attr('class','greyReg')
+        .attr('style',null)
+        .on('mousemove',null)
+        .on('mouseover', null)
+        .on('mouseout', null);
+    //show province map
+    d3.select("#content g.mapProv").attr('style',"visibility:visible");
+  }
+  return 0;
+}
+
+function loadComputationMap(value){ 
+  if(value=="0"){ //compute color of prov-reg considering only "number of crimes"
+    computationType=0; //considering only "number of crimes"
+    computeColourScales();
+  }
+  else{ //compute color of prov-reg considering  "number of crimes/population"
+    computationType=1; //considering  "number of crimes/population"
+    computeColourScales();
+  }
+return 0;
+}
+
+function computeColourScales(){
+  //PROVINCES
+  //save all possible values of provinces crimes (seeing the specific query )
+  var list_provinces=[]
+  d3.text("./datasets/dataset_crimes/dataset1219.csv", function(raw) {
+    var dsv = d3.dsvFormat(';');
+    var data =dsv.parse(raw);
+    regions = d3.nest() //create dictionary on regions name
+            .key(function(d) {
+                list_provinces.push(d.territorio); //retrive all teritory from dataset 
+                return d.territorio; })
+            .entries(stocks = data);    
+    
+    list_provinces = removeRegions(removeDuplicates(list_provinces)); //remove duplicates and regions and macro-areas
+    
+    numbers=[];
+    regions.forEach(function (s){
+        if(list_provinces.includes(s.key)){
+          
+            s.values.forEach(function(d) { 
+              sumDel = d3.sum(s.values, function(d){ //filter per year and crime types
+                if(selectedYears.includes(d.anno)){//FILTER YEARS
+                  tot_selected_crimes_per_year=0;
+
+                  if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
+                  return d.totale;
+                  }
+                  else{ //if some crimes are been selected
+                    for (const [key, value] of Object.entries(d)) {
+                      if(selected_crimes.includes(key)){ //"selected_crimes" is the array that contain all crimes slected by user (by default it start with all crimes)
+                          tot_selected_crimes_per_year+=parseInt(value);
+                      }
+                    }
+                    return tot_selected_crimes_per_year;
+                  }
+                }
+              })
+
+              sumDelPop = d3.sum(s.values, function(d){ //filter per year and crime types
+                if(selectedYears.includes(d.anno)){//FILTER YEARS
+                  tot_selected_crimes_per_year=0;
+
+                  if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
+                    return d.totale/d.popolazione;
+                  }
+                  else{ //if some crimes are been selected
+                    for (const [key, value] of Object.entries(d)) {
+                      if(selected_crimes.includes(key)){ //"selected_crimes" is the array that contain all crimes slected by user (by default it start with all crimes)
+                        tot_selected_crimes_per_year+=parseInt(value);
+                      }
+                    }
+                    return tot_selected_crimes_per_year/d.popolazione;
+                  }
+                }
+              })
+            })
+            
+            //number of crimes
+            if(computationType==0 ){
+                numbers.push(sumDel);
+            }
+            //number of crimes/region population
+            else {
+              numbers.push(sumDelPop);
+            }
+            sumDel=0;
+            sumDelPop=0;
+        }
+    })
+
+    var minMax=d3.extent(numbers);
+    colorProv = d3.scaleQuantile()
+                  .domain([minMax[0], minMax[1]]) //select min an max of retrived values
+                  .range(['#ffffb2',
+                          '#fecc5c',
+                          '#fd8d3c',
+                          '#f03b20',
+                          '#bd0026']);
+    updateClickedProv();
+  });
+
+  //REGIONS
+  //save all possible values of regions delicts (seeing the specific query )
+  var list_regions=[];
+  d3.text("./datasets/dataset_crimes/dataset1219.csv", function(raw) {
+    var dsv = d3.dsvFormat(';');
+    var data =dsv.parse(raw);
+      
+    regions = d3.nest() //create dictionary on regions name
+            .key(function(d) {
+                list_regions.push(d.territorio); //retrive all territory from dataset 
+                return d.territorio; })
+            .entries(stocks = data);    
+    
+    list_regions = removeProvinces(removeDuplicates(list_regions)); //remove duplicates and regions and macro-areas
+    console.log(list_regions);
+   
+    numbers=[];
+    regions.forEach(function (s){
+        if(list_regions.includes(s.key)){
+        
+            s.values.forEach(function(d) { 
+                 sumDel = d3.sum(s.values, function(d){ //filter per year and crime types
+                    if(selectedYears.includes(d.anno)){//FILTER YEARS
+                      tot_selected_crimes_per_year=0;
+                      if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
+                        return d.totale;
+                      }
+                      else{ //if some crimes are been selected
+                        for (const [key, value] of Object.entries(d)) {
+                            if(selected_crimes.includes(key)){ ////FILTER CRIMES. "selected_crimes" is the array that contain all crimes slected by user (by default it start with all crimes)
+                                tot_selected_crimes_per_year+=parseInt(value);            
+                            }
+                        }
+                        return tot_selected_crimes_per_year;
+                      }
+                    }
+                  })
+                  sumDelPop = d3.sum(s.values, function(d){ //filter per year and crime types
+                    if(selectedYears.includes(d.anno)){//FILTER YEARS
+                      tot_selected_crimes_per_year=0;
+                      if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
+                        return d.totale/d.popolazione;
+                      }
+                      else{ //if some crimes are been selected
+                        for (const [key, value] of Object.entries(d)) {
+                            if(selected_crimes.includes(key)){ //FILTER CRIMES "selected_crimes" is the array that contain all crimes sElected by user (by default it start with all crimes)
+                                tot_selected_crimes_per_year+=parseInt(value);
+                            }
+                        }
+                        return tot_selected_crimes_per_year/d.popolazione;
+                      }
+                    }
+                  })
+                  
+                //number of crimes
+                if(computationType==0 ){
+                    numbers.push(sumDel);  
+                }
+                //number of crimes/region population
+                else {
+                  numbers.push(sumDelPop);
+                }
+                sumDel=0;
+                sumDelPop=0;
+         })
+        }
+    });
+    var minMax=d3.extent(numbers);
+    colorReg = d3.scaleQuantile()
+              .domain([minMax[0], minMax[1]]) //select min an max of retrived values
+              .range(['#ffffb2',
+                      '#fecc5c',
+                      '#fd8d3c',
+                      '#f03b20',
+                      '#bd0026']);
+    updateClickedReg()
+  }); 
+}
+
+function updateClickedReg(){
+          //update clicked regions
+          var gReg = d3.select('#content g.mapReg').selectAll('path')
+          .filter(function(d){
+            //console.log(d3.select('#'+this['id']).attr('clicked'));
+            return d3.select('#'+this['id']).attr('clicked')=='1';
+          });
+
+          gReg.each(function(d){
+            var reg = d3.select(this);
+            reComputeSumDel(reg.attr('name'),"#"+reg.attr('id'),1);
+          })
+}
+
+function updateClickedProv(){
+  //update selected reg-prov with the new colour (select them looking attribute "clicked")
+  var gProv = d3.select('#content g.mapProv').selectAll('path')
+  .filter(function(d){
+    //console.log(d3.select('#'+this['id']).attr('clicked'));
+    return d3.select('#'+this['id']).attr('clicked')=='1';
+  });
+  console.log(gProv)
+  gProv.each(function(d){
+    var prov = d3.select(this);
+    reComputeSumDel(prov.attr('name'),"#"+prov.attr('id'),0);
+  })
+}
+
+function updateSelectedYears(){ //change value of list of selected years
+  //manage select all years checkbox
+  var selectedC=d3.select(this);
+  if(selectedC.attr('id')=='tot'){
+    if(selectedC.property('checked') == true){
+      d3.selectAll(".yearCheckbox").property('checked',true);
+      selectedYears.push("2012","2013","2014","2015","2016","2017","2018","2019");
+      selectedYears = removeDuplicates(selectedYears);
+      console.log(selectedYears);
+    }
+    else{
+      d3.selectAll(".yearCheckbox").property('checked',false);
+      selectedYears = [];
+    } 
+  }
+  else{ //manage all other years
+    //TO DO// console.log(d3.select(this).attr('id'));
+    if(selectedC.property('checked') == true){
+      selectedYears.push(selectedC.attr('id'));//add checked
+      selectedYears = removeDuplicates(selectedYears);
+      console.log(selectedYears);
+    }
+    else{
+      d3.select('#tot').property('checked',false);
+      selectedYears = selectedYears.filter(function(value){ //remove unchecked year
+        return value != selectedC.attr('id');
+      });
+      console.log(selectedYears)
+      console.log(selectedC.attr('id'))
+    } 
+  }
+  computeColourScales(); //for map 
+  //updateYearsParCoord(); (valerio [menu]) la funzione nelle righe sopra cambia la lista 'selectedYears' che contiene gli anni selezionati in ogni momento
+ 
+}
+
+function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function called for prov, else =1
+  //read from dataset of delicts[FUNCTION]
+  d3.text("./datasets/dataset_crimes/dataset1219.csv", function(raw) {//retrive sum of delicts
+        var dsv = d3.dsvFormat(';');
+        var data =dsv.parse(raw);
+        regions = d3.nest() //create dictionary on regions name
+                .key(function(d) { 
+                    if(d.territorio.trim().startsWith(territory)) return d.territorio; })
+                .entries(stocks = data);      
+        sumDel=0;
+        sumDelPop=0;
+
+        regions[1].values.forEach(function(d) { 
+          sumDel = d3.sum(regions[1].values, function(d){ //filter per year and crime types
+            if(selectedYears.includes(d.anno)){//FILTER YEARS
+              tot_selected_crimes_per_year=0;
+
+              if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
+                return d.totale;
+              }
+              else{ //if some crimes are been selected
+                for (const [key, value] of Object.entries(d)) {
+                  if(selected_crimes.includes(key)){ //"selected_crimes" is the array that contain all crimes slected by user (by default it start with all crimes)
+                    tot_selected_crimes_per_year+=parseInt(value);
+                  }
+                }
+                return tot_selected_crimes_per_year;
+              }
+            }
+          })
+
+          sumDelPop = d3.sum(regions[1].values, function(d){ //filter per year and crime types
+            if(selectedYears.includes(d.anno)){//FILTER YEARS
+              tot_selected_crimes_per_year=0;
+              if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
+                return d.totale/d.popolazione;
+              }
+              else{ //if some crimes are been selected
+                for (const [key, value] of Object.entries(d)) {
+                  if(selected_crimes.includes(key)){ //"selected_crimes" is the array that contain all crimes slected by user (by default it start with all crimes)
+                      tot_selected_crimes_per_year+=parseInt(value);
+                  }
+                }
+                return tot_selected_crimes_per_year/d.popolazione;
+              }
+            }
+          })
+
+          population=0;
+          i=0;
+          population = d3.sum(regions[1].values, function(d){ //filter per year and crime types
+            if(selectedYears.includes(d.anno)){//FILTER YEARS
+              return d.popolazione
+            }
+          })   
+        })
+        
+          d3.select(id)
+            //interaction with dataset:
+            .style("fill", function(){
+              if (computationType==0){
+                if(typeOfTer==0) return colorProv(sumDel);
+                else return  colorReg(sumDel);
+              } 
+              else{
+                if(typeOfTer==0) return colorProv(sumDelPop);
+                else return colorReg(sumDelPop);
+              }
+            })
+            .attr('clicked','1')
+            .attr('sumDel',sumDel)
+            .attr('sumDelPop',sumDelPop)
+            .attr('population',population/selectedYears.length);
+          
+            if(visualization=="0" ) {
+              var gReg = d3.select('#content g.mapReg')
+              .selectAll('path');
+        
+              gReg.attr('class','greyReg')
+                  .style('fill',null);
+            }
+  });
+}
+
+function retrieveNameReg(prov){
+  var reg = prov.attr('id').split('g');
+  reg=reg[1];
+  reg= 'regione'+reg;
+  var region = d3.select('#content g.mapReg').selectAll('path').filter(function(d){
+    return this['id'] == reg;
+  })
+  return region.attr('name');
+}
+
+function selectAllTer(){
+  var elem = d3.select(this);
+  if(elem.property('checked') == true){ //select all territory
+    if(visualization =='0'){ 
+      d3.select('#content g.mapProv').selectAll('path')
+        .each(function(d){
+          var ter = d3.select(this)
+          if(ter.attr('clicked')=='0'){ //for each territory not clicked =>click it
+            updateMapProv(ter.attr("id"));
+          }
+        })
+    }
+    if(visualization =='1'){ 
+      d3.select('#content g.mapReg').selectAll('path')
+        .each(function(d){
+          var ter = d3.select(this)
+          if(ter.attr('clicked')=='0'){
+            updateMapReg(ter.attr("id"),'');
+          }
+        })
+    }
+  }
+  else{ //unselect all territory
+    if(visualization =='0'){
+      d3.select('#content g.mapProv').selectAll('path')
+        .each(function(d){
+          var ter = d3.select(this)
+          if(ter.attr('clicked')=='1'){
+            ter
+            .style('fill',null)
+            .attr('class', 'greyProv')
+            .attr('sumDel',null)
+            .attr('sumDelPop',null)
+            .attr('population',null)
+            .attr('clicked','0');
+          }
+        })
+    }
+    if(visualization =='1'){
+      d3.select('#content g.mapReg').selectAll('path')
+        .each(function(d){
+          var ter = d3.select(this)
+          if(ter.attr('clicked')=='1'){
+            ter
+            .style('fill',null)
+            .attr('class', 'greyOnlyReg')
+            .attr('sumDel',null)
+            .attr('sumDelPop',null)
+            .attr('population',null)
+            .attr('clicked','0');
+          }
+        })
+    }
+  }
+}
