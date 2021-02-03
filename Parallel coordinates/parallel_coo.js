@@ -1,13 +1,13 @@
 //  -------------------------------------------parametri globali che l'utente puo cambiare
-YEAR = 2019
+YEAR = [2019]
 CMD_REGIONS = "except"
 //REGIONS = ["Italia"]
+KIND_OF_TERRITORY = "regions"
 REGIONS = []
 CMD_CRIMES = "except"
 //CRIMES = ["strage","omicidi","rapine"]
 ABSOLUTE = false
 CRIMES = []
-
 //inizializzazione elementi del dom
 //fill dropmenu degli anni 
 var select = document.getElementById("year");
@@ -17,7 +17,8 @@ for (let i = 2012; i < 2020; i++) {
     el.value = i;
     select.appendChild(el);
 }
-select.value = YEAR
+
+select.value = YEAR[0]
 //absolute button
 var abs = document.getElementById("absolute");
 abs.textContent="absolute: " + ABSOLUTE
@@ -46,7 +47,7 @@ var svg = d3.select("#my_dataviz")
 //quando cambio anno ridisegno l'intera parallel coord.
 function changeYear(year){
     svg.selectAll("*").remove();
-    YEAR = year
+    if(!YEAR.includes(year)) YEAR.push(year)
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
 }
 function changeAbsolute(){
@@ -76,7 +77,7 @@ function changeRegions(region){
     }
     })
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-    console.log(REGIONS)
+    //console.log(REGIONS)
 }
 function changeCmdCrimes(){
     svg.selectAll("*").remove();
@@ -99,13 +100,15 @@ function changeCrimes(crime){
     }
     })
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-    console.log(REGIONS)
+    //console.log(CRIMES)
 }
 //filtra il le P.c. con l'anno scelto dall'utente
 function filterByYear(year,data){
     const data_filtered = []
     for (let i = 0; i < data.length; i++) {
-    if(data[i].anno == year) data_filtered.push(data[i])
+        year.forEach(function(y){
+            if(data[i].anno == ""+y) data_filtered.push(data[i])
+        })
     }
     //console.log(data_filtered)
     return data_filtered
@@ -157,7 +160,6 @@ function filterByCrime(command,crimes,data){
 
 }
 
-
 //riempie la select con i nomi delle regioni/citta
 function fillRegionSelect(dataset_path){
     d3.text(dataset_path, function(raw) {//retrive sum of delicts
@@ -165,13 +167,17 @@ function fillRegionSelect(dataset_path){
         var data =dsv.parse(raw);
         var regioni=[]
         for (let i = 0; i < data.length; i++) {
-            const region = data[i].territorio.trim();
-            if(! regioni.includes(region)) {
-            regioni.push(region)
+            const region = data[i].territorio
+            if(!regioni.includes(region)) {
+                if(KIND_OF_TERRITORY == "region" && region.substring(0,7).trim().length == 1){
+                    console.log(region)
+                }
+                console.log(region.substring(0,7).trim().length)
+                regioni.push(region)
             }
         }
         regioni.sort()
-        console.log
+        
         for (let i = 0; i < regioni.length; i++) {
             var el = document.createElement("option");
             region = regioni[i]
@@ -218,8 +224,6 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         var dsv = d3.dsvFormat(';');
         var data =dsv.parse(raw);
     
-    //fillRegionSelect(data)
-        
     data = filterByYear(year, data)
     if(regions.length>0) data = filterByRegion(command_regions, regions, data)
     dimensions = d3.keys(data[0]).filter(function(d) { return d != "territorio" && d!= "totale" && d!="anno" && d!= "popolazione"})
@@ -234,10 +238,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         y[name] = d3.scaleLinear()
         ///////d3.extent  returns the minimum and maximum value in an array, in this case i take from the dataset the i-th feature domain
         .domain( d3.extent(data, function(d) {
-                
-                if(!isAbsolute){
-                return +d[name];
-                }
+                if(!isAbsolute){ return +d[name];}
                 else{
                 r = d[name]/d["popolazione"]
                 return +r;
@@ -267,8 +268,9 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         /////per ogni riga del csv (d), per ogni feature assegno la sua x e le sue y
     }
     //tooltip management
-    function drawTooltip(regione) {
-        tooltip.html(regione) //Change the content of all tooltip elements:
+    function drawTooltip(regione,anno) {
+        if(YEAR.length>1) tooltip.html(regione + " " + anno) //Change the content of all tooltip elements:
+        else tooltip.html(regione)
         var d = document.getElementById('tooltip');
         tooltip.style('display', 'block');
         d.style.position = "absolute";
@@ -291,7 +293,7 @@ svg
     .style("opacity", 0.5)
     .on("mouseover", function(d) {
     d3.select(this).style("stroke", "#FF0000")
-    drawTooltip(d["territorio"])
+    drawTooltip(d["territorio"],d["anno"])
     })                  
     .on("mouseout", function(d) {
     d3.select(this).style("stroke", "#0000CD")
