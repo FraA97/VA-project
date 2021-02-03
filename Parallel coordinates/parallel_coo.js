@@ -160,26 +160,28 @@ function filterByCrime(command,crimes,data){
 
 //riempie la select con i nomi delle regioni/citta
 function fillRegionSelect(dataset_path){
-    d3.csv(dataset_path, function(data){
-    var regioni=[]
-    for (let i = 0; i < data.length; i++) {
-        const region = data[i].territorio.trim();
-        if(! regioni.includes(region)) {
-        regioni.push(region)
+    d3.text(dataset_path, function(raw) {//retrive sum of delicts
+        var dsv = d3.dsvFormat(';');
+        var data =dsv.parse(raw);
+        var regioni=[]
+        for (let i = 0; i < data.length; i++) {
+            const region = data[i].territorio.trim();
+            if(! regioni.includes(region)) {
+            regioni.push(region)
+            }
         }
-    }
-    regioni.sort()
-    console.log
-    for (let i = 0; i < regioni.length; i++) {
-        var el = document.createElement("option");
-        region = regioni[i]
-        el.textContent = region;
-        el.value = region;
-        el.id = region;
-        document.getElementById("regions").appendChild(el);
-        
-    }
-    })
+        regioni.sort()
+        console.log
+        for (let i = 0; i < regioni.length; i++) {
+            var el = document.createElement("option");
+            region = regioni[i]
+            el.textContent = region;
+            el.value = region;
+            el.id = region;
+            document.getElementById("regions").appendChild(el);
+            
+        }
+        })
 }
 
 //riempie la select con i nomi dei crimini
@@ -204,14 +206,18 @@ function fillCrimeSelect(dimensions){
     
 }
 //per evitare il cross origin
-var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/Parallel%20coordinates/dataset1219.csv"
+//var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/Parallel%20coordinates/dataset1219.csv"
+var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
 
 fillRegionSelect(dataset_path)
 
 
 function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     const tooltip = d3.select('#tooltip');
-    d3.csv(dataset_path, function(data){
+    d3.text(dataset_path, function(raw) {//retrive sum of delicts
+        var dsv = d3.dsvFormat(';');
+        var data =dsv.parse(raw);
+    
     //fillRegionSelect(data)
         
     data = filterByYear(year, data)
@@ -224,7 +230,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     //ogni asse verticale delle parallel coo. lo salvo dentro y 
     var y = {}
     for (i in dimensions) {
-        name = dimensions[i]
+        var name = dimensions[i]
         y[name] = d3.scaleLinear()
         ///////d3.extent  returns the minimum and maximum value in an array, in this case i take from the dataset the i-th feature domain
         .domain( d3.extent(data, function(d) {
