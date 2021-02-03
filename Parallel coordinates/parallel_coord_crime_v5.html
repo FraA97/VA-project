@@ -26,6 +26,8 @@
     <button id="absolute" onclick="changeAbsolute()"></button>
     <button id="cmd_region" onclick="changeCmdRegions()"></button>
     <select id="regions"  multiple size = "8" onchange="changeRegions(this.value)"></select>
+    <button id="cmd_crime" onclick="changeCmdCrimes()"></button>
+    <select id="crimes"  multiple size = "8" onchange="changeCrimes(this.value)"></select>
 
     <div id="my_dataviz"></div>
 
@@ -37,9 +39,9 @@
     //REGIONS = ["Italia"]
     REGIONS = []
     CMD_CRIMES = "except"
-    CRIMES = ["strage","omicidi","rapine"]
+    //CRIMES = ["strage","omicidi","rapine"]
     ABSOLUTE = false
-    //CRIMES = []
+    CRIMES = []
 
     //inizializzazione elementi del dom
     //fill dropmenu degli anni 
@@ -57,6 +59,9 @@
     //cmd_region button
     var abs = document.getElementById("cmd_region");
     abs.textContent=CMD_REGIONS
+    //cmd_crime button
+    var abs = document.getElementById("cmd_crime");
+    abs.textContent=CMD_CRIMES
     //-----------
 
     // set the dimensions and margins of the graph
@@ -108,6 +113,29 @@
       draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
       console.log(REGIONS)
     }
+    function changeCmdCrimes(){
+      svg.selectAll("*").remove();
+      if(CMD_CRIMES == "only") CMD_CRIMES = "except"
+      else{
+        CMD_CRIMES = "only"
+      }
+      document.getElementById("cmd_crime").textContent=CMD_CRIMES
+      draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+    }
+    function changeCrimes(crime){
+      if(!CRIMES.includes(crime)){
+        CRIMES.push(crime.trim())
+      }
+      svg.selectAll("*").remove();
+      CRIMES.forEach( function(r){
+        if(CMD_CRIMES == "only") document.getElementById(r).style.color = "green"
+        else{
+          document.getElementById(r).style.color = "red"
+        }
+      })
+      draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+      console.log(REGIONS)
+    }
     //filtra il le P.c. con l'anno scelto dall'utente
     function filterByYear(year,data){
       const data_filtered = []
@@ -143,9 +171,9 @@
     
     //filtra in base al crimie, only fa solo i crimini passati, except fa tutti tranni quelli passati
     function filterByCrime(command,crimes,data){
-      ////////d3.keys(data[0]) sono le classi ["territorio", "anno", "popolazione",..] della prima riga
-      ///////d3.values(data[0]) sono i valori delle classi ["Italia", "2012", "59394207",..] della prima riga
-      dimensions = d3.keys(data[0]).filter(function(d) { return d != "territorio" && d!= "totale" && d!="anno" && d!= "popolazione"})
+      
+        ////////d3.keys(data[0]) sono le classi ["territorio", "anno", "popolazione",..] della prima riga
+        ///////d3.values(data[0]) sono i valori delle classi ["Italia", "2012", "59394207",..] della prima riga
       function filterCrimes(crime){
         if(command == "except"){
           if(crimes.includes(crime)) return false
@@ -166,39 +194,67 @@
     
     
     //riempie la select con i nomi delle regioni/citta
-    function fillRegionSelect(data){
-      var regioni=[]
-      for (let i = 0; i < data.length; i++) {
-        const region = data[i].territorio.trim();
-        if(! regioni.includes(region)) {
-          regioni.push(region)
+    function fillRegionSelect(dataset_path){
+      d3.csv(dataset_path, function(data){
+        var regioni=[]
+        for (let i = 0; i < data.length; i++) {
+          const region = data[i].territorio.trim();
+          if(! regioni.includes(region)) {
+            regioni.push(region)
+          }
         }
-      }
-      regioni.sort()
-      console.log
-      for (let i = 0; i < regioni.length; i++) {
+        regioni.sort()
+        console.log
+        for (let i = 0; i < regioni.length; i++) {
+          var el = document.createElement("option");
+          region = regioni[i]
+          el.textContent = region;
+          el.value = region;
+          el.id = region;
+          document.getElementById("regions").appendChild(el);
+          
+        }
+      })
+    }
+
+    //riempie la select con i nomi dei crimini
+    function fillCrimeSelect(dimensions){
+      var crimes=[]
+      dimensions.forEach(function(crime){
+        crime = crime.trim()
+        if(! crimes.includes(crime)) {
+          crimes.push(crime)
+        }
+      })
+      crimes.sort()
+      for (let i = 0; i < crimes.length; i++) {
         var el = document.createElement("option");
-        region = regioni[i]
-        el.textContent = region;
-        el.value = region;
-        el.id = region;
-        document.getElementById("regions").appendChild(el);
+        crime = crimes[i]
+        el.textContent = crime;
+        el.value = crime;
+        el.id = crime;
+        document.getElementById("crimes").appendChild(el);
         
       }
       
     }
-
     //per evitare il cross origin
     var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/Parallel%20coordinates/dataset1219.csv"
+    
+    fillRegionSelect(dataset_path)
+  
 
     function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
       const tooltip = d3.select('#tooltip');
       d3.csv(dataset_path, function(data){
-        fillRegionSelect(data)
+        //fillRegionSelect(data)
           
         data = filterByYear(year, data)
         if(regions.length>0) data = filterByRegion(command_regions, regions, data)
+        dimensions = d3.keys(data[0]).filter(function(d) { return d != "territorio" && d!= "totale" && d!="anno" && d!= "popolazione"})
+        fillCrimeSelect(dimensions)
         dimensions = filterByCrime(command_crimes,crimes,data)
+
 
         //ogni asse verticale delle parallel coo. lo salvo dentro y 
         var y = {}
