@@ -488,6 +488,7 @@ function updateClickedProv(){
 function updateSelectedYears(){ //change value of list of selected years
   //manage select all years checkbox
   var selectedC=d3.select(this);
+  console.log(selectedC)
   if(selectedC.attr('id')=='tot'){
     if(selectedC.property('checked') == true){
       d3.selectAll(".yearCheckbox").property('checked',true);

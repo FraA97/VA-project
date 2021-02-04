@@ -126,8 +126,9 @@ loadMap("0");//Province map
 //Years (valerio=>function to implement is on 'updateSelectedYears' function)
 d3.selectAll(".yearCheckbox").on("change",updateSelectedYears); //update list of selected years ('selectedYears') + map
 
-d3.selectAll(".yearCheckbox").property('checked',true);//start with all years selected
-    
+d3.selectAll(".yearCheckbox").property('checked',false);//start with only 1 year selected
+
+document.getElementById("2019").checked = true  
 //manage years checkboxes
 var expanded = false;
 function showCheckboxes() {
