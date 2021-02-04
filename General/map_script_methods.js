@@ -297,7 +297,7 @@ function computeColourScales(){
   //PROVINCES
   //save all possible values of provinces crimes (seeing the specific query )
   var list_provinces=[]
-  d3.text("./datasets/dataset_crimes/dataset1219.csv", function(raw) {
+  d3.text(dataset_path, function(raw) {
     var dsv = d3.dsvFormat(';');
     var data =dsv.parse(raw);
     regions = d3.nest() //create dictionary on regions name
@@ -377,7 +377,7 @@ function computeColourScales(){
   //REGIONS
   //save all possible values of regions delicts (seeing the specific query )
   var list_regions=[];
-  d3.text("./datasets/dataset_crimes/dataset1219.csv", function(raw) {
+  d3.text(dataset_path, function(raw) {
     var dsv = d3.dsvFormat(';');
     var data =dsv.parse(raw);
       
@@ -519,7 +519,7 @@ function updateSelectedYears(){ //change value of list of selected years
 
 function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function called for prov, else =1
   //read from dataset of delicts[FUNCTION]
-  d3.text("./datasets/dataset_crimes/dataset1219.csv", function(raw) {//retrive sum of delicts
+  d3.text(dataset_path, function(raw) {
         var dsv = d3.dsvFormat(';');
         var data =dsv.parse(raw);
         regions = d3.nest() //create dictionary on regions name

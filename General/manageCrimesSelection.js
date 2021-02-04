@@ -2,7 +2,9 @@
   //MenuCrimeSelection
 
 //generate list of crimes reading dataset of crimes
-d3.text("./datasets/dataset_crimes/dataset1219.csv", function(raw) {
+var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
+
+d3.text(dataset_path, function(raw) {
     var dsv = d3.dsvFormat(';');
     var data =dsv.parse(raw);
     var i = 0;

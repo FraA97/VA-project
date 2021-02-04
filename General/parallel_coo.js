@@ -1,5 +1,5 @@
 //  -------------------------------------------parametri globali che l'utente puo cambiare
-YEAR = 2019
+YEAR = [2019]
 CMD_REGIONS = "except"
 //REGIONS = ["Italia"]
 REGIONS = []
@@ -45,14 +45,14 @@ var sv = d3.select("#my_dataviz")
 
 //quando cambio anno ridisegno l'intera parallel coord.
 function changeYear(year){
-    sv.selectAll("*").remove();
-    YEAR = year
+    svg.selectAll("*").remove();
+    if(!YEAR.includes(year)) YEAR.push(year)
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
 }
-function changeAbsolute(){
+function changeAbsolute(flag){
     sv.selectAll("*").remove();
-    ABSOLUTE = !ABSOLUTE
-    document.getElementById("absolute").textContent="absolute: " + ABSOLUTE
+    ABSOLUTE = flag
+    //document.getElementById("absolute").textContent="absolute: " + ABSOLUTE
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
 }
 function changeCmdRegions(){
@@ -105,7 +105,9 @@ function changeCrimes(crime){
 function filterByYear(year,data){
     const data_filtered = []
     for (let i = 0; i < data.length; i++) {
-    if(data[i].anno == year) data_filtered.push(data[i])
+        year.forEach(function(y){
+            if(data[i].anno == ""+y) data_filtered.push(data[i])
+        })
     }
     //console.log(data_filtered)
     return data_filtered
@@ -213,7 +215,7 @@ var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-pro
 
 
 function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
-    const tooltip = d3.select('#tooltip');
+    const PCtooltip = d3.select('#PCtooltip');
     d3.text(dataset_path, function(raw) {//retrive sum of delicts
         var dsv = d3.dsvFormat(';');
         var data =dsv.parse(raw);
@@ -266,17 +268,18 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         }));
         /////per ogni riga del csv (d), per ogni feature assegno la sua x e le sue y
     }
-    //tooltip management
+    //PCtooltip management
     function drawTooltip(regione) {
-        tooltip.html(regione) //Change the content of all tooltip elements:
-        var d = document.getElementById('tooltip');
-        tooltip.style('display', 'block');
+        PCtooltip.html(regione) //Change the content of all PCtooltip elements:
+        var d = document.getElementById('PCtooltip');
+        PCtooltip.style('display', 'block');
         d.style.position = "absolute";
-        d.style.left = event.pageX+20+'px';
-        d.style.top = event.pageY+'px';
+        d.style.left = event.clientX+'px';
+        d.style.top = (event.clientY-420)+'px';
+        //console.log(d.style.top)
     }
     function removeTooltip() {
-        if (tooltip) tooltip.style('display', 'none');
+        if (PCtooltip) PCtooltip.style('display', 'none');
     } 
     // Draw the lines
 

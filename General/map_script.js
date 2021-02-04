@@ -101,7 +101,9 @@ d3.select('#computationCrimes')
   .on('change', function() {
     var newData = eval(d3.select(this).property('value'));//0 if choose only number of crimes or 1 if choose num_crimes/pop
     loadComputationMap(newData);
-    //loadComputationParallelCoordinates(newData); (valerio [menu])
+    //loadComputationParallelCoordinates(newData); (valerio [menu]) DONE
+    if(newData == 0) changeAbsolute(false)
+    else changeAbsolute(true)
 });
 computeColourScales();//compute colour scales considering only num crimes
 //compute parCoord(); //(valerio [start function]) compute par. coord. considering only num crimes
@@ -112,6 +114,8 @@ d3.select('#visualization')
     var newData = eval(d3.select(this).property('value'));//0 if choose to vis. for province or 1 if choose to vis for regions
     visualization=newData; //variable that mantain value 0 or 1 (default setted to 0 => visualize for provinces)
     loadMap(newData);
+    if(newData == 0) filterByRegion("provinces")
+    else filterByRegion("region")
     //loadParallelCoordinates(newData); (valerio [menu]) (must load par. coord. with prov or reg)
 });
 loadMap("0");//Province map

@@ -3,6 +3,16 @@
 <head>
   <title>Italy Crimes</title>
   <link rel="stylesheet" href="styles_map_crimes.css">
+  <style> 
+    #PCtooltip {
+      border-radius: 25px;
+      background: lightgray; 
+      position:absolute;
+      display:none;
+      padding: 5px;
+      font-family: sans-serif;
+    }
+  </style>
 </head>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
@@ -87,7 +97,7 @@
   <!--html for PARALLEL COORDINATES-->
 <div id= "par-coord">
   
-    <div id='tooltip'></div>
+    <div id='PCtooltip'></div>
 <!--
     <select id="year"  onchange="changeYear(this.value)"></select>
     <button id="absolute" onclick="changeAbsolute()"></button>

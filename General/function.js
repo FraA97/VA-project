@@ -11,10 +11,11 @@ d3.text(dataset_path, function(raw) {//retrive sum of delicts
     regions.forEach( d => delete d.popolazione);                            //eliminate column popolazione
     regions.forEach( d => delete d.totale);                                 //eliminate column totale
     regions.forEach( d => delete d['altri delitti']);                       //eliminate column altri delitti
-
-    d3.text("../coefficienti.csv", function(raw) {//retrive sum of delicts
-        var dsv = d3.dsvFormat(',');
-        var dataCoeff =dsv.parse(raw);
+    
+    var coeff_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/coefficienti.csv"
+    d3.text("coeff_path", function(raw) {//retrive sum of delicts
+        var dsv = d3.dsvFormat(',')
+        var dataCoeff =dsv.parse(raw)
       //---------------------------------------------Computing  default dissimilarity matrix------------------------------------------------
       
       var m = chooseCharacteristic(dataCoeff, regions, 1, 2019)
