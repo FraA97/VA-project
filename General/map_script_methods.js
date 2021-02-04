@@ -205,7 +205,9 @@ function removeProvinces(array) {
 //load region map(newData=0) or province map (newData=1) 
 function loadMap(newData){
   if(newData=="1"){ //load region map
-    var mapReg = d3.json('./datasets/dataset_mappa_italiana/mappa_italiana_regioni.json', function(data) {
+    url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
+
+    var mapReg = d3.json(url_regioni, function(data) {
       //HIDE THE PROVINCE MAP
       d3.select("#content g.mapProv").attr('style',"visibility:hidden");
      
