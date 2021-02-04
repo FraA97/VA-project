@@ -239,10 +239,12 @@ function loadMap(newData){
   }
   else{ //load province map
     if(count==0){
-      var mapReg = d3.json('./datasets/dataset_mappa_italiana/mappa_italiana_regioni.json', function(data) {
+      url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
+      url_province = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
+      var mapReg = d3.json(url_regioni, function(data) {
         createMapReg(data);
       })
-      var mapProv = d3.json('./datasets/dataset_mappa_italiana/mappa_italiana_provincie.json', function(data) {
+      var mapProv = d3.json(url_province, function(data) {
         createMapProv(data);
       
         var g=d3.select('#content g.mapProv').selectAll('path')  
@@ -388,7 +390,7 @@ function computeColourScales(){
             .entries(stocks = data);    
     
     list_regions = removeProvinces(removeDuplicates(list_regions)); //remove duplicates and regions and macro-areas
-    console.log(list_regions);
+    //console.log(list_regions);
    
     numbers=[];
     regions.forEach(function (s){
@@ -474,7 +476,7 @@ function updateClickedProv(){
     //console.log(d3.select('#'+this['id']).attr('clicked'));
     return d3.select('#'+this['id']).attr('clicked')=='1';
   });
-  console.log(gProv)
+  //console.log(gProv)
   gProv.each(function(d){
     var prov = d3.select(this);
     reComputeSumDel(prov.attr('name'),"#"+prov.attr('id'),0);

@@ -158,8 +158,9 @@ circle {
 #par-coord{
   border:3px solid black;
   position: absolute;
-  margin-top: 40%;
   bottom: 0px;
+  top: 560px;
+  height: 400px;
 }
 #tooltip {
   border-radius: 25px;

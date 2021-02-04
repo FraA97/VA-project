@@ -118,6 +118,8 @@ d3.select('#visualization')
     else filterByRegion("region")
     //loadParallelCoordinates(newData); (valerio [menu]) (must load par. coord. with prov or reg)
 });
+//console.log(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+draw(YEAR,"only",REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
 loadMap("0");//Province map
 //loadParallelCoordinates(newData); (valerio [start function])
 

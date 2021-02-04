@@ -13,7 +13,7 @@ d3.text(dataset_path, function(raw) {//retrive sum of delicts
     regions.forEach( d => delete d['altri delitti']);                       //eliminate column altri delitti
     
     var coeff_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/coefficienti.csv"
-    d3.text("coeff_path", function(raw) {//retrive sum of delicts
+    d3.text(coeff_path, function(raw) {//retrive sum of delicts
         var dsv = d3.dsvFormat(',')
         var dataCoeff =dsv.parse(raw)
       //---------------------------------------------Computing  default dissimilarity matrix------------------------------------------------

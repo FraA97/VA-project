@@ -113,8 +113,9 @@ function filterByYear(year,data){
     return data_filtered
 } 
 //filtra in base al territorio, only fa solo le regioni passate, except fa tutte tranne quelle passate
-function filterByRegion(command,regions,data){
+function filterByRegion(kindOfTerr,command,regions,data){
     const indeces = []
+    console.log("DIOCANEEEE")
     for (let i = 0; i < data.length; i++) {
     for (let r = 0; r < regions.length; r++) {
         if(data[i].territorio.trim() == regions[r].trim()){
@@ -323,4 +324,4 @@ sv.selectAll("myAxis")
 
     })        
 }
-draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
+//draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
