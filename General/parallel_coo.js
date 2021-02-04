@@ -211,7 +211,6 @@ function fillCrimeSelect(dimensions){
 //per evitare il cross origin
 //var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/Parallel%20coordinates/dataset1219.csv"
 var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
-
 //fillRegionSelect(dataset_path)
 
 
