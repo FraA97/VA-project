@@ -9,7 +9,7 @@ ABSOLUTE = false
 CRIMES = []
 //per evitare il cross origin
 var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
-var dataset_path = "../dataset1219.csv"
+//var dataset_path = "../dataset1219.csv"
 //inizializzazione elementi del dom
 //fill dropmenu degli anni 
 var select = document.getElementById("year");

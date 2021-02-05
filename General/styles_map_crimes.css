@@ -76,6 +76,12 @@ body {
     margin-bottom:0;
   }
 
+  #recLegendMap{
+    fill: gray;
+    opacity: 0.7;
+  }
+
+
 /*CSS FOR MENU*/
   .multiselect {
     width: 200px;

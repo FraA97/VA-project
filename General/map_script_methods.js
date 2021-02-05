@@ -1,7 +1,7 @@
 url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
 url_province = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
-url_regioni = "./datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
-url_province = "./datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
+//url_regioni = "./datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
+//url_province = "./datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
 function createMapReg(geojson) {
     var projection = d3.geoEquirectangular().fitSize([widthMap,(heightMap+200)*1.4],geojson).scale(0.01);
     
@@ -213,15 +213,15 @@ function removeProvinces(array) {
 //load region map(newData=1) or province map (newData=0) 
 function loadMap(newData){
   if(newData=="1"){ //load region map
-    //url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
+    url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
       var mapReg = d3.json(url_regioni, function(data) {
         if(count==0){
           createMapReg(data);
-          d3.select("#selectAll").property('checked',true);//check checkbox for select all regions
-          selectAllTer();         
+          d3.select("#selectAll").property('checked',true);//check checkbox for select all regions       
         } 
-        else d3.select("#selectAll").property('checked',false);//uncheck checkbox for select all territory
-
+        else count+=1;
+        d3.select("#selectAll").property('checked',true);//check checkbox for select all territory
+        selectAllTer(); 
       
         var gReg = d3.select('#mapReg')
                      .selectAll('path')
@@ -254,7 +254,7 @@ function loadMap(newData){
   else{ //load province map
     if(count==1){
       //url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
-      //url_province = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
+      url_province = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
 
       var mapProv = d3.json(url_province, function(data) {
         createMapProv(data);
@@ -278,9 +278,13 @@ function loadMap(newData){
                     .classed("hidden", true)
                     .node().innerHTML = null;        
                 }
-              );  
+              );
+              d3.select("#selectAll").property('checked',true);//check checkbox for select all territory
+              selectAllTer();  
       })
     }
+    else d3.select("#selectAll").property('checked',false);
+
     var gReg = d3.select('#mapReg')
       .selectAll('path')
 
@@ -697,30 +701,40 @@ function selectAllTer(){
 function updateLegend(minMax){ //update the legend of map
   var rangeLeg=(minMax[1]-minMax[0])/5;
   if(computationType==0) var keys =['NUM. CRIMES'];
-  else var keys =['NUM. CRIMES by 10k citizen'];
+  else var keys =['NUM. CRIMES by 10k cit.'];
   for(i=0; i<5;i++){
     var minvalue= minMax[0]+ (i*rangeLeg);
     var maxvalue= minvalue+rangeLeg;
-    var str = '< '+Number(minvalue.toFixed(3)).toLocaleString()+' - '+Number(maxvalue.toFixed(3)).toLocaleString()+' >'
+    var str = '< '+Number(Math.ceil(minvalue.toFixed(3)) ).toLocaleString()+' - '+Number(Math.ceil(maxvalue.toFixed(3)) ).toLocaleString()+' >'
     keys.push(str);
   }
   
     // select the svg area
-  var legend = d3.select("#legendMap")
+  var legend = d3.select("#legendMap")//.style('font-family','verdana')
   legend.selectAll('g text').remove();
   //legend.selectAll('g rect').remove();
   // Usually you have a color scale in your chart already
   var color = d3.scaleOrdinal()
     .domain(keys)
-    .range(['#ffffff','#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026']);
+    .range(['#dddddd','#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026']);
 
   // Add one dot in the legend for each name.
   var size = 20
+  if (count==0){
+    data=['1']
+    legend.selectAll('rec').data(["a"]).enter().append('rect')
+          .attr('id',"recLegendMap")
+          .attr("x",0)
+          .attr("y", 390) 
+          .attr("width", widthMap/3 +10 )
+          .attr("height", heightMap/3 -30)
+          .style('stroke','');
+  }
   legend.selectAll("mydots")
     .data(keys)
     .enter()
     .append("rect")
-      .attr("x", 15)
+      .attr("x", 10)
       .attr("y", function(d,i){ return 400 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
       .attr("width", size)
       .attr("height", size)
@@ -734,17 +748,18 @@ function updateLegend(minMax){ //update the legend of map
     .append("text")
       .attr("stroke",function(d){ if(d.includes('NUM. CRIMES')) return "#000000";
       else return color(d)})
-      .attr("stroke-width",'0.5')
+      .attr("stroke-width",'0.2')
       .attr("x", 15 + size*1.2)
       .attr("y", function(d,i){ return 400+ i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
-      .style("fill", function(d){ if(d.includes('NUM. CRIMES')) return "#000000";
-                                  else return color(d)})
+      .style("fill", '#000000')
       .text(function(d){ return d})
       .attr("text-anchor", "left")
-      .style("alignment-baseline", "middle")
+      .style("alignment-baseline", "middle");
+    
       
      
 }
+
 
 function split(string){
   list= string.split(',');
