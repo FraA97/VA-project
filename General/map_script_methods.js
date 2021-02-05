@@ -27,6 +27,11 @@ function createMapReg(geojson) {
       .attr("onclick",function(d,i){
               return "updateMapReg('regione',"+d.properties.COD_REG+");" +'' //(valerio)[on '' add function for manage click of a region---possible parameter = 'd3.select(this).attr('name') = nome della regione]]
            });
+      
+      if(count==0){
+        zoom.scaleTo(d3.select("#map").transition().duration(600), 2.3);
+        count+=1;
+      } 
 }
 
 function createMapProv(geojson) {
@@ -82,8 +87,7 @@ if(container) {
       return "updateMapProv('"+d3.select(this).attr("id")+"');"+'' //(valerio)[on '' add function for manage click of a province---possible parameter = 'd3.select(this).attr('name') = nome della provincia]
     })
     .on(["mousemove" || "click"], showTooltipProv);
-    if(count==0) zoom.scaleTo(d3.select("#map").transition().duration(600), 2.3);
-    count+=1;
+    
 }
 
 function updateMapReg(r,i){  //apply transition + interaction
@@ -202,50 +206,52 @@ function removeProvinces(array) {
   return x;
 }
 
-//load region map(newData=0) or province map (newData=1) 
+//load region map(newData=1) or province map (newData=0) 
 function loadMap(newData){
   if(newData=="1"){ //load region map
     url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
+      var mapReg = d3.json(url_regioni, function(data) {
+        if(count==0){
+          createMapReg(data);
+          d3.select("#selectAll").property('checked',true);//check checkbox for select all regions
+          selectAllTer();         
+        } 
+        else d3.select("#selectAll").property('checked',false);//uncheck checkbox for select all territory
 
-    var mapReg = d3.json(url_regioni, function(data) {
-      //HIDE THE PROVINCE MAP
-      d3.select("#content g.mapProv").attr('style',"visibility:hidden");
-     
-      var gReg = d3.select('#content g.mapReg')
-      .selectAll('path')
+      
+        var gReg = d3.select('#content g.mapReg')
+                     .selectAll('path')
 
-      gReg.attr('class','greyOnlyReg')
-        .on('mousemove',showTooltipReg)
-        .on('mouseover',
-          function(){
-            if(d3.select(this).attr("clicked") != '1'){
-              d3.select(this)
-                .attr('class','white');
-            }
-          }
-        )
-        .on('mouseout',
-              function(){
-                if(d3.select(this).attr("clicked") != '1'){
-                  d3.select(this)
-                  .attr('class','greyOnlyReg');
-                }
-              tooltip.attr('style', null)
-                  .classed("hidden", true)
-                  .node().innerHTML = null;
+        gReg.attr('class','greyOnlyReg')
+          .on('mousemove',showTooltipReg)
+          .on('mouseover',
+            function(){
+              if(d3.select(this).attr("clicked") != '1'){
+                d3.select(this)
+                  .attr('class','white');
               }
-            );
-     });
-
-     d3.select("#selectAll").property('checked',false);//uncheck checkbox for select all territory
+            }
+          )
+          .on('mouseout',
+                function(){
+                  if(d3.select(this).attr("clicked") != '1'){
+                    d3.select(this)
+                    .attr('class','greyOnlyReg');
+                  }
+                tooltip.attr('style', null)
+                    .classed("hidden", true)
+                    .node().innerHTML = null;
+                }
+              );
+      });      
+      //HIDE THE PROVINCE MAP
+      d3.select("#content g.mapProv").attr('style',"visibility:hidden"); 
   }
   else{ //load province map
-    if(count==0){
+    if(count==1){
       url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
       url_province = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
-      var mapReg = d3.json(url_regioni, function(data) {
-        createMapReg(data);
-      })
+
       var mapProv = d3.json(url_province, function(data) {
         createMapProv(data);
       
@@ -276,6 +282,7 @@ function loadMap(newData){
 
     gReg.attr('class','greyReg')
         .attr('style',null)
+        .attr('clicked','0')
         .on('mousemove',null)
         .on('mouseover', null)
         .on('mouseout', null);
@@ -617,7 +624,7 @@ function retrieveNameReg(prov){
 }
 
 function selectAllTer(){
-  var elem = d3.select(this);
+  var elem = d3.select("#selectAll");
   if(elem.property('checked') == true){ //select all territory
     if(visualization =='0'){ 
       d3.select('#content g.mapProv').selectAll('path')

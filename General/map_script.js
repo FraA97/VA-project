@@ -84,12 +84,13 @@ var selectAllProv = d3.select('.leaflet-top')
                   
 //manage events of selectAllProv
 d3.select("#selectAll").on("change", selectAllTer); //select or unselect all reg/prov
+
 //---------------------------------------------------------------
 //---------------------------------------------------------------
 
 
 //MENU VARIABLES
-var visualization = '0'; //variable that contain the visualization type of the moment: =0 =>vis. for provinces; =1 => vis. for regions 
+var visualization = '1'; //variable that contain the visualization type of the moment: =0 =>vis. for provinces; =1 => vis. for regions 
 var computationType=0; //variable that contain the computationType of the moment: =0 =>number of crimes; =1 => num.crimes/population 
 var selectedYears=["2019"]; //variable tha contain the years selected (start with all years selected))
 var selected_crimes = []; //variable that contain crimes selected
@@ -120,7 +121,7 @@ d3.select('#visualization')
 });
 //console.log(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
 draw(YEAR,"only",REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
-loadMap("0");//Province map
+loadMap(visualization);//Region map
 //loadParallelCoordinates(newData); (valerio [start function])
 
 //Years (valerio=>function to implement is on 'updateSelectedYears' function)
