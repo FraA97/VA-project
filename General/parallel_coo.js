@@ -57,12 +57,9 @@ function changeAbsolute(flag){
     //document.getElementById("absolute").textContent="absolute: " + ABSOLUTE
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
 }
-function changeCmdRegions(){
+function changeCmdRegions(cmd){
     svg_PC.selectAll("*").remove();
-    if(CMD_REGIONS == "only") CMD_REGIONS = "except"
-    else{
-    CMD_REGIONS = "only"
-    }
+    CMD_REGIONS = cmd
     //document.getElementById("cmd_region").textContent=CMD_REGIONS
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
 }
@@ -139,14 +136,20 @@ function filterByRegion(command,regions,data){
     }
     data_filtered = []
     indeces.forEach(function(el,i) {
-    if(command == "only"){
-        data_filtered.push(data[el])
-    }
-    else if(command == "except"){
-        data_filtered = data
-        data_filtered.splice(el-i,1) 
-    }
+        if(command == "only"){
+            data_filtered.push(data[el])
+        }
+        else if(command == "except"){
+            data_filtered = data
+            data_filtered.splice(el-i,1) 
+        }
     });
+    //TODO WHEN EXCEPT DEVO CANCELLARE ANCHE LE PROVINCIE.
+    /* for (let i = 0; i < data_filtered.length; i++) {
+        const element = data_filtered[i];
+        length_name=  (element.territorio.substring(0,7).match(/\s/g) || []).length
+        length_name
+    } */
     //console.log(data_filtered)
     return data_filtered
 }
@@ -228,6 +231,7 @@ function fillCrimeSelect(dimensions){
 
 function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     svg_PC.selectAll("*").remove();
+    console.log(REGIONS)
     const PCtooltip = d3.select('#PCtooltip');
     d3.text(dataset_path, function(raw) {//retrive sum of delicts
         var dsv = d3.dsvFormat(';');

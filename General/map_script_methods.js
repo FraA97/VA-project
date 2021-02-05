@@ -638,6 +638,7 @@ function retrieveNameReg(prov){
 function selectAllTer(){
   var elem = d3.select("#selectAll");
   if(elem.property('checked') == true){ //select all territory
+    changeCmdRegions("only")
     if(visualization =='0'){ 
       d3.select('#mapProv').selectAll('path')
         .each(function(d){
@@ -658,6 +659,7 @@ function selectAllTer(){
     }
   }
   else{ //unselect all territory
+    changeCmdRegions("except")
     if(visualization =='0'){
       d3.select('#mapProv').selectAll('path')
         .each(function(d){
