@@ -355,7 +355,7 @@ function computeColourScales(){
                         tot_selected_crimes_per_year+=parseInt(value);
                       }
                     }
-                    return tot_selected_crimes_per_year/d.popolazione;
+                    return (tot_selected_crimes_per_year/d.popolazione)*10000;
                   }
                 }
               })
@@ -375,6 +375,10 @@ function computeColourScales(){
     })
 
     var minMax=d3.extent(numbers);
+    if(visualization=='0'){
+      updateLegend(minMax); //update the legend of map
+    } 
+    d3.select('#mapProv').attr('minMax',minMax);
     colorProv = d3.scaleQuantile()
                   .domain([minMax[0], minMax[1]]) //select min an max of retrived values
                   .range(['#ffffb2',
@@ -434,7 +438,7 @@ function computeColourScales(){
                                 tot_selected_crimes_per_year+=parseInt(value);
                             }
                         }
-                        return tot_selected_crimes_per_year/d.popolazione;
+                        return (tot_selected_crimes_per_year/d.popolazione)*10000; //num crimes each 10000 inhabitants
                       }
                     }
                   })
@@ -453,6 +457,8 @@ function computeColourScales(){
         }
     });
     var minMax=d3.extent(numbers);
+    if(visualization=='1') updateLegend(minMax); //update the legend of map
+    d3.select('#mapReg').attr('minMax',minMax);
     colorReg = d3.scaleQuantile()
               .domain([minMax[0], minMax[1]]) //select min an max of retrived values
               .range(['#ffffb2',
@@ -572,7 +578,7 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
                       tot_selected_crimes_per_year+=parseInt(value);
                   }
                 }
-                return tot_selected_crimes_per_year/d.popolazione;
+                return (tot_selected_crimes_per_year/d.popolazione)*10000;
               }
             }
           })
@@ -677,4 +683,63 @@ function selectAllTer(){
         })
     }
   }
+}
+
+
+function updateLegend(minMax){ //update the legend of map
+  var rangeLeg=(minMax[1]-minMax[0])/5;
+  if(computationType==0) var keys =['NUM. CRIMES'];
+  else var keys =['NUM. CRIMES by 10k citizen'];
+  for(i=0; i<5;i++){
+    var minvalue= minMax[0]+ (i*rangeLeg);
+    var maxvalue= minvalue+rangeLeg;
+    var str = '< '+Number(minvalue.toFixed(3)).toLocaleString()+' - '+Number(maxvalue.toFixed(3)).toLocaleString()+' >'
+    keys.push(str);
+  }
+  
+    // select the svg area
+  var legend = d3.select("#legendMap")
+  legend.selectAll('g text').remove();
+  //legend.selectAll('g rect').remove();
+  // Usually you have a color scale in your chart already
+  var color = d3.scaleOrdinal()
+    .domain(keys)
+    .range(['#ffffff','#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026']);
+
+  // Add one dot in the legend for each name.
+  var size = 20
+  legend.selectAll("mydots")
+    .data(keys)
+    .enter()
+    .append("rect")
+      .attr("x", 15)
+      .attr("y", function(d,i){ return 400 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+      .attr("width", size)
+      .attr("height", size)
+      .style("fill", function(d){ return color(d)})
+      .style('stroke','#000000')
+
+  // Add one dot in the legend for each name.
+  legend.selectAll("mylabels")
+    .data(keys)
+    .enter()
+    .append("text")
+      .attr("stroke",function(d){ if(d.includes('NUM. CRIMES')) return "#000000";
+      else return color(d)})
+      .attr("stroke-width",'0.5')
+      .attr("x", 15 + size*1.2)
+      .attr("y", function(d,i){ return 400+ i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+      .style("fill", function(d){ if(d.includes('NUM. CRIMES')) return "#000000";
+                                  else return color(d)})
+      .text(function(d){ return d})
+      .attr("text-anchor", "left")
+      .style("alignment-baseline", "middle")
+      
+     
+}
+
+function split(string){
+  list= string.split(',');
+  list =[parseFloat(list[0]), parseFloat(list[1] )]
+  return list;
 }

@@ -85,13 +85,13 @@ var selectAllProv = d3.select('.leaflet-top')
 //manage events of selectAllProv
 d3.select("#selectAll").on("change", selectAllTer); //select or unselect all reg/prov
 
-
+/*
 //LEGEND MAP
 // select the svg area
 var legend = d3.select("#legendMap")
 
 // create a list of keys
-var keys = ["Mister A", "Brigitte", "Eleonore", "Another friend", "Batman"]
+var keys = ["A", "B", "C", "D", "E"]
 
 // Usually you have a color scale in your chart already
 var color = d3.scaleOrdinal()
@@ -126,7 +126,7 @@ legend.selectAll("mylabels")
     .attr("text-anchor", "left")
     .style("alignment-baseline", "middle")
 
-
+*/
 
 
 
@@ -160,8 +160,14 @@ d3.select('#visualization')
     var newData = eval(d3.select(this).property('value'));//0 if choose to vis. for province or 1 if choose to vis for regions
     visualization=newData; //variable that mantain value 0 or 1 (default setted to 0 => visualize for provinces)
     loadMap(newData);
-    if(newData == 0) filterByRegion("provinces")
-    else filterByRegion("region")
+    if(newData == 0){
+      updateLegend( split(d3.select('#mapProv').attr('minMax')) );
+      filterByRegion("provinces");
+    } 
+    else{
+      updateLegend( split(d3.select('#mapReg').attr('minMax') ) );
+      filterByRegion("region");
+    } 
     //loadParallelCoordinates(newData); (valerio [menu]) (must load par. coord. with prov or reg)
 });
 //console.log(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
