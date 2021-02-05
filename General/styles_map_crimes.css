@@ -70,6 +70,14 @@ body {
         position: absolute;
   }
 
+  #legendMap {
+    height:300;
+    width:450;
+    position: absolute;
+    margin-left:0;
+    margin-bottom:0;
+  }
+
 /*CSS FOR MENU*/
   .multiselect {
     width: 200px;

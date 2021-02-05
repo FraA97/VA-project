@@ -33,9 +33,14 @@
     <!--html for MAP-->
     <div id="content" >
         <svg id='map' >
-            <g class="mapProv"></g>
-            <g class="mapReg"></g>   
-        </svg>      
+            <g id ='mapProv' class="map"></g>
+            <g id ='mapReg' class="map"></g>
+            <!--legend for italy map-->
+            <g class='mapLegend' id='legendMap'> </g> 
+             <!-- <svg id="legendMap" ></svg>-->
+            
+        </svg>    
+        
     </div>
 
     <!--html for MENU-->
@@ -95,6 +100,7 @@
     <!--html for MDS-->
     <div id="regions"></div>
   </div>
+  
     <!--html for PARALLEL COORDINATES-->
   <div id= "par-coord">
       <div id='PCtooltip'></div>

@@ -7,7 +7,7 @@ function createMapReg(geojson) {
     d3.select('#map')
         .attr('width', widthMap)
         .attr('height',heightMap)
-    var u = d3.select('#content g.mapReg')
+    var u = d3.select('#mapReg')
       .selectAll('path')
       .data(geojson.features);
 
@@ -56,7 +56,7 @@ if(container) {
   d3.select('#map')
      // .attr('width', width)
       //.attr('height',height)
-  var u = d3.select('#content g.mapProv')
+  var u = d3.select('#mapProv')
     .selectAll('path')
     .data(geojson.features);
 
@@ -219,7 +219,7 @@ function loadMap(newData){
         else d3.select("#selectAll").property('checked',false);//uncheck checkbox for select all territory
 
       
-        var gReg = d3.select('#content g.mapReg')
+        var gReg = d3.select('#mapReg')
                      .selectAll('path')
 
         gReg.attr('class','greyOnlyReg')
@@ -245,7 +245,7 @@ function loadMap(newData){
               );
       });      
       //HIDE THE PROVINCE MAP
-      d3.select("#content g.mapProv").attr('style',"visibility:hidden"); 
+      d3.select("#mapProv").attr('style',"visibility:hidden"); 
   }
   else{ //load province map
     if(count==1){
@@ -255,7 +255,7 @@ function loadMap(newData){
       var mapProv = d3.json(url_province, function(data) {
         createMapProv(data);
       
-        var g=d3.select('#content g.mapProv').selectAll('path')  
+        var g=d3.select('#mapProv').selectAll('path')  
               .on('mouseover',
                 function(){
                   if(d3.select(this).attr("clicked") != '1'){
@@ -277,7 +277,7 @@ function loadMap(newData){
               );  
       })
     }
-    var gReg = d3.select('#content g.mapReg')
+    var gReg = d3.select('#mapReg')
       .selectAll('path')
 
     gReg.attr('class','greyReg')
@@ -287,7 +287,7 @@ function loadMap(newData){
         .on('mouseover', null)
         .on('mouseout', null);
     //show province map
-    d3.select("#content g.mapProv").attr('style',"visibility:visible");
+    d3.select("#mapProv").attr('style',"visibility:visible");
   }
   return 0;
 }
@@ -466,7 +466,7 @@ function computeColourScales(){
 
 function updateClickedReg(){
           //update clicked regions
-          var gReg = d3.select('#content g.mapReg').selectAll('path')
+          var gReg = d3.select('#mapReg').selectAll('path')
           .filter(function(d){
             //console.log(d3.select('#'+this['id']).attr('clicked'));
             return d3.select('#'+this['id']).attr('clicked')=='1';
@@ -480,7 +480,7 @@ function updateClickedReg(){
 
 function updateClickedProv(){
   //update selected reg-prov with the new colour (select them looking attribute "clicked")
-  var gProv = d3.select('#content g.mapProv').selectAll('path')
+  var gProv = d3.select('#mapProv').selectAll('path')
   .filter(function(d){
     //console.log(d3.select('#'+this['id']).attr('clicked'));
     return d3.select('#'+this['id']).attr('clicked')=='1';
@@ -604,7 +604,7 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
             .attr('population',population/selectedYears.length);
           
             if(visualization=="0" ) {
-              var gReg = d3.select('#content g.mapReg')
+              var gReg = d3.select('#mapReg')
               .selectAll('path');
         
               gReg.attr('class','greyReg')
@@ -617,7 +617,7 @@ function retrieveNameReg(prov){
   var reg = prov.attr('id').split('g');
   reg=reg[1];
   reg= 'regione'+reg;
-  var region = d3.select('#content g.mapReg').selectAll('path').filter(function(d){
+  var region = d3.select('#mapReg').selectAll('path').filter(function(d){
     return this['id'] == reg;
   })
   return region.attr('name');
@@ -627,7 +627,7 @@ function selectAllTer(){
   var elem = d3.select("#selectAll");
   if(elem.property('checked') == true){ //select all territory
     if(visualization =='0'){ 
-      d3.select('#content g.mapProv').selectAll('path')
+      d3.select('#mapProv').selectAll('path')
         .each(function(d){
           var ter = d3.select(this)
           if(ter.attr('clicked')=='0'){ //for each territory not clicked =>click it
@@ -636,7 +636,7 @@ function selectAllTer(){
         })
     }
     if(visualization =='1'){ 
-      d3.select('#content g.mapReg').selectAll('path')
+      d3.select('#mapReg').selectAll('path')
         .each(function(d){
           var ter = d3.select(this)
           if(ter.attr('clicked')=='0'){
@@ -647,7 +647,7 @@ function selectAllTer(){
   }
   else{ //unselect all territory
     if(visualization =='0'){
-      d3.select('#content g.mapProv').selectAll('path')
+      d3.select('#mapProv').selectAll('path')
         .each(function(d){
           var ter = d3.select(this)
           if(ter.attr('clicked')=='1'){
@@ -662,7 +662,7 @@ function selectAllTer(){
         })
     }
     if(visualization =='1'){
-      d3.select('#content g.mapReg').selectAll('path')
+      d3.select('#mapReg').selectAll('path')
         .each(function(d){
           var ter = d3.select(this)
           if(ter.attr('clicked')=='1'){
