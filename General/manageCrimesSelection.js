@@ -63,6 +63,7 @@ d3.text(dataset_path, function(raw) {
     selected_crimes = removeDuplicates(selected_crimes);//remove eventual duplicates
     computeColourScales(); //update computation of colours
     //updateCrimeParCoord(e); (valerio [menu])
+    
   });
 
   //Unselected a crime

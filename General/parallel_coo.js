@@ -282,8 +282,9 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         /////per ogni riga del csv (d), per ogni feature assegno la sua x e le sue y
     }
     //PCtooltip management
-    function drawTooltip(regione) {
-        PCtooltip.html(regione) //Change the content of all PCtooltip elements:
+    function drawTooltip(regione,anno) {
+       if(YEAR.length>1) PCtooltip.html(regione + " " + anno) //Change the content of all tooltip elements:
+        else PCtooltip.html(regione)
         var d = document.getElementById('PCtooltip');
         PCtooltip.style('display', 'block');
         d.style.position = "absolute";
@@ -307,8 +308,8 @@ svg_PC
     .style("opacity", 0.5)
     .on("mouseover", function(d) {
     d3.select(this).style("stroke", "#FF0000")
-    drawTooltip(d["territorio"])
-    })                  
+    drawTooltip(d["territorio"],d["anno"])
+    })                
     .on("mouseout", function(d) {
     d3.select(this).style("stroke", "#0000CD")
     removeTooltip()

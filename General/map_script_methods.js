@@ -97,7 +97,7 @@ if(container) {
 function updateMapReg(r,i){  //apply transition + interaction
     var tot = '#'+r+i+''; //id of clicked region
     var reg = d3.select(tot).attr("name"); //name of clicked region
-    console.log(reg);
+    //console.log(reg);
     if(d3.select(tot).attr("clicked") != 1){
       reComputeSumDel(reg,tot,1);
     }
@@ -115,7 +115,7 @@ function updateMapReg(r,i){  //apply transition + interaction
 function updateMapProv(p,i){  //apply transition + interaction
   var tot = '#'+p; //id of clicked region
   var prov = d3.select(tot).attr("name"); //name of clicked region
-  console.log(prov);
+  //console.log(prov);
   
   if(d3.select(tot).attr("clicked") != '1'){
     if(prov!="Sud Sardegna") reComputeSumDel(prov,tot,0);
@@ -535,7 +535,9 @@ function updateSelectedYears(){ //change value of list of selected years
     } 
   }
   computeColourScales(); //for map 
-  //updateYearsParCoord(); (valerio [menu]) la funzione nelle righe sopra cambia la lista 'selectedYears' che contiene gli anni selezionati in ogni momento
+  YEAR = selectedYears
+  draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+    //updateYearsParCoord(); (valerio [menu]) la funzione nelle righe sopra cambia la lista 'selectedYears' che contiene gli anni selezionati in ogni momento
  
 }
 
