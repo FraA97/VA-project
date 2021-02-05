@@ -1,3 +1,7 @@
+url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
+url_province = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
+url_regioni = "./datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
+url_province = "./datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
 function createMapReg(geojson) {
     var projection = d3.geoEquirectangular().fitSize([widthMap,(heightMap+200)*1.4],geojson).scale(0.01);
     
@@ -25,8 +29,8 @@ function createMapReg(geojson) {
       .attr('shape_leng',function(d){return d.properties.SHAPE_LENG;})
       .attr('clicked',"0")
       .attr("onclick",function(d,i){
-              return "updateMapReg('regione',"+d.properties.COD_REG+");" +'' //(valerio)[on '' add function for manage click of a region---possible parameter = 'd3.select(this).attr('name') = nome della regione]]
-           });
+        return "updateMapReg('regione',"+d.properties.COD_REG+");" +"add_delete_territory('"+d3.select(this).attr('name')+"');" //(valerio)[on '' add function for manage click of a region---possible parameter = 'd3.select(this).attr('name') = nome della regione]]
+      });
       
       if(count==0){
         zoom.scaleTo(d3.select("#map").transition().duration(600), 2.3);
@@ -84,7 +88,7 @@ if(container) {
   // .attr('population',0)
     .attr('clicked',"0")
     .attr("onclick",function(d,i){
-      return "updateMapProv('"+d3.select(this).attr("id")+"');"+'' //(valerio)[on '' add function for manage click of a province---possible parameter = 'd3.select(this).attr('name') = nome della provincia]
+      return "updateMapProv('"+d3.select(this).attr("id")+"');"+"add_delete_territory('"+d3.select(this).attr('name')+"');" //(valerio)[on '' add function for manage click of a province---possible parameter = 'd3.select(this).attr('name') = nome della provincia]
     })
     .on(["mousemove" || "click"], showTooltipProv);
     
@@ -209,7 +213,7 @@ function removeProvinces(array) {
 //load region map(newData=1) or province map (newData=0) 
 function loadMap(newData){
   if(newData=="1"){ //load region map
-    url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
+    //url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
       var mapReg = d3.json(url_regioni, function(data) {
         if(count==0){
           createMapReg(data);
@@ -249,8 +253,8 @@ function loadMap(newData){
   }
   else{ //load province map
     if(count==1){
-      url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
-      url_province = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
+      //url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
+      //url_province = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
 
       var mapProv = d3.json(url_province, function(data) {
         createMapProv(data);

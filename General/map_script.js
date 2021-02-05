@@ -162,16 +162,18 @@ d3.select('#visualization')
     loadMap(newData);
     if(newData == 0){
       updateLegend( split(d3.select('#mapProv').attr('minMax')) );
-      filterByRegion("provinces");
+      
     } 
     else{
       updateLegend( split(d3.select('#mapReg').attr('minMax') ) );
-      filterByRegion("region");
     } 
+    REGIONS = changeKindOfTerritory(newData)
+    draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
     //loadParallelCoordinates(newData); (valerio [menu]) (must load par. coord. with prov or reg)
 });
 //console.log(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-draw(YEAR,"only",REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
+REGIONS = changeKindOfTerritory(visualization)
+draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
 loadMap(visualization);//Region map
 //loadParallelCoordinates(newData); (valerio [start function])
 

@@ -1,13 +1,15 @@
 //  -------------------------------------------parametri globali che l'utente puo cambiare
 YEAR = [2019]
-CMD_REGIONS = "except"
+CMD_REGIONS = "only"
 //REGIONS = ["Italia"]
 REGIONS = []
-CMD_CRIMES = "except"
+CMD_CRIMES = "only"
 //CRIMES = ["strage","omicidi","rapine"]
 ABSOLUTE = false
 CRIMES = []
-
+//per evitare il cross origin
+var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
+var dataset_path = "../dataset1219.csv"
 //inizializzazione elementi del dom
 //fill dropmenu degli anni 
 var select = document.getElementById("year");
@@ -33,8 +35,8 @@ abs.textContent=CMD_CRIMES*/
 var margin = {top: 130, right: 10, bottom: 10, left: 0},
     width = 5000 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
-// append the svg object to the body of the page
-var sv = d3.select("#my_dataviz")
+// append the svg_PC object to the body of the page
+var svg_PC = d3.select("#my_dataviz")
 .append("svg")
     .attr("width", width +margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -45,38 +47,50 @@ var sv = d3.select("#my_dataviz")
 
 //quando cambio anno ridisegno l'intera parallel coord.
 function changeYear(year){
-    svg.selectAll("*").remove();
+    svg_PC.selectAll("*").remove();
     if(!YEAR.includes(year)) YEAR.push(year)
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
 }
 function changeAbsolute(flag){
-    sv.selectAll("*").remove();
+    svg_PC.selectAll("*").remove();
     ABSOLUTE = flag
     //document.getElementById("absolute").textContent="absolute: " + ABSOLUTE
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
 }
 function changeCmdRegions(){
-    sv.selectAll("*").remove();
+    svg_PC.selectAll("*").remove();
     if(CMD_REGIONS == "only") CMD_REGIONS = "except"
     else{
     CMD_REGIONS = "only"
     }
-    document.getElementById("cmd_region").textContent=CMD_REGIONS
+    //document.getElementById("cmd_region").textContent=CMD_REGIONS
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
 }
-function changeRegions(region){
-    if(!REGIONS.includes(region)){
-    REGIONS.push(region.trim())
-    }
-    sv.selectAll("*").remove();
-    REGIONS.forEach( function(r){
-    if(CMD_REGIONS == "only") document.getElementById(r).style.color = "green"
-    else{
-        document.getElementById(r).style.color = "red"
-    }
+function changeKindOfTerritory(newData){
+    REGIONS = []
+    d3.text(dataset_path, function(raw) {//retrive sum of delicts
+        var dsv = d3.dsvFormat(';');
+        var data =dsv.parse(raw);
+        for (let i = 0; i < data.length; i++) {
+            length_name=  (data[i].territorio.substring(0,7).match(/\s/g) || []).length //conta i white spaces: 6 provincie,4regioni, 2macroregioni,0 Italia
+            if(newData == 0 && length_name == 6 && !REGIONS.includes(data[i].territorio.trim())){//provinces
+                REGIONS.push(data[i].territorio.trim())
+            }
+            if(newData == 1 && length_name == 4 && !REGIONS.includes(data[i].territorio.trim())){//regions
+                REGIONS.push(data[i].territorio.trim())
+            }
+        }
     })
+    //console.log(REGIONS)
+    return REGIONS
+}
+function add_delete_territory(territory){ //when user click on a territory in a map it will be added or deleted from regions
+    if(REGIONS.includes(territory.trim())) {
+        REGIONS.splice(REGIONS.indexOf(territory.trim()), 1);
+        console.log(REGIONS)
+    }
+    else REGIONS.push(territory)
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-    console.log(REGIONS)
 }
 function changeCmdCrimes(){
     sv.selectAll("*").remove();
@@ -113,14 +127,14 @@ function filterByYear(year,data){
     return data_filtered
 } 
 //filtra in base al territorio, only fa solo le regioni passate, except fa tutte tranne quelle passate
-function filterByRegion(kindOfTerr,command,regions,data){
+function filterByRegion(command,regions,data){
+    //console.log(regions)    
     const indeces = []
-    console.log("DIOCANEEEE")
     for (let i = 0; i < data.length; i++) {
-    for (let r = 0; r < regions.length; r++) {
-        if(data[i].territorio.trim() == regions[r].trim()){
-        indeces.push(i)
-        }
+        for (let r = 0; r < regions.length; r++) {
+            if(data[i].territorio.trim() == regions[r].trim()){
+            indeces.push(i)
+            }
     }
     }
     data_filtered = []
@@ -208,13 +222,12 @@ function fillCrimeSelect(dimensions){
     }
     
 }
-//per evitare il cross origin
-//var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/Parallel%20coordinates/dataset1219.csv"
-var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
+
 //fillRegionSelect(dataset_path)
 
 
 function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
+    svg_PC.selectAll("*").remove();
     const PCtooltip = d3.select('#PCtooltip');
     d3.text(dataset_path, function(raw) {//retrive sum of delicts
         var dsv = d3.dsvFormat(';');
@@ -223,7 +236,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     //fillRegionSelect(data)
         
     data = filterByYear(year, data)
-    //if(regions.length>0) data = filterByRegion(command_regions, regions, data)
+    if(regions.length>0) data = filterByRegion(command_regions, regions, data)
     dimensions = d3.keys(data[0]).filter(function(d) { return d != "territorio" && d!= "totale" && d!="anno" && d!= "popolazione"})
     //fillCrimeSelect(dimensions)
     //dimensions = filterByCrime(command_crimes,crimes,data)
@@ -234,7 +247,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     for (i in dimensions) {
         var name = dimensions[i]
         y[name] = d3.scaleLinear()
-        ///////d3.extent  returns the minimum and maximum value in an array, in this case i take from the dataset the i-th feature domain
+        //d3.extent  returns the minimum and maximum value in an array, in this case i take from the dataset the i-th feature domain
         .domain( d3.extent(data, function(d) {
                 
                 if(!isAbsolute){
@@ -249,7 +262,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     }
     
     //asse x -> it find the best position for each Y axis
-    x = d3.scalePoint() /////Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
+    x = d3.scalePoint() //Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
         .domain(dimensions)  ///.domain(["territorio", "anno", "popolazione",..])
         .range([0, (270-6*dimensions.length)*dimensions.length])///general width of the graph, varia a seconda di quanti crimini metti
         .padding(0.5);
@@ -283,7 +296,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     } 
     // Draw the lines
 
-sv
+svg_PC
     .selectAll("myPath")
     .data(data)
     .enter().append("path")
@@ -302,7 +315,7 @@ sv
     });
 
 // Draw the axis:
-sv.selectAll("myAxis")
+svg_PC.selectAll("myAxis")
     // For each dimension of the dataset I add a 'g' element:
     .data(dimensions).enter()
     .append("g")
