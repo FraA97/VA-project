@@ -312,8 +312,15 @@ svg_PC
         //! francesco--> seleziona la regione sulla mappa, d["territorio"] è il nome
     })                
     .on("mouseout", function(d) {
-    d3.select(this).style("stroke", "#0000CD")
-    removeTooltip()
+        d3.select(this).style("stroke", "#0000CD")
+        removeTooltip()
+    })
+    .on("click", function(d) {//when clicked, the territory is removed
+
+        REGIONS = REGIONS.filter(n => n!=d["territorio"].trim())
+        draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+        removeTooltip()
+        //!francesco--> elimina la regione dalla visualizzazione
     });
 
 // Draw the axis:
