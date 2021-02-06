@@ -23,17 +23,7 @@ for (let i = 2012; i < 2020; i++) {
     el.value = i;
    // select.appendChild(el);
 }
-/*select.value = YEAR
-//absolute button
-var abs = document.getElementById("absolute");
-abs.textContent="absolute: " + ABSOLUTE
-//cmd_region button
-var abs = document.getElementById("cmd_region");
-abs.textContent=CMD_REGIONS
-//cmd_crime button
-var abs = document.getElementById("cmd_crime");
-abs.textContent=CMD_CRIMES*/
-//-----------
+
 
 // set the dimensions and margins of the graph
 var margin = {top: 130, right: 10, bottom: 10, left: 0},
@@ -262,7 +252,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 return +d[name];
                 }
                 else{
-                r = d[name]/d["popolazione"]
+                r = d[name]/d["popolazione"]*10000
                 return +r;
                 }
             }))
@@ -284,7 +274,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         //d[p] è il valore del crimine nella riga d, tipo d = data[i] e p = omicidio, d[p] = 30
         if(!isAbsolute) return [x(p), y[p](d[p])]; 
         else{
-            return [x(p), y[p](d[p]/d["popolazione"])]
+            return [x(p), y[p](  (d[p]/d["popolazione"]) *10000)]
         }
         }));
         /////per ogni riga del csv (d), per ogni feature assegno la sua x e le sue y
@@ -319,13 +309,11 @@ svg_PC
     .on("mouseover", function(d) {
         d3.select(this).style("stroke", "#FF0000")
         drawTooltip(d["territorio"],d["anno"])
-        $(window).scroll(function(event) {
-            drawTooltip(d["territorio"],d["anno"])
-        });
+        //! francesco--> seleziona la regione sulla mappa, d["territorio"] è il nome
     })                
     .on("mouseout", function(d) {
     d3.select(this).style("stroke", "#0000CD")
-    //removeTooltip()
+    removeTooltip()
     });
 
 // Draw the axis:
