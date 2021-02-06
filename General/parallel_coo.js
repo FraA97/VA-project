@@ -4,6 +4,7 @@ var lastScrolledLeft = 0;
 var lastScrolledTop = 0;
 $(document).mousemove(function(event) {
     captureMousePosition(event);
+    console.log("y = " + yMousePos)
 })  
 
 $(window).scroll(function(event) {
@@ -18,7 +19,7 @@ $(window).scroll(function(event) {
         yMousePos += lastScrolledTop;
     }
     window.status = "x = " + xMousePos + " y = " + yMousePos;
-    console.log(window.status)
+    
 });
 function captureMousePosition(event){
     xMousePos = event.pageX;
@@ -317,10 +318,12 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         else PCtooltip.html(regione)
         var d = document.getElementById('PCtooltip');
         PCtooltip.style('display', 'block');
-        d.style.position = "fixed"; 
-        d.style.left = event.pageX+10+'px';
-        d.style.top = (event.pageY)+10+'px';
-        //console.log(d.style.top)
+        d.style.position = "absolute"; 
+        d.style.top = event.pageY-572+"px"
+        d.style.left = event.pageX+"px"
+        
+        
+        
     }
     function removeTooltip() {
         if (PCtooltip) PCtooltip.style('display', 'none');
@@ -337,8 +340,11 @@ svg_PC
     .style("stroke-width", "3")
     .style("opacity", 0.5)
     .on("mouseover", function(d) {
-    d3.select(this).style("stroke", "#FF0000")
-    drawTooltip(d["territorio"],d["anno"])
+        d3.select(this).style("stroke", "#FF0000")
+        drawTooltip(d["territorio"],d["anno"])
+        $(window).scroll(function(event) {
+            drawTooltip(d["territorio"],d["anno"])
+        });
     })                
     .on("mouseout", function(d) {
     d3.select(this).style("stroke", "#0000CD")

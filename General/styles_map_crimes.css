@@ -174,10 +174,9 @@ circle {
   top: 560px;
   height: 400px;
 }
-#tooltip {
+#PCtooltip {
   border-radius: 25px;
   background: lightgray; 
-  position:absolute;
   display:none;
   padding: 5px;
   font-family: sans-serif;
