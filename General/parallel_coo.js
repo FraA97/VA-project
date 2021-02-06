@@ -292,7 +292,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         PCtooltip.style('display', 'block');
         d.style.position = "absolute";
         d.style.left = event.clientX+'px';
-        d.style.top = (event.clientY-420)+'px';
+        d.style.top = (event.clientY)+'px';
         //console.log(d.style.top)
     }
     function removeTooltip() {
