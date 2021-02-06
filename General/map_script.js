@@ -83,7 +83,7 @@ var selectAllProv = d3.select('.leaflet-top')
                     .attr('type','checkbox').attr( 'id','selectAll')
                   
 //manage events of selectAllProv
-d3.select("#selectAll").on("change", selectAllTer); //select or unselect all reg/prov
+d3.select("#selectAll").on("change", selectAllTer)//select or unselect all reg/prov
 
 //---------------------------------------------------------------
 //---------------------------------------------------------------

@@ -1,15 +1,14 @@
 //  -------------------------------------------parametri globali che l'utente puo cambiare
 YEAR = [2019]
 CMD_REGIONS = "only"
-//REGIONS = ["Italia"]
 REGIONS = []
+KIND_OF_TERRITORY = "region"
 CMD_CRIMES = "only"
-//CRIMES = ["strage","omicidi","rapine"]
 ABSOLUTE = false
 CRIMES = []
 //per evitare il cross origin
 var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
-//var dataset_path = "../dataset1219.csv"
+var dataset_path = "../dataset1219.csv"
 //inizializzazione elementi del dom
 //fill dropmenu degli anni 
 var select = document.getElementById("year");
@@ -72,9 +71,11 @@ function changeKindOfTerritory(newData){
             length_name=  (data[i].territorio.substring(0,7).match(/\s/g) || []).length //conta i white spaces: 6 provincie,4regioni, 2macroregioni,0 Italia
             if(newData == 0 && length_name == 6 && !REGIONS.includes(data[i].territorio.trim())){//provinces
                 REGIONS.push(data[i].territorio.trim())
+                KIND_OF_TERRITORY = "prov"
             }
             if(newData == 1 && length_name == 4 && !REGIONS.includes(data[i].territorio.trim())){//regions
                 REGIONS.push(data[i].territorio.trim())
+                KIND_OF_TERRITORY = "region"
             }
         }
     })
@@ -124,34 +125,32 @@ function filterByYear(year,data){
     return data_filtered
 } 
 //filtra in base al territorio, only fa solo le regioni passate, except fa tutte tranne quelle passate
-function filterByRegion(command,regions,data){
+function filterByRegion(command,regions,data,kindOfTerr){
     //console.log(regions)    
-    const indeces = []
+    list_all_territories = []
     for (let i = 0; i < data.length; i++) {
-        for (let r = 0; r < regions.length; r++) {
-            if(data[i].territorio.trim() == regions[r].trim()){
-            indeces.push(i)
-            }
-    }
+        length_name =  (data[i].territorio.substring(0,7).match(/\s/g) || []).length
+        if(kindOfTerr == "prov" && length_name == 6){
+            list_all_territories.push(data[i])
+        }
+        if(kindOfTerr == "region" && length_name == 4){
+            list_all_territories.push(data[i])
+        }
     }
     data_filtered = []
-    indeces.forEach(function(el,i) {
-        if(command == "only"){
-            data_filtered.push(data[el])
+    console.log(list_all_territories)
+    for (let i = 0; i < list_all_territories.length; i++) {
+        const terr = list_all_territories[i];
+        for (let r = 0; r < regions.length; r++) {
+            if(terr.territorio.trim() == regions[r].trim()){
+                data_filtered.push(terr)
+            }
         }
-        else if(command == "except"){
-            data_filtered = data
-            data_filtered.splice(el-i,1) 
-        }
-    });
-    //TODO WHEN EXCEPT DEVO CANCELLARE ANCHE LE PROVINCIE.
-    /* for (let i = 0; i < data_filtered.length; i++) {
-        const element = data_filtered[i];
-        length_name=  (element.territorio.substring(0,7).match(/\s/g) || []).length
-        length_name
-    } */
-    //console.log(data_filtered)
-    return data_filtered
+    }
+    if(command == "only") return data_filtered
+    else if(command == "except") return list_all_territories.filter(n => !data_filtered.includes(n)) 
+    
+    
 }
 
 //filtra in base al crimie, only fa solo i crimini passati, except fa tutti tranni quelli passati
@@ -231,7 +230,7 @@ function fillCrimeSelect(dimensions){
 
 function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     svg_PC.selectAll("*").remove();
-    console.log(REGIONS)
+    //console.log(REGIONS)
     const PCtooltip = d3.select('#PCtooltip');
     d3.text(dataset_path, function(raw) {//retrive sum of delicts
         var dsv = d3.dsvFormat(';');
@@ -240,7 +239,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     //fillRegionSelect(data)
         
     data = filterByYear(year, data)
-    if(regions.length>0) data = filterByRegion(command_regions, regions, data)
+    if(regions.length>0) data = filterByRegion(command_regions, regions, data,KIND_OF_TERRITORY)
     dimensions = d3.keys(data[0]).filter(function(d) { return d != "territorio" && d!= "totale" && d!="anno" && d!= "popolazione"})
     //fillCrimeSelect(dimensions)
     //dimensions = filterByCrime(command_crimes,crimes,data)
