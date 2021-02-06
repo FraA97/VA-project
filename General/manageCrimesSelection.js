@@ -62,6 +62,8 @@ d3.text(dataset_path, function(raw) {
     selected_crimes.push(e.params.data.id); //update list of selected crimes adding 
     selected_crimes = removeDuplicates(selected_crimes);//remove eventual duplicates
     computeColourScales(); //update computation of colours
+    CRIMES = selected_crimes
+    draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
     //updateCrimeParCoord(e); (valerio [menu])
     
   });
@@ -70,6 +72,8 @@ d3.text(dataset_path, function(raw) {
   $('.selectCrimes').on('select2:unselect', function (e) {
     selected_crimes = selected_crimes.filter(el => el !=e.params.data.id);//update list of selected crimes removing 
     computeColourScales();
+    CRIMES = selected_crimes
+    draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
     //updateCrimeParCoord(e); (valerio [menu])
   });
 });

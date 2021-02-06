@@ -107,7 +107,7 @@ d3.select('#computationCrimes')
     else changeAbsolute(true)
 });
 computeColourScales();//compute colour scales considering only num crimes
-//compute parCoord(); //(valerio [start function]) compute par. coord. considering only num crimes
+//compute parCoord(); //(valerio [start function]) compute par. coord. considering only num crimes DONE
 
 //visualize for region or province map
 d3.select('#visualization')
@@ -123,15 +123,15 @@ d3.select('#visualization')
     } 
     REGIONS = changeKindOfTerritory(newData)
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-    //loadParallelCoordinates(newData); (valerio [menu]) (must load par. coord. with prov or reg)
+    //loadParallelCoordinates(newData); (valerio [menu]) (must load par. coord. with prov or reg) DONE
 });
 //console.log(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
 REGIONS = changeKindOfTerritory(visualization)
 draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
 loadMap(visualization);//Region map
-//loadParallelCoordinates(newData); (valerio [start function])
+//loadParallelCoordinates(newData); (valerio [start function]) DONE
 
-//Years (valerio=>function to implement is on 'updateSelectedYears' function)
+//Years (valerio=>function to implement is on 'updateSelectedYears' function) DONE
 d3.selectAll(".yearCheckbox").on("change",updateSelectedYears); //update list of selected years ('selectedYears') + map
 
 d3.selectAll(".yearCheckbox").property('checked',false);//start with only 1 year selected

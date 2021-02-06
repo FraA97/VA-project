@@ -29,7 +29,7 @@ function createMapReg(geojson) {
       .attr('shape_leng',function(d){return d.properties.SHAPE_LENG;})
       .attr('clicked',"0")
       .attr("onclick",function(d,i){
-        return "updateMapReg('regione',"+d.properties.COD_REG+");" +"add_delete_territory('"+d3.select(this).attr('name')+"');" //(valerio)[on '' add function for manage click of a region---possible parameter = 'd3.select(this).attr('name') = nome della regione]]
+        return "updateMapReg('regione',"+d.properties.COD_REG+");" +"add_delete_territory('"+d3.select(this).attr('name')+"');" //DONE (valerio)[on '' add function for manage click of a region---possible parameter = 'd3.select(this).attr('name') = nome della regione]]
       });
       
       if(count==0){
@@ -88,7 +88,7 @@ if(container) {
   // .attr('population',0)
     .attr('clicked',"0")
     .attr("onclick",function(d,i){
-      return "updateMapProv('"+d3.select(this).attr("id")+"');"+"add_delete_territory('"+d3.select(this).attr('name')+"');" //(valerio)[on '' add function for manage click of a province---possible parameter = 'd3.select(this).attr('name') = nome della provincia]
+      return "updateMapProv('"+d3.select(this).attr("id")+"');"+"add_delete_territory('"+d3.select(this).attr('name')+"');" //DONE (valerio)[on '' add function for manage click of a province---possible parameter = 'd3.select(this).attr('name') = nome della provincia]
     })
     .on(["mousemove" || "click"], showTooltipProv);
     
@@ -395,6 +395,7 @@ function computeColourScales(){
                           '#f03b20',
                           '#bd0026']);
     updateClickedProv();
+    CRIMES = selected_crimes
   });
 
   //REGIONS
@@ -509,7 +510,7 @@ function updateClickedProv(){
 function updateSelectedYears(){ //change value of list of selected years
   //manage select all years checkbox
   var selectedC=d3.select(this);
-  console.log(selectedC)
+  //console.log(selectedC)
   if(selectedC.attr('id')=='tot'){
     if(selectedC.property('checked') == true){
       d3.selectAll(".yearCheckbox").property('checked',true);
@@ -541,7 +542,7 @@ function updateSelectedYears(){ //change value of list of selected years
   computeColourScales(); //for map 
   YEAR = selectedYears
   draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-    //updateYearsParCoord(); (valerio [menu]) la funzione nelle righe sopra cambia la lista 'selectedYears' che contiene gli anni selezionati in ogni momento
+    //updateYearsParCoord(); DONE (valerio [menu]) la funzione nelle righe sopra cambia la lista 'selectedYears' che contiene gli anni selezionati in ogni momento
  
 }
 

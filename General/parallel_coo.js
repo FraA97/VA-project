@@ -138,7 +138,7 @@ function filterByRegion(command,regions,data,kindOfTerr){
         }
     }
     data_filtered = []
-    console.log(list_all_territories)
+    //console.log(list_all_territories)
     for (let i = 0; i < list_all_territories.length; i++) {
         const terr = list_all_territories[i];
         for (let r = 0; r < regions.length; r++) {
@@ -242,7 +242,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     if(regions.length>0) data = filterByRegion(command_regions, regions, data,KIND_OF_TERRITORY)
     dimensions = d3.keys(data[0]).filter(function(d) { return d != "territorio" && d!= "totale" && d!="anno" && d!= "popolazione"})
     //fillCrimeSelect(dimensions)
-    //dimensions = filterByCrime(command_crimes,crimes,data)
+    dimensions = filterByCrime(command_crimes,crimes,data)
 
 
     //ogni asse verticale delle parallel coo. lo salvo dentro y 
@@ -267,7 +267,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     //asse x -> it find the best position for each Y axis
     x = d3.scalePoint() //Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
         .domain(dimensions)  ///.domain(["territorio", "anno", "popolazione",..])
-        .range([0, (270-6*dimensions.length)*dimensions.length])///general width of the graph, varia a seconda di quanti crimini metti
+        .range([0, (280-11*dimensions.length)*dimensions.length])///general width of the graph, varia a seconda di quanti crimini metti
         .padding(0.5);
 
 
@@ -315,7 +315,7 @@ svg_PC
     })                
     .on("mouseout", function(d) {
     d3.select(this).style("stroke", "#0000CD")
-    removeTooltip()
+    //removeTooltip()
     });
 
 // Draw the axis:
