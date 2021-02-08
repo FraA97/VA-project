@@ -623,9 +623,8 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
             if(visualization=="0" ) {
               var gReg = d3.select('#mapReg')
               .selectAll('path');
-        
               gReg.attr('class','greyReg')
-                  .style('fill',null);
+                .style('fill',null);
             }
   });
 }
@@ -814,7 +813,8 @@ function clickTer(){ //click on legend rectangles
       else return 'greyOnlyReg';
     } 
     else return d3.select(this).attr('class')
-  })   
+  })  
+   
   if(visualization=='0')  updateClickedProv();
   else  updateClickedReg();
 }

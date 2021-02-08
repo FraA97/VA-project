@@ -13,13 +13,17 @@ d3.text(dataset_path, function(raw) {
       if(i>2 && i<34) list_crimes.push(key);
       i+=1;
     }
-  
+    d3.select('#crimes').append('br');
+    d3.select('#crimes').append('br');
+    d3.select('#crimes').append('br');
+    d3.select('#crimes').append('br');
+    d3.select('#crimes').append('br');
+    //d3.select('#crimes').append('br');
     var label = d3.select('#crimes')
                   .append('label')
                   .attr('for','selCrime')
                   .append('b')
-                  .text('Select Crimes:')
-                  .style("margin","100px");
+                  .text('Select Crimes:');
     label.append('br')
     //label.style("padding","100px")
 
@@ -27,7 +31,7 @@ d3.text(dataset_path, function(raw) {
     .append('button')
     .attr('class','clearCrime button')
     .append('b')
-    .text('clear')
+    .text('Clear')
     .on('click',function(d){
       selected_crimes = []; //clear list of selected crimes  
       console.log(selected_crimes);
@@ -64,13 +68,13 @@ d3.text(dataset_path, function(raw) {
           draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
           $('.selectCrimes').val(selected_crimes).trigger('change');
     });
-
+    d3.select('#crimes').append('br')
     var select =d3.select('#crimes')
                   .append('select')
                   .attr('id', 'selCrime')
                   .attr('class','selectCrimes')
                   .property('multiple','multiple')
-                  .style('width','400px')
+                  .style('width','500px')
                   
     var options = select.selectAll("option").data(list_crimes)
     //console.log(options)
