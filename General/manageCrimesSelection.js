@@ -49,7 +49,6 @@ d3.text(dataset_path, function(raw) {
           
           $('.selectCrimes').val(list_crimes).trigger('change');
           CRIMES = selected_crimes
-          console.log(CRIMES)
           draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
     });
     var mainCrButton = d3.select('#crimes')
@@ -61,6 +60,8 @@ d3.text(dataset_path, function(raw) {
           selected_crimes = list_crimes.slice(0,16); //add all crimes to the list
           computeColourScales(); //recompute 
           //(valerio) //select main crimes
+          CRIMES = selected_crimes
+          draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
           $('.selectCrimes').val(selected_crimes).trigger('change');
     });
 

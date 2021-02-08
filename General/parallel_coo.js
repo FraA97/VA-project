@@ -27,7 +27,7 @@ for (let i = 2012; i < 2020; i++) {
 
 // set the dimensions and margins of the graph
 var margin = {top: 130, right: 10, bottom: 10, left: 0},
-    width = 5000 - margin.left - margin.right,
+    width = 5050 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 // append the svg_PC object to the body of the page
 var svg_PC = d3.select("#my_dataviz")
@@ -263,8 +263,8 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     //asse x -> it find the best position for each Y axis
     x = d3.scalePoint() //Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
         .domain(dimensions)  ///.domain(["territorio", "anno", "popolazione",..])
-        .range([0, width])///general width of the graph, varia a seconda di quanti crimini metti
-        
+        .range([0, Math.min(1650,99*dimensions.length)])///general width of the graph, varia a seconda di quanti crimini metti
+        .padding(0.5);
         //.range([0, (350-11*dimensions.length)*dimensions.length])///general width of the graph, varia a seconda di quanti crimini metti
 
 
