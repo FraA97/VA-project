@@ -1,5 +1,5 @@
-url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
-url_province = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
+//url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
+//url_province = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
 url_regioni = "./datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
 url_province = "./datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
 function createMapReg(geojson) {
@@ -90,7 +90,7 @@ if(container) {
     .attr("onclick",function(d,i){
       return "updateMapProv('"+d3.select(this).attr("id")+"');"+"add_delete_territory('"+d3.select(this).attr('name')+"');" //DONE (valerio)[on '' add function for manage click of a province---possible parameter = 'd3.select(this).attr('name') = nome della provincia]
     })
-    .on(["mousemove" || "click"], showTooltipProv);
+    .on("mousemove", showTooltipProv);
     
 }
 
@@ -109,6 +109,8 @@ function updateMapReg(r,i){  //apply transition + interaction
             .attr('sumDelPop',null)
             .attr('population',null)
             .attr('clicked','0');
+        d3.select("#selectAll").property('checked',false);//remove check when a territory is deselected
+        
     }			
 }	
 
@@ -132,6 +134,7 @@ function updateMapProv(p,i){  //apply transition + interaction
           .attr('sumDelPop',null)
           .attr('population',null)
           .attr('clicked','0');
+      d3.select("#selectAll").property('checked',false);//remove check when a territory is deselected
   }			
 }	
 
@@ -151,6 +154,7 @@ function showTooltipReg(d) {
       else{
         label="<center><b>"+d.properties.DEN_REG+"</b></center>"
                 +"Num. Crimes: "+ Number(region.attr('sumDel')).toLocaleString() +"<br>"
+                +"Num. Crimes each 10k citizen: "+ Number(Math.ceil(region.attr('sumDelPop')) ).toLocaleString() +"<br>"
                 +"Region Area: "+ Number(region.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup> "+"<br>"
                 +"Region Population: "+ Number(region.attr('population')).toLocaleString() 
         tooltip.classed("hidden", false)
@@ -176,18 +180,14 @@ function showTooltipProv(d) {
           .html(label);
   }
   else{
-    if(d.properties.DEN_PROV=="-"){
-      label="<center><b>"+d.properties.DEN_CM+"</b> ("+nameReg+")</center>"
-            +"Num. Crimes: "+ Number(province.attr('sumDel')).toLocaleString() +"<br>"
-            +"Province Area: "+ Number(province.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup> " + "<br>"
-            +"Province Population: "+ Number(province.attr('population')).toLocaleString() 
-    }
-    else{
-      label="<center><b>"+d.properties.DEN_PROV+"</b> ("+nameReg+")</center>"
-            +"Num. Crimes: "+ Number(province.attr('sumDel')).toLocaleString() +"<br>"
-            +"Province Area: "+ Number(province.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup> " + "<br>"
-            +"Province Population: "+ Number(province.attr('population')).toLocaleString() 
-    }
+    if(d.properties.DEN_PROV=="-") label="<center><b>"+d.properties.DEN_CM+"</b> ("+nameReg+")</center>";
+                
+    else label="<center><b>"+d.properties.DEN_PROV+"</b> ("+nameReg+")</center>";  
+    label=label +"Num. Crimes: "+ Number(province.attr('sumDel')).toLocaleString() +"<br>"
+                +"Num. Crimes each 10k citizen: "+ Number(Math.ceil(province.attr('sumDelPop')) ).toLocaleString() +"<br>"
+                +"Province Area: "+ Number(province.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup> " + "<br>"
+                +"Province Population: "+ Number(province.attr('population')).toLocaleString();
+
     tooltip.classed("hidden", false)
           .attr("style", "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px")
           .html(label);
@@ -213,7 +213,7 @@ function removeProvinces(array) {
 //load region map(newData=1) or province map (newData=0) 
 function loadMap(newData){
   if(newData=="1"){ //load region map
-    url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
+    //url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
       var mapReg = d3.json(url_regioni, function(data) {
         if(count==0){
           createMapReg(data);
@@ -254,7 +254,7 @@ function loadMap(newData){
   else{ //load province map
     if(count==1){
       //url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
-      url_province = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
+      //url_province = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
 
       var mapProv = d3.json(url_province, function(data) {
         createMapProv(data);
@@ -337,7 +337,7 @@ function computeColourScales(){
                   tot_selected_crimes_per_year=0;
 
                   if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
-                  return d.totale;
+                  return 0;
                   }
                   else{ //if some crimes are been selected
                     for (const [key, value] of Object.entries(d)) {
@@ -355,7 +355,7 @@ function computeColourScales(){
                   tot_selected_crimes_per_year=0;
 
                   if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
-                    return d.totale/d.popolazione;
+                    return 0;
                   }
                   else{ //if some crimes are been selected
                     for (const [key, value] of Object.entries(d)) {
@@ -423,7 +423,7 @@ function computeColourScales(){
                     if(selectedYears.includes(d.anno)){//FILTER YEARS
                       tot_selected_crimes_per_year=0;
                       if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
-                        return d.totale;
+                        return 0;
                       }
                       else{ //if some crimes are been selected
                         for (const [key, value] of Object.entries(d)) {
@@ -439,7 +439,7 @@ function computeColourScales(){
                     if(selectedYears.includes(d.anno)){//FILTER YEARS
                       tot_selected_crimes_per_year=0;
                       if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
-                        return d.totale/d.popolazione;
+                        return 0;
                       }
                       else{ //if some crimes are been selected
                         for (const [key, value] of Object.entries(d)) {
@@ -564,7 +564,7 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
               tot_selected_crimes_per_year=0;
 
               if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
-                return d.totale;
+                return 0;
               }
               else{ //if some crimes are been selected
                 for (const [key, value] of Object.entries(d)) {
@@ -581,7 +581,7 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
             if(selectedYears.includes(d.anno)){//FILTER YEARS
               tot_selected_crimes_per_year=0;
               if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
-                return d.totale/d.popolazione;
+                return 0;
               }
               else{ //if some crimes are been selected
                 for (const [key, value] of Object.entries(d)) {
@@ -715,7 +715,7 @@ function updateLegend(minMax){ //update the legend of map
     // select the svg area
   var legend = d3.select("#legendMap")//.style('font-family','verdana')
   legend.selectAll('g text').remove();
-  //legend.selectAll('g rect').remove();
+  legend.selectAll('g rect').remove();
   // Usually you have a color scale in your chart already
   var color = d3.scaleOrdinal()
     .domain(keys)
@@ -723,16 +723,14 @@ function updateLegend(minMax){ //update the legend of map
 
   // Add one dot in the legend for each name.
   var size = 20
-  if (count==0){
-    data=['1']
-    legend.selectAll('rec').data(["a"]).enter().append('rect')
-          .attr('id',"recLegendMap")
-          .attr("x",0)
-          .attr("y", 390) 
-          .attr("width", widthMap/3 +10 )
-          .attr("height", heightMap/3 -30)
-          .style('stroke','');
-  }
+  legend.selectAll('rec').data(["a"]).enter().append('rect')
+        .attr('id',"recLegendMap")
+        .attr("x",0)
+        .attr("y", 390) 
+        .attr("width", widthMap/3 +10 )
+        .attr("height", heightMap/3 -30)
+        .style('stroke','');
+
   legend.selectAll("mydots")
     .data(keys)
     .enter()
@@ -743,6 +741,10 @@ function updateLegend(minMax){ //update the legend of map
       .attr("height", size)
       .style("fill", function(d){ return color(d)})
       .style('stroke','#000000')
+      .on('mouseover',highlightTer)
+      .on('mouseout',unlightTer)
+      .on('click',clickTer)
+
 
   // Add one dot in the legend for each name.
   legend.selectAll("mylabels")
@@ -763,9 +765,62 @@ function updateLegend(minMax){ //update the legend of map
      
 }
 
-
-function split(string){
+function split(string){ //from a list of string to a list of Float
   list= string.split(',');
   list =[parseFloat(list[0]), parseFloat(list[1] )]
   return list;
+}
+
+function highlightTer(){ //mouseover on legend rectangles
+  var rect = d3.select(this);
+  var color = rect.style('fill');
+  //console.log(color);
+  if(visualization=='0') var mapTer=d3.select('#mapProv').selectAll('path');
+  else var mapTer=d3.select('#mapReg').selectAll('path');
+  
+  mapTer.style('fill',function(d){
+    var terFill = d3.select(this).style('fill');
+    if(terFill == color) return 'violet';
+    else return terFill;
+  })   
+}
+
+function unlightTer(){ //mouseout on legend rectangles
+  var rect = d3.select(this);
+  var color = rect.style('fill');
+  //console.log(color);
+  if(visualization=='0') var mapTer=d3.select('#mapProv').selectAll('path');
+  else var mapTer=d3.select('#mapReg').selectAll('path');
+  
+  mapTer.style('fill',function(d){
+    var terFill = d3.select(this).style('fill');
+    console.log(terFill)
+    if(terFill == 'violet') return color;
+    else return terFill;
+  })   
+}
+
+function clickTer(){ //click on legend rectangles
+  var rect = d3.select(this);
+  var color = rect.style('fill');
+  if(visualization=='0') var mapTer=d3.select('#mapProv').selectAll('path');
+  else var mapTer=d3.select('#mapReg').selectAll('path');
+  
+  mapTer.attr('clicked',function(d){
+    var terFill = d3.select(this).style('fill');
+    if(terFill == 'violet') {d3.select("#selectAll").property('checked',false); return '1';}
+    else return '0';
+  })   
+  mapTer.attr('class',function(d){
+    var terFill = d3.select(this).style('fill');
+    if(terFill != 'violet'){
+      d3.select(this).style('fill',null);
+      if(visualization=='0')  return 'greyProv';
+      else return 'greyOnlyReg';
+    } 
+    else return d3.select(this).attr('class')
+  })   
+  if(visualization=='0')  updateClickedProv();
+  else  updateClickedReg();
+ // d3.select('#selectAll').properties('checked',false)
 }

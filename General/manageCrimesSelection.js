@@ -2,15 +2,15 @@
   //MenuCrimeSelection
 
 //generate list of crimes reading dataset of crimes
-var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
-var dataset_path = "../dataset1219.csv"
+//var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
+var dataset_path = "datasets/dataset_crimes/dataset1219.csv"
 
 d3.text(dataset_path, function(raw) {
     var dsv = d3.dsvFormat(';');
     var data =dsv.parse(raw);
     var i = 0;
     for (const [key, value] of Object.entries(data[0])) {
-      if(i>2 && i<35) list_crimes.push(key);
+      if(i>2 && i<34) list_crimes.push(key);
       i+=1;
     }
   
@@ -21,11 +21,29 @@ d3.text(dataset_path, function(raw) {
                   .text('Select Crimes:');
     label.append('br')
 
-   /* var button = d3.select('#crimes')
+    var clearButton = d3.select('#crimes')
     .append('button')
     .attr('class','clearCrime button')
     .append('b')
-    .text('clear');*/
+    .text('clear')
+    .on('click',function(d){
+      selected_crimes = []; //clear list of selected crimes  
+      console.log(selected_crimes);
+      computeColourScales(); //recompute 
+      //(valerio) //clear all crimes
+      $('.selectCrimes').val(null).trigger('change'); //deselect crimes
+    });
+    var selAllButton = d3.select('#crimes')
+    .append('button')
+    .attr('class','selAllCrimes button')
+    .append('b')
+    .text('Select All')
+    .on('click',function(d){
+          selected_crimes = list_crimes; //add all crimes to the list
+          computeColourScales(); //recompute 
+          //(valerio) //select all crimes
+          $('.selectCrimes').val(list_crimes).trigger('change');
+    });
 
     var select =d3.select('#crimes')
                   .append('select')
@@ -53,6 +71,10 @@ d3.text(dataset_path, function(raw) {
   {
     $(".selectCrimes").select2(
     {
+      closeOnSelect: false,
+      minimumResultsForSearch: Infinity,
+     
+      //multiple: true
    // maximumSelectionLength: 16
     });
   });

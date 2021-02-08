@@ -1,5 +1,5 @@
-var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
-//var dataset_path = "../dataset1219.csv"
+//var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
+var dataset_path = "datasets/dataset_crimes/dataset1219.csv"
 d3.text(dataset_path, function(raw) {//retrive sum of delicts
     var dsv = d3.dsvFormat(';');
     var data =dsv.parse(raw);

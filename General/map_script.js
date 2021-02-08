@@ -9,7 +9,6 @@ var sumDel=0 //var for the sum of crimes
 var colorProv = null; //province colour scale
 var colorReg = null; //province colour scale
 var numbers = []; //for set of numbers of delicts of each territory
-var list_crimes = []; //list of all crimes retrieved from dataset (in 'manageCrimesSelection.js' file)
 var count = 0; //count number of swapping among maps 
 var population=0;
 
@@ -94,7 +93,7 @@ var visualization = '1'; //variable that contain the visualization type of the m
 var computationType=0; //variable that contain the computationType of the moment: =0 =>number of crimes; =1 => num.crimes/population 
 var selectedYears=["2019"]; //variable tha contain the years selected (start with all years selected))
 var selected_crimes = []; //variable that contain crimes selected
-
+var list_crimes = []; //list of all crimes retrieved from dataset (in 'manageCrimesSelection.js' file)
 //MENU CODE
 
 //compute for number of crimes or num.crimes/population 
