@@ -53,7 +53,7 @@
 
 
       <br><form>
-        <div class="multiselect" style="width:200px;">
+        <div class="multiselect">
           <div class="selectBox" onclick="showCheckboxes()">
             <select>
               <option>Select years of crimes </option>
@@ -61,24 +61,28 @@
             <div class="overSelect"></div>
           </div>
           <div id="yearCheckboxes">
-            <label for="tot">
-              <input class ="yearCheckbox" type="checkbox" id="tot" />Select All Years</label>
-            <label for="2012">
-              <input class ="yearCheckbox" type="checkbox" id="2012" />2012</label>
-            <label for="2013">
-              <input class ="yearCheckbox" type="checkbox" id="2013" />2013</label>
-            <label for="2014">
-              <input class ="yearCheckbox" type="checkbox" id="2014" />2014</label>
-            <label for="2015">
-              <input class ="yearCheckbox" type="checkbox" id="2015" />2015</label>
-            <label for="2016">
-              <input class ="yearCheckbox" type="checkbox" id="2016" />2016</label>
-            <label for="2017">
-              <input class ="yearCheckbox" type="checkbox" id="2017" />2017</label>
-            <label for="2018">
-              <input class ="yearCheckbox" type="checkbox" id="2018" />2018</label>
-            <label for="2019">
-              <input class ="yearCheckbox" type="checkbox" id="2019" />2019</label>
+            <div class ="layoutYears">
+              <label for="tot">
+                <input class ="yearCheckbox" type="checkbox" id="tot" />Select All Years</label>
+              <label for="2012">
+                <input class ="yearCheckbox" type="checkbox" id="2012" />2012</label>
+              <label for="2013">
+                <input class ="yearCheckbox" type="checkbox" id="2013" />2013</label>
+              <label for="2014">
+                <input class ="yearCheckbox" type="checkbox" id="2014" />2014</label>
+              <label for="2015">
+              </div>
+            <div class ="layoutYears">
+                <input class ="yearCheckbox" type="checkbox" id="2015" />2015</label>
+              <label for="2016">
+                <input class ="yearCheckbox" type="checkbox" id="2016" />2016</label>
+              <label for="2017">
+                <input class ="yearCheckbox" type="checkbox" id="2017" />2017</label>
+              <label for="2018">
+                <input class ="yearCheckbox" type="checkbox" id="2018" />2018</label>
+              <label for="2019">
+                <input class ="yearCheckbox" type="checkbox" id="2019" />2019</label>
+            </div>
           </div>
         </div>
       </form>

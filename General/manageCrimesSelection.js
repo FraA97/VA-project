@@ -18,8 +18,10 @@ d3.text(dataset_path, function(raw) {
                   .append('label')
                   .attr('for','selCrime')
                   .append('b')
-                  .text('Select Crimes:');
+                  .text('Select Crimes:')
+                  .style("margin","100px");
     label.append('br')
+    //label.style("padding","100px")
 
     var clearButton = d3.select('#crimes')
     .append('button')
@@ -30,6 +32,8 @@ d3.text(dataset_path, function(raw) {
       selected_crimes = []; //clear list of selected crimes  
       console.log(selected_crimes);
       computeColourScales(); //recompute 
+      CRIMES = []
+      draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
       //(valerio) //clear all crimes
       $('.selectCrimes').val(null).trigger('change'); //deselect crimes
     });
@@ -42,7 +46,11 @@ d3.text(dataset_path, function(raw) {
           selected_crimes = list_crimes; //add all crimes to the list
           computeColourScales(); //recompute 
           //(valerio) //select all crimes
+          
           $('.selectCrimes').val(list_crimes).trigger('change');
+          CRIMES = selected_crimes
+          console.log(CRIMES)
+          draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
     });
     var mainCrButton = d3.select('#crimes')
     .append('button')
