@@ -44,6 +44,17 @@ d3.text(dataset_path, function(raw) {
           //(valerio) //select all crimes
           $('.selectCrimes').val(list_crimes).trigger('change');
     });
+    var mainCrButton = d3.select('#crimes')
+    .append('button')
+    .attr('class','mainCrimes button')
+    .append('b')
+    .text('Main Crimes')
+    .on('click',function(d){
+          selected_crimes = list_crimes.slice(0,16); //add all crimes to the list
+          computeColourScales(); //recompute 
+          //(valerio) //select main crimes
+          $('.selectCrimes').val(selected_crimes).trigger('change');
+    });
 
     var select =d3.select('#crimes')
                   .append('select')

@@ -774,7 +774,6 @@ function split(string){ //from a list of string to a list of Float
 function highlightTer(){ //mouseover on legend rectangles
   var rect = d3.select(this);
   var color = rect.style('fill');
-  //console.log(color);
   if(visualization=='0') var mapTer=d3.select('#mapProv').selectAll('path');
   else var mapTer=d3.select('#mapReg').selectAll('path');
   
@@ -788,21 +787,17 @@ function highlightTer(){ //mouseover on legend rectangles
 function unlightTer(){ //mouseout on legend rectangles
   var rect = d3.select(this);
   var color = rect.style('fill');
-  //console.log(color);
   if(visualization=='0') var mapTer=d3.select('#mapProv').selectAll('path');
   else var mapTer=d3.select('#mapReg').selectAll('path');
   
   mapTer.style('fill',function(d){
     var terFill = d3.select(this).style('fill');
-    console.log(terFill)
     if(terFill == 'violet') return color;
     else return terFill;
   })   
 }
 
 function clickTer(){ //click on legend rectangles
-  var rect = d3.select(this);
-  var color = rect.style('fill');
   if(visualization=='0') var mapTer=d3.select('#mapProv').selectAll('path');
   else var mapTer=d3.select('#mapReg').selectAll('path');
   
@@ -822,5 +817,4 @@ function clickTer(){ //click on legend rectangles
   })   
   if(visualization=='0')  updateClickedProv();
   else  updateClickedReg();
- // d3.select('#selectAll').properties('checked',false)
 }
