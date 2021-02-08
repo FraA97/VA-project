@@ -18,8 +18,10 @@ d3.text(dataset_path, function(raw) {
                   .append('label')
                   .attr('for','selCrime')
                   .append('b')
-                  .text('Select Crimes:');
+                  .text('Select Crimes:')
+                  .style("margin","100px");
     label.append('br')
+    //label.style("padding","100px")
 
     var clearButton = d3.select('#crimes')
     .append('button')
