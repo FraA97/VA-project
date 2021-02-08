@@ -186,3 +186,6 @@ circle {
   padding: 5px;
   font-family: sans-serif;
 }
+#my_dataviz{
+  height: 500px;
+}

@@ -26,7 +26,7 @@ for (let i = 2012; i < 2020; i++) {
 
 
 // set the dimensions and margins of the graph
-var margin = {top: 130, right: 10, bottom: 10, left: 0},
+var margin = {top: 50, right: 10, bottom: 5, left: 0},
     width = 5050 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 // append the svg_PC object to the body of the page
@@ -336,7 +336,13 @@ svg_PC.selectAll("myAxis")
     .style("text-anchor", "start")
     .attr("transform", "rotate(-15)")
     .attr("y", -9)
-    .text(function(d) {return d; })
+    .text(function(d) {
+        if(d.length > 23) return d.substring(0,22)
+        return d; })
+    .on("mouseover", function(d) {
+        console.log(d+"---"+d3.select(this).textContent)
+        })
+
     .style("fill", "black")
     
 
