@@ -703,8 +703,9 @@ function selectAllTer(){
 
 function updateLegend(minMax){ //update the legend of map
   var rangeLeg=(minMax[1]-minMax[0])/5;
-  if(computationType==0) var keys =['NUM. CRIMES'];
-  else var keys =['NUM. CRIMES by 10k cit.'];
+  var keys =[];
+  if(computationType==0) var label =['NUMBER OF CRIMES'];
+  else var label =['NUM. of CRIMES by 10k citizen'];
   for(i=0; i<5;i++){
     var minvalue= minMax[0]+ (i*rangeLeg);
     var maxvalue= minvalue+rangeLeg;
@@ -719,7 +720,7 @@ function updateLegend(minMax){ //update the legend of map
   // Usually you have a color scale in your chart already
   var color = d3.scaleOrdinal()
     .domain(keys)
-    .range(['#dddddd','#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026']);
+    .range(['#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026']);
 
   // Add one dot in the legend for each name.
   var size = 20
@@ -729,14 +730,27 @@ function updateLegend(minMax){ //update the legend of map
         .attr("y", 390) 
         .attr("width", widthMap/3 +10 )
         .attr("height", heightMap/3 -30)
+        .attr("rx","15")
         .style('stroke','');
-
+        
+        
+  legend.append('text')
+          .attr("stroke","#000000")
+        .attr("stroke-width",'0.2')
+        .attr("x", function(d){ if(label =="NUMBER OF CRIMES") return 5 + size*1.2;
+                                else return  5})
+        .attr("y", function(d,i){ return 400+ i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+        .style("fill", '#000000')
+        .text(label)
+        //.attr("text-anchor", "left")
+        //.style("alignment-baseline", "middle");
+          
   legend.selectAll("mydots")
     .data(keys)
     .enter()
     .append("rect")
       .attr("x", 10)
-      .attr("y", function(d,i){ return 400 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+      .attr("y", function(d,i){ return 420 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
       .attr("width", size)
       .attr("height", size)
       .style("fill", function(d){ return color(d)})
@@ -755,7 +769,7 @@ function updateLegend(minMax){ //update the legend of map
       else return color(d)})
       .attr("stroke-width",'0.2')
       .attr("x", 15 + size*1.2)
-      .attr("y", function(d,i){ return 400+ i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+      .attr("y", function(d,i){ return 420+ i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
       .style("fill", '#000000')
       .text(function(d){ return d})
       .attr("text-anchor", "left")
