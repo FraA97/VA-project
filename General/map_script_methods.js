@@ -29,7 +29,7 @@ function createMapReg(geojson) {
       .attr('shape_leng',function(d){return d.properties.SHAPE_LENG;})
       .attr('clicked',"0")
       .attr("onclick",function(d,i){
-        return "updateMapReg('regione',"+d.properties.COD_REG+");" +"add_delete_territory('"+d3.select(this).attr('name')+"');" //DONE (valerio)[on '' add function for manage click of a region---possible parameter = 'd3.select(this).attr('name') = nome della regione]]
+        return 'updateMapReg("regione",'+d.properties.COD_REG+');' +'add_delete_territory("'+d3.select(this).attr('name')+'");' //DONE (valerio)[on '' add function for manage click of a region---possible parameter = 'd3.select(this).attr('name') = nome della regione]]
       });
       
       if(count==0){
@@ -88,7 +88,7 @@ if(container) {
   // .attr('population',0)
     .attr('clicked',"0")
     .attr("onclick",function(d,i){
-      return "updateMapProv('"+d3.select(this).attr("id")+"');"+"add_delete_territory('"+d3.select(this).attr('name')+"');" //DONE (valerio)[on '' add function for manage click of a province---possible parameter = 'd3.select(this).attr('name') = nome della provincia]
+      return 'updateMapProv("'+d3.select(this).attr('id')+'");'+'add_delete_territory("'+d3.select(this).attr('name')+'");'
     })
     .on("mousemove", showTooltipProv);
     
@@ -116,6 +116,7 @@ function updateMapReg(r,i){  //apply transition + interaction
 
 function updateMapProv(p,i){  //apply transition + interaction
   var tot = '#'+p; //id of clicked region
+  console.log(tot);
   var prov = d3.select(tot).attr("name"); //name of clicked region
   //console.log(prov);
   
