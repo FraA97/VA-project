@@ -357,6 +357,7 @@ svg_PC.selectAll("myAxis")
         CRIMES.splice(CRIMES.indexOf(d),1)
         $('.selectCrimes').val(CRIMES).trigger('change');
         draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+        computeColourScales()
     })
     .style("fill", "black")
     
