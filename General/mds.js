@@ -92,6 +92,21 @@
             .attr("text-anchor", "middle")
             .text(function(d) { return d; })
             .attr("x", function(d, i) { return xScale(xPos[i]); })
-            .attr("y", function(d, i) { return yScale(yPos[i]) - 2 *pointRadius; });
+            .attr("y", function(d, i) { return yScale(yPos[i]) - 2 *pointRadius; })
+            .attr("fill", "darkgrey")   // Font color
+            .style("font", "14px times")  // Font size
+
+        nodes.on('mouseover', function (d, i) {
+            d3.select(this).select("text").transition()
+                 .duration('100')
+                 .attr("fill", "black")
+                .style("font", "20px times");
+            })
+            .on('mouseout', function (d, i) {
+                d3.select(this).select("text").transition()
+                    .duration('200')
+                    .attr("fill", "darkgrey")
+                    .style("font", "14px times")
+                });
     };
 }(window.mds = window.mds || {}));

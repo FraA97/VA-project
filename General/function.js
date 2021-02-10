@@ -76,6 +76,8 @@ function createMDS(year){
           labels[i] = labels[i].replace(" / Vallée d'Aoste","")
           labels[i] = labels[i].replace(" / Südtirol","")
           labels[i] = labels[i].replace(" / Bozen","")
+          labels[i] = labels[i].replace("Provincia Autonoma Trento","Trento")
+          labels[i] = labels[i].replace("Provincia Autonoma Bolzano","Bolzano")
       }
 
       anno.forEach( d => delete d.territorio);
