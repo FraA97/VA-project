@@ -351,7 +351,13 @@ svg_PC.selectAll("myAxis")
         if(d.length > 23) d3.select(this).text(d.substring(0,22))
         //document.getElementById("par-coord").style.border = '3px solid black'
         })
-
+    .on("click",function(d){
+        //CRIMES.splice(CRIMES.indexOf(d),1)
+        //draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+        CRIMES.splice(CRIMES.indexOf(d),1)
+        $('.selectCrimes').val(CRIMES).trigger('change');
+        draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+    })
     .style("fill", "black")
     
 

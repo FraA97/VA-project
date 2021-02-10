@@ -557,6 +557,7 @@ function updateSelectedYears(){ //change value of list of selected years
   computeColourScales(); //for map 
   YEAR = selectedYears
   draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+  
     //updateYearsParCoord(); DONE (valerio [menu]) la funzione nelle righe sopra cambia la lista 'selectedYears' che contiene gli anni selezionati in ogni momento
  
 }
