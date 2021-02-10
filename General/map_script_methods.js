@@ -861,6 +861,7 @@ function clickTer(){ //click on legend rectangles
       return terFill != 'violet';  
     });
   }
+  
   mapTer.attr('clicked','1');
   mapBadTer.attr('clicked','0')
           .style('fill',null)
@@ -869,7 +870,11 @@ function clickTer(){ //click on legend rectangles
             else return 'greyOnlyReg';
           });
    //valerio (mapTer contiene tutti i territori che devono rimanere selezionati)
-  //valerio (mapBadTer contiene tutti i territori che devono essere deselezionati)
+  var names=[]
+  mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;})
+  REGIONS = names
+  draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+
   d3.select("#selectAll").property('checked',false);
 
   if(visualization=='0')  updateClickedProv();

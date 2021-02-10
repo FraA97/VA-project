@@ -2,6 +2,7 @@ var xMousePos = 0;
 var yMousePos = 0;
 var lastScrolledLeft = 0;
 var lastScrolledTop = 0;
+var foreground;
 
 //  -------------------------------------------parametri globali che l'utente puo cambiare
 YEAR = [2019]
@@ -330,7 +331,19 @@ svg_PC.selectAll("myAxis")
     // I translate this element to its right position on the x axis
     .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
     // And I build the axis with the call function
+    //BRUSH
     .each(function(d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })
+    .attr("class", "brush")
+      .each(function(d) { 
+          d3.select(this).call(y[d].brush = d3.brushY()
+            .extent([[-10,0], [10,height]])
+            .on("brush", brush)           
+            .on("end", brush)
+            )
+        })
+    .selectAll("rect")
+      .attr("x", -8)
+      .attr("width", 16)
     // Add axis title
     .append("text")
     .style("text-anchor", "start")
@@ -361,9 +374,29 @@ svg_PC.selectAll("myAxis")
     })
     .style("fill", "black")
     
-
-
-
     })        
+}
+
+function brush() {  
+    var actives = [];
+    svg.selectAll(".brush")
+      .filter(function(d) {
+            y[d].brushSelectionValue = d3.brushSelection(this);
+            return d3.brushSelection(this);
+      })
+      .each(function(d) {
+          // Get extents of brush along each active selection axis (the Y axes)
+            actives.push({
+                dimension: d,
+                extent: d3.brushSelection(this).map(y[d].invert)
+            });
+      });
+
+    // Update foreground to only display selected values
+    foreground.style("display", function(d) {
+        return actives.every(function(active) {
+            return active.extent[1] <= d[active.dimension] && d[active.dimension] <= active.extent[0];
+        }) ? null : "none";
+    });
 }
 //draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
