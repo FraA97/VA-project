@@ -317,15 +317,19 @@ svg_PC
                 var terName = d3.select('#'+this['id']).attr('name');
                 return terName == name;  
               });
+              showTooltipProv(id,1);
         }
         else{
             var id =d3.select('#mapReg').selectAll('path').filter(function(d){
                 var terName = d3.select('#'+this['id']).attr('name');
                 return terName == name;  
               });
+              showTooltipReg(id,1)
         }
+       
         currentColour= id.style('fill')
-        id.style('fill','violet')
+        id.style('fill','green')
+        
     })                
     .on("mouseout", function(d) {
         d3.select(this).style("stroke", "#0000CD")

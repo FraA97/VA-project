@@ -142,12 +142,20 @@ function updateMapProv(p,i){  //apply transition + interaction
 var offsetL = d3.select("#content").offsetLeft+10;
 var offsetT = d3.select("#content").offsetTop+10;
 
-function showTooltipReg(d) {
-      region = d3.select(this)
-      var mouse = d3.mouse(d3.select('#map').node())
+function showTooltipReg(d,flag) {
+  
+      if(flag==1){
+        region = d;
+        var mouse = [widthMap,heightMap]
+      }
+      else{
+        region = d3.select(this);
+        var mouse = d3.mouse(d3.select('#map').node())
                     .map( function(d) { return parseInt(d); } );
+      }
+      
       if(region.attr('clicked')=='0'){
-        label = "<b>"+d.properties.DEN_REG+"</b>";
+        label = "<b>"+region.attr('name')+"</b>";
         tooltip.classed("hidden", false)
               .html(label)
               .attr("style", function(d){
@@ -156,7 +164,7 @@ function showTooltipReg(d) {
               })
       }
       else{
-        label="<center><b>"+d.properties.DEN_REG+"</b></center>"
+        label="<center><b>"+region.attr('name')+"</b></center>"
                 +"Num. Crimes: "+ Number(region.attr('sumDel')).toLocaleString() +"<br>"
                 +"Num. Crimes each 10k citizen: "+ Number(Math.ceil(region.attr('sumDelPop')) ).toLocaleString() +"<br>"
                 +"Region Area: "+ Number(region.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup> "+"<br>"
@@ -164,37 +172,42 @@ function showTooltipReg(d) {
         tooltip.classed("hidden", false)
               .html(label)
               .attr("style", function(d){
-                if(mouse[0]>= widthMap/2){ return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";}
+                if(mouse[0]>= widthMap/2){
+                  if(flag==1) return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-120)+"px";
+                  else return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";
+                }
                 else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";
               });
       }
 }
 
-function showTooltipProv(d) { 
-  province = d3.select(this);
-  var nameReg=retrieveNameReg(province);
-  var mouse = d3.mouse(d3.select('#map').node())
+function showTooltipProv(d,flag) { 
+  if(flag==1){
+    province = d;
+    var mouse = [widthMap,heightMap]
+  }
+  else{
+    province = d3.select(this);
+    var mouse = d3.mouse(d3.select('#map').node())
                 .map( function(d) { return parseInt(d); } );
+  }
+  var nameReg=retrieveNameReg(province);
   if(province.attr('clicked')=='0'){
-    if(d.properties.DEN_PROV=="-"){
-      label = "<b>"+d.properties.DEN_CM+"</b>"+" ("+nameReg+")";
-    }
-    else{
-      label = "<b>"+d.properties.DEN_PROV+ "</b>"+" ("+nameReg+")";
-    } 
+    label = "<b>"+province.attr('name')+ "</b>"+" ("+nameReg+")";
+  
     tooltip.classed("hidden", false)
           //.attr("style", "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px")
           .html(label)
           .attr("style", function(d){
-            if(mouse[0]>= widthMap/2){ return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";}
+            if(mouse[0]>= widthMap/2){ 
+             return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";
+            }
             else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";
           });
   }
-  else{
-    if(d.properties.DEN_PROV=="-") label="<center><b>"+d.properties.DEN_CM+"</b> ("+nameReg+")</center>";
-                
-    else label="<center><b>"+d.properties.DEN_PROV+"</b> ("+nameReg+")</center>";  
-    label=label +"Num. Crimes: "+ Number(province.attr('sumDel')).toLocaleString() +"<br>"
+  else{    
+    label="<center><b>"+province.attr('name')+"</b> ("+nameReg+")</center>"
+                +"Num. Crimes: "+ Number(province.attr('sumDel')).toLocaleString() +"<br>"
                 +"Num. Crimes each 10k citizen: "+ Number(Math.ceil(province.attr('sumDelPop')) ).toLocaleString() +"<br>"
                 +"Province Area: "+ Number(province.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup> " + "<br>"
                 +"Province Population: "+ Number(province.attr('population')).toLocaleString();
@@ -203,7 +216,10 @@ function showTooltipProv(d) {
           //.attr("style", "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px")
           .html(label)
           .attr("style", function(d){
-            if(mouse[0]>= widthMap/2){ return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";}
+            if(mouse[0]>= widthMap/2){ 
+              if(flag==1) return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-120)+"px";
+              else return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";
+            }
             else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";
           });
   }
@@ -827,7 +843,7 @@ function highlightTer(){ //mouseover on legend rectangles
       }
     })
   })
-  mapTer.style('fill','violet');
+  mapTer.style('fill','green');
   //valerio (mapTer contiene tutti i territori che hanno il colore del rettangolo del mouseover)
 
 }
@@ -838,13 +854,13 @@ function unlightTer(){ //mouseout on legend rectangles
   if(visualization=='0'){
     var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
       var terFill = d3.select('#'+this['id']).style('fill');
-      return terFill == 'violet';  
+      return terFill == 'green';  
     });
   } 
   else{
     var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
       var terFill = d3.select('#'+this['id']).style('fill');
-      return terFill == 'violet';  
+      return terFill == 'green';  
     });
   } 
   mapTer.style('fill',color);
@@ -869,21 +885,21 @@ function clickTer(){ //click on legend rectangles
   if(visualization=='0'){
     var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
       var terFill = d3.select('#'+this['id']).style('fill');
-      return terFill == 'violet';  
+      return terFill == 'green';  
     });
     var mapBadTer=d3.select('#mapProv').selectAll('path').filter(function(d){
       var terFill = d3.select('#'+this['id']).style('fill');
-      return terFill != 'violet';  
+      return terFill != 'green';  
     });
   }
   else{
     var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
       var terFill = d3.select('#'+this['id']).style('fill');
-      return terFill == 'violet';  
+      return terFill == 'green';  
     });
     var mapBadTer=d3.select('#mapReg').selectAll('path').filter(function(d){
       var terFill = d3.select('#'+this['id']).style('fill');
-      return terFill != 'violet';  
+      return terFill != 'green';  
     });
   }
   
