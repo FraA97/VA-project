@@ -149,8 +149,11 @@ function showTooltipReg(d) {
       if(region.attr('clicked')=='0'){
         label = "<b>"+d.properties.DEN_REG+"</b>";
         tooltip.classed("hidden", false)
-              .attr("style", "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px")
-              .html(label);
+              .html(label)
+              .attr("style", function(d){
+                if(mouse[0]>= widthMap/2){ return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";}
+                else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";
+              })
       }
       else{
         label="<center><b>"+d.properties.DEN_REG+"</b></center>"
@@ -159,8 +162,11 @@ function showTooltipReg(d) {
                 +"Region Area: "+ Number(region.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup> "+"<br>"
                 +"Region Population: "+ Number(region.attr('population')).toLocaleString() 
         tooltip.classed("hidden", false)
-              .attr("style", "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px")
-              .html(label);
+              .html(label)
+              .attr("style", function(d){
+                if(mouse[0]>= widthMap/2){ return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";}
+                else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";
+              });
       }
 }
 
@@ -177,8 +183,12 @@ function showTooltipProv(d) {
       label = "<b>"+d.properties.DEN_PROV+ "</b>"+" ("+nameReg+")";
     } 
     tooltip.classed("hidden", false)
-          .attr("style", "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px")
-          .html(label);
+          //.attr("style", "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px")
+          .html(label)
+          .attr("style", function(d){
+            if(mouse[0]>= widthMap/2){ return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";}
+            else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";
+          });
   }
   else{
     if(d.properties.DEN_PROV=="-") label="<center><b>"+d.properties.DEN_CM+"</b> ("+nameReg+")</center>";
@@ -190,8 +200,12 @@ function showTooltipProv(d) {
                 +"Province Population: "+ Number(province.attr('population')).toLocaleString();
 
     tooltip.classed("hidden", false)
-          .attr("style", "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px")
-          .html(label);
+          //.attr("style", "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px")
+          .html(label)
+          .attr("style", function(d){
+            if(mouse[0]>= widthMap/2){ return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";}
+            else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";
+          });
   }
 }
 
@@ -726,11 +740,11 @@ function updateLegend(minMax){ //update the legend of map
   var size = 20
   legend.selectAll('rec').data(["a"]).enter().append('rect')
         .attr('id',"recLegendMap")
-        .attr("x",0)
+        .attr("x",5)
         .attr("y", 390) 
         .attr("width", widthMap/3 +10 )
-        .attr("height", heightMap/3 -30)
-        .attr("rx","15")
+        .attr("height", heightMap/3 -35)
+        .attr("rx","12")
         .style('stroke','');
         
         
