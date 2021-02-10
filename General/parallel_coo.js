@@ -311,18 +311,62 @@ svg_PC
     .on("mouseover", function(d) {
         d3.select(this).style("stroke", "#FF0000")
         drawTooltip(d["territorio"],d["anno"])
-        //! francesco--> seleziona la regione sulla mappa, d["territorio"] è il nome
+        name =d['territorio'].trim()
+        if(visualization==0){
+            var id =d3.select('#mapProv').selectAll('path').filter(function(d){
+                var terName = d3.select('#'+this['id']).attr('name');
+                return terName == name;  
+              });
+        }
+        else{
+            var id =d3.select('#mapReg').selectAll('path').filter(function(d){
+                var terName = d3.select('#'+this['id']).attr('name');
+                return terName == name;  
+              });
+        }
+        currentColour= id.style('fill')
+        id.style('fill','violet')
     })                
     .on("mouseout", function(d) {
         d3.select(this).style("stroke", "#0000CD")
         removeTooltip()
+        name =d['territorio'].trim()
+        if(visualization==0){
+            var id =d3.select('#mapProv').selectAll('path').filter(function(d){
+                var terName = d3.select('#'+this['id']).attr('name');
+                return terName == name;  
+              });
+        }
+        else{
+            var id =d3.select('#mapReg').selectAll('path').filter(function(d){
+                var terName = d3.select('#'+this['id']).attr('name');
+                return terName == name;  
+              });
+        }
+        id.style('fill',currentColour)
     })
     .on("click", function(d) {//when clicked, the territory is removed
-
         REGIONS = REGIONS.filter(n => n!=d["territorio"].trim())
         draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
         removeTooltip()
-        //!francesco--> elimina la regione dalla visualizzazione
+        name =d['territorio'].trim()
+        if(visualization==0){
+            var id =d3.select('#mapProv').selectAll('path').filter(function(d){
+                var terName = d3.select('#'+this['id']).attr('name');
+                return terName == name;  
+              });
+            updateMapProv(id.attr('id'));
+            id.attr('class','greyProv')
+        }
+        else{
+            var id =d3.select('#mapReg').selectAll('path').filter(function(d){
+                var terName = d3.select('#'+this['id']).attr('name');
+                return terName == name;  
+              });
+            console.log(id)
+            updateMapReg(id.attr('id'),'');
+            id.attr('class','greyOnlyReg')
+        }
     });
 
 // Draw the axis:
