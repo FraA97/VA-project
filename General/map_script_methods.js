@@ -803,48 +803,76 @@ function split(string){ //from a list of string to a list of Float
 function highlightTer(){ //mouseover on legend rectangles
   var rect = d3.select(this);
   var color = rect.style('fill');
-  if(visualization=='0') var mapTer=d3.select('#mapProv').selectAll('path');
-  else var mapTer=d3.select('#mapReg').selectAll('path');
-  
-  mapTer.style('fill',function(d){
-    var terFill = d3.select(this).style('fill');
-    if(terFill == color) return 'violet';
-    else return terFill;
-  })   
+  if(visualization=='0'){
+    var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
+      var terFill = d3.select('#'+this['id']).style('fill');
+      return terFill == color;  
+    });
+  } 
+  else{
+    var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
+      var terFill = d3.select('#'+this['id']).style('fill');
+      return terFill == color;  
+    });
+  }
+  mapTer.style('fill','violet');
+  //valerio (mapTer contiene tutti i territori che hanno il colore del rettangolo del mouseover)
+
 }
 
 function unlightTer(){ //mouseout on legend rectangles
   var rect = d3.select(this);
   var color = rect.style('fill');
-  if(visualization=='0') var mapTer=d3.select('#mapProv').selectAll('path');
-  else var mapTer=d3.select('#mapReg').selectAll('path');
+  if(visualization=='0'){
+    var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
+      var terFill = d3.select('#'+this['id']).style('fill');
+      return terFill == 'violet';  
+    });
+  } 
+  else{
+    var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
+      var terFill = d3.select('#'+this['id']).style('fill');
+      return terFill == 'violet';  
+    });
+  } 
+  mapTer.style('fill',color);
+  //valerio (mapTer contiene tutti i territori che sono diventati viola
   
-  mapTer.style('fill',function(d){
-    var terFill = d3.select(this).style('fill');
-    if(terFill == 'violet') return color;
-    else return terFill;
-  })   
+
 }
 
 function clickTer(){ //click on legend rectangles
-  if(visualization=='0') var mapTer=d3.select('#mapProv').selectAll('path');
-  else var mapTer=d3.select('#mapReg').selectAll('path');
-  
-  mapTer.attr('clicked',function(d){
-    var terFill = d3.select(this).style('fill');
-    if(terFill == 'violet') {d3.select("#selectAll").property('checked',false); return '1';}
-    else return '0';
-  })   
-  mapTer.attr('class',function(d){
-    var terFill = d3.select(this).style('fill');
-    if(terFill != 'violet'){
-      d3.select(this).style('fill',null);
-      if(visualization=='0')  return 'greyProv';
-      else return 'greyOnlyReg';
-    } 
-    else return d3.select(this).attr('class')
-  })  
-   
+  if(visualization=='0'){
+    var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
+      var terFill = d3.select('#'+this['id']).style('fill');
+      return terFill == 'violet';  
+    });
+    var mapBadTer=d3.select('#mapProv').selectAll('path').filter(function(d){
+      var terFill = d3.select('#'+this['id']).style('fill');
+      return terFill != 'violet';  
+    });
+  }
+  else{
+    var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
+      var terFill = d3.select('#'+this['id']).style('fill');
+      return terFill == 'violet';  
+    });
+    var mapBadTer=d3.select('#mapReg').selectAll('path').filter(function(d){
+      var terFill = d3.select('#'+this['id']).style('fill');
+      return terFill != 'violet';  
+    });
+  }
+  mapTer.attr('clicked','1');
+  mapBadTer.attr('clicked','0')
+          .style('fill',null)
+          .attr('class',function(d){
+            if(visualization=='0')  return 'greyProv';
+            else return 'greyOnlyReg';
+          });
+   //valerio (mapTer contiene tutti i territori che devono rimanere selezionati)
+  //valerio (mapBadTer contiene tutti i territori che devono essere deselezionati)
+  d3.select("#selectAll").property('checked',false);
+
   if(visualization=='0')  updateClickedProv();
   else  updateClickedReg();
 }
