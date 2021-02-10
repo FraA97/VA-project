@@ -32,12 +32,12 @@ var margin = {top: 60, right: 10, bottom: 5, left: 0},
     height = 400 - margin.top - margin.bottom;
 // append the svg_PC object to the body of the page
 var svg_PC = d3.select("#my_dataviz")
-.append("svg")
-    .attr("width", width +margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-.append("g")
-    .attr("transform",
-        "translate(" + margin.left + "," + margin.top + ")");
+                .append("svg")
+                    .attr("width", width +margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                    .attr("transform",
+                        "translate(" + margin.left + "," + margin.top + ")");
 
 
 //quando cambio anno ridisegno l'intera parallel coord.
@@ -239,7 +239,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     dimensions = d3.keys(data[0]).filter(function(d) { return d != "territorio" && d!= "totale" && d!="anno" && d!= "popolazione"})
     //fillCrimeSelect(dimensions)
     dimensions = filterByCrime(command_crimes,crimes,data)
-    console.log(dimensions)
+    //console.log(dimensions)
 
 
     //ogni asse verticale delle parallel coo. lo salvo dentro y 
@@ -306,6 +306,8 @@ svg_PC
     .style("stroke", "#0000CD")
     .style("stroke-width", "3")
     .style("opacity", 0.5)
+    .attr("name",function(d){
+        return d["territorio"]})
     .on("mouseover", function(d) {
         d3.select(this).style("stroke", "#FF0000")
         drawTooltip(d["territorio"],d["anno"])
@@ -331,19 +333,8 @@ svg_PC.selectAll("myAxis")
     // I translate this element to its right position on the x axis
     .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
     // And I build the axis with the call function
-    //BRUSH
     .each(function(d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })
-    .attr("class", "brush")
-      .each(function(d) { 
-          d3.select(this).call(y[d].brush = d3.brushY()
-            .extent([[-10,0], [10,height]])
-            .on("brush", brush)           
-            .on("end", brush)
-            )
-        })
-    .selectAll("rect")
-      .attr("x", -8)
-      .attr("width", 16)
+    
     // Add axis title
     .append("text")
     .style("text-anchor", "start")

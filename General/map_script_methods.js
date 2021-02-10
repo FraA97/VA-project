@@ -814,6 +814,19 @@ function highlightTer(){ //mouseover on legend rectangles
       return terFill == color;  
     });
   }
+
+  var names=[]
+  mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;})
+  names.forEach(function(d){
+    d3.select("#my_dataviz").selectAll('path').each(function(t){
+      if (d3.select(this).attr("name") != null){
+        if(d.trim() == d3.select(this).attr("name").trim()){
+          d3.select(this).style("stroke", "#FF0000")
+          console.log(d)
+        }
+      }
+    })
+  })
   mapTer.style('fill','violet');
   //valerio (mapTer contiene tutti i territori che hanno il colore del rettangolo del mouseover)
 
@@ -835,6 +848,18 @@ function unlightTer(){ //mouseout on legend rectangles
     });
   } 
   mapTer.style('fill',color);
+  var names=[]
+  mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;})
+  names.forEach(function(d){
+    d3.select("#my_dataviz").selectAll('path').each(function(t){
+      if (d3.select(this).attr("name") != null){
+        if(d.trim() == d3.select(this).attr("name").trim()){
+          d3.select(this).style("stroke", "#0000CD")
+          console.log(d)
+        }
+      }
+    })
+  })
   //valerio (mapTer contiene tutti i territori che sono diventati viola
   
 
