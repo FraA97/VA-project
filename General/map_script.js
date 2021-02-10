@@ -129,7 +129,7 @@ REGIONS = changeKindOfTerritory(visualization)
 draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
 loadMap(visualization);//Region map
 //loadParallelCoordinates(newData); (valerio [start function]) DONE
-
+createMDS(selectedYears)
 //Years (valerio=>function to implement is on 'updateSelectedYears' function) DONE
 d3.selectAll(".yearCheckbox").on("change",updateSelectedYears); //update list of selected years ('selectedYears') + map
 
