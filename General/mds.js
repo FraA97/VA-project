@@ -101,12 +101,13 @@
                  .duration('100')
                  .attr("fill", "black")
                 .style("font", "20px times");
+                d3.select(this).raise().classed("active", true);
             })
             .on('mouseout', function (d, i) {
                 d3.select(this).select("text").transition()
                     .duration('200')
                     .attr("fill", "darkgrey")
                     .style("font", "14px times")
-                });
+            })
     };
 }(window.mds = window.mds || {}));
