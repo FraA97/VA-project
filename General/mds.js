@@ -86,7 +86,8 @@
         nodes.append("circle")
             .attr("r", pointRadius)
             .attr("cx", function(d, i) { return xScale(xPos[i]); })
-            .attr("cy", function(d, i) { return yScale(yPos[i]); });
+            .attr("cy", function(d, i) { return yScale(yPos[i]); })
+            .attr("class", "non_brushed");
 
         nodes.append("text")
             .attr("text-anchor", "middle")
@@ -95,8 +96,9 @@
             .attr("y", function(d, i) { return yScale(yPos[i]) - 2 *pointRadius; })
             .attr("fill", "darkgrey")   // Font color
             .style("font", "14px times")  // Font size
+            .attr("class", "non_brushed");
 
-        nodes.on('mouseover', function (d, i) {
+        /*nodes.on('mouseover', function (d, i) {
             d3.select(this).select("text").transition()
                  .duration('100')
                  .attr("fill", "black")
@@ -108,6 +110,71 @@
                     .duration('200')
                     .attr("fill", "darkgrey")
                     .style("font", "14px times")
-            })
+            })*/
+
+        function highlightBrushedCircles() {
+
+            if (d3.event.selection != null) {
+
+                // revert circles to initial style
+                nodes.selectAll("circle").attr("class", "non_brushed");
+                nodes.selectAll("text").attr("class", "non_brushed");
+
+                var brush_coords = d3.brushSelection(this);
+
+                // style brushed circles
+                nodes.selectAll("circle").filter(function (){
+
+                            var cx = d3.select(this).attr("cx"),
+                                cy = d3.select(this).attr("cy");
+
+                            return isBrushed(brush_coords, cx, cy);
+                        })
+                        .attr("class", "brushed");
+                nodes.filter(function (){
+
+                    var cx = d3.select(this).select("circle").attr("cx"),
+                        cy = d3.select(this).select("circle").attr("cy");
+
+                    return isBrushed(brush_coords, cx, cy);
+                })
+                .selectAll("text").attr("class", "brushed_text");
+            }
+        }
+        function displayTable() {
+
+            if (!d3.event.selection) return;
+
+            //clearing brush
+            d3.select(this).call(brush.move, null);
+
+            var d_brushed =  d3.selectAll(".brushed").data();
+            var brushed_regions=[]
+
+            // populate array if one or more elements is brushed
+            if (d_brushed.length > 0) {
+                d_brushed.forEach(d_row => brushed_regions.push(d_row))
+            }
+            else{
+                brushed_regions = []
+            }
+            console.log(brushed_regions)
+        }
+        var brush = d3.brush()
+                          .on("brush", highlightBrushedCircles)
+                          .on("end", displayTable); 
+
+        svg.append("g")
+            .call(brush);
+
+        function isBrushed(brush_coords, cx, cy) {
+
+            var x0 = brush_coords[0][0],
+                x1 = brush_coords[1][0],
+                y0 = brush_coords[0][1],
+                y1 = brush_coords[1][1];
+
+        return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
+        }
     };
 }(window.mds = window.mds || {}));
