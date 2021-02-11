@@ -169,8 +169,34 @@
             }
             
             console.log(brushed_regions)
+            brushed_regions.forEach(function(d){
+                d3.select("#my_dataviz").selectAll('path').each(function(t){
+                  if (d3.select(this).attr("name") != null){
+                    if(d.trim() == d3.select(this).attr("name").trim()){
+                      d3.select(this).style("stroke", "#FF0000")
+                      console.log(d)
+                    }
+                  }
+                })
+              })
         }
+<<<<<<< Updated upstream
         
+=======
+        var brush = d3.brush()
+                          .on("brush", highlightBrushedCircles)
+                          .on("end", displayTable)
+
+        svg.append("g")
+            .on("mousedown", function(){
+                d3.selectAll(".brushed").attr("class", "non_brushed");
+                d3.selectAll(".brushed_text").attr("class", "non_brushed");
+                brushed_regions =[]
+                console.log(brushed_regions)
+                
+            })
+            .call(brush);
+>>>>>>> Stashed changes
 
         function isBrushed(brush_coords, cx, cy) {
 

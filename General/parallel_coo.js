@@ -436,7 +436,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                     });
               });
             var selected = [];
-            console.log(actives)
+            //console.log(actives)
             // Update foreground to only display selected values
             foreground.style("display", function(d) {
                 let isActive = actives.every(function(active) {
