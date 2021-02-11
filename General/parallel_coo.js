@@ -328,8 +328,8 @@ svg_PC
               showTooltipReg(id,1)
         }
        
-        currentColour= id.style('fill')
-        id.style('fill','green')
+        //currentColour= id.style('stroke-width')
+        id.style('stroke-width','2')
         
     })                
     .on("mouseout", function(d) {
@@ -348,7 +348,7 @@ svg_PC
                 return terName == name;  
               });
         }
-        id.style('fill',currentColour)
+        id.style('stroke-width','0.5');
     })
     
 
