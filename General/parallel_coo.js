@@ -3,6 +3,7 @@ var yMousePos = 0;
 var lastScrolledLeft = 0;
 var lastScrolledTop = 0;
 var foreground;
+var background;
 
 //  -------------------------------------------parametri globali che l'utente puo cambiare
 YEAR = [2019]
@@ -31,13 +32,13 @@ var margin = {top: 60, right: 10, bottom: 5, left: 0},
     width = 5050 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 // append the svg_PC object to the body of the page
-var svg_PC = d3.select("#my_dataviz")
-                .append("svg")
-                    .attr("width", width +margin.left + margin.right)
-                    .attr("height", height + margin.top + margin.bottom)
-                .append("g")
-                    .attr("transform",
-                        "translate(" + margin.left + "," + margin.top + ")");
+var svg_pc = d3.select("#my_dataviz")
+            .append("svg")
+            .attr("width", width +margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+var svg_PC = svg_pc.append("g")
+                .attr("transform",
+                    "translate(" + margin.left + "," + margin.top + ")");
 
 
 //quando cambio anno ridisegno l'intera parallel coord.
@@ -296,127 +297,265 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         if (PCtooltip) PCtooltip.style('display', 'none');
     } 
     // Draw the lines
+    //BRUSH
+    // Add grey background lines for context.
+    background = svg_PC.append("g")
+        .attr("class", "background")
+        .selectAll("path")
+        .data(data)
+        .enter().append("path")
+        .attr("d", path)
+        .style("stroke", "grey")
+        .style("stroke-width", "3")
+        .style("opacity", 0.5);
 
-svg_PC
-    .selectAll("myPath")
-    .data(data)
-    .enter().append("path")
-    .attr("d",  path) //The d attribute defines a path to be drawn.
-    .style("fill", "none")
-    .style("stroke", "#0000CD")
-    .style("stroke-width", "3")
-    .style("opacity", 0.5)
-    .attr("name",function(d){
-        return d["territorio"]})
-    .on("mouseover", function(d) {
-        d3.select(this).raise().classed("active", true);
-        d3.select(this).style("stroke", "#FF0000")
-        drawTooltip(d["territorio"],d["anno"])
-        name =d['territorio'].trim()
-        if(visualization==0){
-            var id =d3.select('#mapProv').selectAll('path').filter(function(d){
-                var terName = d3.select('#'+this['id']).attr('name');
-                return terName == name;  
-              });
-              showTooltipProv(id,1);
-        }
-        else{
-            var id =d3.select('#mapReg').selectAll('path').filter(function(d){
-                var terName = d3.select('#'+this['id']).attr('name');
-                return terName == name;  
-              });
-              showTooltipReg(id,1)
-        }
-       
-        //currentColour= id.style('stroke-width')
-        id.style('stroke-width','2')
+    // Add blue foreground lines for focus.
+    foreground = svg_PC.append("g")
+        .attr("class", "foreground")
+        .selectAll("path")
+        .data(data)
+        .enter().append("path")
+        .attr("d", path)
+        .style("stroke", "#0000CD")
+        .style("stroke-width", "3")
+        .style("opacity", 0.4);
+    
+    foreground.attr("name",function(d){
+            return d["territorio"]})
+        .on("mouseover", function(d) {
+            d3.select(this).raise().classed("active", true);
+            d3.select(this).style("stroke", "#FF0000")
+            drawTooltip(d["territorio"],d["anno"])
+            name =d['territorio'].trim()
+            if(visualization==0){
+                var id =d3.select('#mapProv').selectAll('path').filter(function(d){
+                    var terName = d3.select('#'+this['id']).attr('name');
+                    return terName == name;  
+                });
+                showTooltipProv(id,1);
+            }
+            else{
+                var id =d3.select('#mapReg').selectAll('path').filter(function(d){
+                    var terName = d3.select('#'+this['id']).attr('name');
+                    return terName == name;  
+                });
+                showTooltipReg(id,1)
+            }
         
-    })                
-    .on("mouseout", function(d) {
-        d3.select(this).style("stroke", "#0000CD")
-        removeTooltip()
-        name =d['territorio'].trim()
-        if(visualization==0){
-            var id =d3.select('#mapProv').selectAll('path').filter(function(d){
-                var terName = d3.select('#'+this['id']).attr('name');
-                return terName == name;  
-              });
-        }
-        else{
-            var id =d3.select('#mapReg').selectAll('path').filter(function(d){
-                var terName = d3.select('#'+this['id']).attr('name');
-                return terName == name;  
-              });
-        }
-        id.style('stroke-width','0.5');
-    })
-    
+            //currentColour= id.style('stroke-width')
+            id.style('stroke-width','2')
+            
+        })                
+        .on("mouseout", function(d) {
+            d3.select(this).style("stroke", "#0000CD")
+            removeTooltip()
+            name =d['territorio'].trim()
+            if(visualization==0){
+                var id =d3.select('#mapProv').selectAll('path').filter(function(d){
+                    var terName = d3.select('#'+this['id']).attr('name');
+                    return terName == name;  
+                });
+            }
+            else{
+                var id =d3.select('#mapReg').selectAll('path').filter(function(d){
+                    var terName = d3.select('#'+this['id']).attr('name');
+                    return terName == name;  
+                });
+            }
+            id.style('stroke-width','0.5');
+        })
 
-// Draw the axis:
-svg_PC.selectAll("myAxis")
-    // For each dimension of the dataset I add a 'g' element:
-    .data(dimensions).enter()
-    .append("g")
-    // I translate this element to its right position on the x axis
-    .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
-    // And I build the axis with the call function
-    .each(function(d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })
+     // Add a group element for each dimension.
+     const g = svg_PC.selectAll(".dimension")
+        .data(dimensions)
+        .enter().append("g")
+        .attr("class", "dimension")
+        .attr("transform", function(d) { return "translate(" + x(d) + ")"; });
     
-    // Add axis title
-    .append("text")
-    .style("text-anchor", "start")
-    .attr("transform", "rotate(-7)")
-    .attr("y", -9)
-    .text(function(d) {
-        d3.select(this).style("font-size", 10)
-        if(d.length > 23) {
-            //d3.select(this).attr("transform", "rotate(-5)")
-            return d.substring(0,22)
+    // Add an axis and title.
+    g.append("g")
+        .attr("class", "axis")
+        .each(function(d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })
+        .append("text")
+        .style("text-anchor", "start")
+        .attr("transform", "rotate(-7)")
+        .attr("y", -9)
+        .text(function(d) {
+            d3.select(this).style("font-size", 10)
+            if(d.length > 23) {
+                //d3.select(this).attr("transform", "rotate(-5)")
+                return d.substring(0,22)
+            }
+            return d; })
+        .on("mouseover", function(d) {
+            d3.select(this).text(d)
+            //if(d.length > 23) document.getElementById("par-coord").style.border = 'none'
+            })
+        .on("mouseout", function(d) {
+            if(d.length > 23) d3.select(this).text(d.substring(0,22))
+            //document.getElementById("par-coord").style.border = '3px solid black'
+            })
+        .on("click",function(d){
+            //CRIMES.splice(CRIMES.indexOf(d),1)
+            //draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+            CRIMES.splice(CRIMES.indexOf(d),1)
+            $('.selectCrimes').val(CRIMES).trigger('change');
+            draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+            computeColourScales()
+        })
+        .style("fill", "black")
+        // Add and store a brush for each axis.
+    g.append("g")
+        .attr("class", "brush")
+        .each(function(d) { 
+            d3.select(this).call(y[d].brush = d3.brushY()
+                    .extent([[-10,0], [10,height]])
+                    .on("brush", brush)           
+                    .on("end", brush_end)
+                )
+        })
+        .selectAll("rect")
+        .attr("x", -8)
+        .attr("width", 16);
+        function brush_end(){
+            var brushedTerr= brush()
+            //francesco brushedTerr.forEach( n => console.log(n.territorio))
         }
-        return d; })
-    .on("mouseover", function(d) {
-        d3.select(this).text(d)
-        //if(d.length > 23) document.getElementById("par-coord").style.border = 'none'
-        })
-    .on("mouseout", function(d) {
-        if(d.length > 23) d3.select(this).text(d.substring(0,22))
-        //document.getElementById("par-coord").style.border = '3px solid black'
-        })
-    .on("click",function(d){
-        //CRIMES.splice(CRIMES.indexOf(d),1)
-        //draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-        CRIMES.splice(CRIMES.indexOf(d),1)
-        $('.selectCrimes').val(CRIMES).trigger('change');
-        draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-        computeColourScales()
-    })
-    .style("fill", "black")
-    
+        function brush() {  
+            var actives = [];
+            svg_pc.selectAll(".brush")
+              .filter(function(d) {
+                    y[d].brushSelectionValue = d3.brushSelection(this);
+                    return d3.brushSelection(this);
+              })
+              .each(function(d) {
+                  // Get extents of brush along each active selection axis (the Y axes)
+                    actives.push({
+                        dimension: d,
+                        extent: d3.brushSelection(this).map(y[d].invert)
+                    });
+              });
+            var selected = [];
+            console.log(actives)
+            // Update foreground to only display selected values
+            foreground.style("display", function(d) {
+                let isActive = actives.every(function(active) {
+                    var result
+                    if(!isAbsolute){
+                        result = active.extent[1] <= d[active.dimension] && d[active.dimension] <= active.extent[0];
+                    }
+                    else{
+                        result = active.extent[1] <= d[active.dimension]/d["popolazione"]*10000 && d[active.dimension]/d["popolazione"]*10000 <= active.extent[0];
+                    }
+                    return result;
+                });
+                // Only render rows that are active across all selectors
+                if(isActive) selected.push(d);
+                return (isActive) ? null : "none";
+            });
+            return selected
+        }
     })        
 }
+    /* //------
+    svg_PC
+        .selectAll("myPath")
+        .data(data)
+        .enter().append("path")
+        .attr("d",  path) //The d attribute defines a path to be drawn.
+        .style("fill", "none")
+        .style("stroke", "#0000CD")
+        .style("stroke-width", "3")
+        .style("opacity", 0.5)
+        .attr("name",function(d){
+            return d["territorio"]})
+        .on("mouseover", function(d) {
+            d3.select(this).raise().classed("active", true);
+            d3.select(this).style("stroke", "#FF0000")
+            drawTooltip(d["territorio"],d["anno"])
+            name =d['territorio'].trim()
+            if(visualization==0){
+                var id =d3.select('#mapProv').selectAll('path').filter(function(d){
+                    var terName = d3.select('#'+this['id']).attr('name');
+                    return terName == name;  
+                });
+                showTooltipProv(id,1);
+            }
+            else{
+                var id =d3.select('#mapReg').selectAll('path').filter(function(d){
+                    var terName = d3.select('#'+this['id']).attr('name');
+                    return terName == name;  
+                });
+                showTooltipReg(id,1)
+            }
+        
+            //currentColour= id.style('stroke-width')
+            id.style('stroke-width','2')
+            
+        })                
+        .on("mouseout", function(d) {
+            d3.select(this).style("stroke", "#0000CD")
+            removeTooltip()
+            name =d['territorio'].trim()
+            if(visualization==0){
+                var id =d3.select('#mapProv').selectAll('path').filter(function(d){
+                    var terName = d3.select('#'+this['id']).attr('name');
+                    return terName == name;  
+                });
+            }
+            else{
+                var id =d3.select('#mapReg').selectAll('path').filter(function(d){
+                    var terName = d3.select('#'+this['id']).attr('name');
+                    return terName == name;  
+                });
+            }
+            id.style('stroke-width','0.5');
+        })
+        
 
-function brush() {  
-    var actives = [];
-    svg.selectAll(".brush")
-      .filter(function(d) {
-            y[d].brushSelectionValue = d3.brushSelection(this);
-            return d3.brushSelection(this);
-      })
-      .each(function(d) {
-          // Get extents of brush along each active selection axis (the Y axes)
-            actives.push({
-                dimension: d,
-                extent: d3.brushSelection(this).map(y[d].invert)
-            });
-      });
+    // Draw the axis:
+    svg_PC.selectAll("myAxis")
+        // For each dimension of the dataset I add a 'g' element:
+        .data(dimensions).enter()
+        .append("g")
+        // I translate this element to its right position on the x axis
+        .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+        // And I build the axis with the call function
+        .each(function(d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })
+        
+        // Add axis title
+        .append("text")
+        .style("text-anchor", "start")
+        .attr("transform", "rotate(-7)")
+        .attr("y", -9)
+        .text(function(d) {
+            d3.select(this).style("font-size", 10)
+            if(d.length > 23) {
+                //d3.select(this).attr("transform", "rotate(-5)")
+                return d.substring(0,22)
+            }
+            return d; })
+        .on("mouseover", function(d) {
+            d3.select(this).text(d)
+            //if(d.length > 23) document.getElementById("par-coord").style.border = 'none'
+            })
+        .on("mouseout", function(d) {
+            if(d.length > 23) d3.select(this).text(d.substring(0,22))
+            //document.getElementById("par-coord").style.border = '3px solid black'
+            })
+        .on("click",function(d){
+            //CRIMES.splice(CRIMES.indexOf(d),1)
+            //draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+            CRIMES.splice(CRIMES.indexOf(d),1)
+            $('.selectCrimes').val(CRIMES).trigger('change');
+            draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+            computeColourScales()
+        })
+        .style("fill", "black")
+         */
 
-    // Update foreground to only display selected values
-    foreground.style("display", function(d) {
-        return actives.every(function(active) {
-            return active.extent[1] <= d[active.dimension] && d[active.dimension] <= active.extent[0];
-        }) ? null : "none";
-    });
-}
+
+
 //draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
 
 

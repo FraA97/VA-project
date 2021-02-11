@@ -200,3 +200,13 @@ circle {
   stroke: #fff;
   shape-rendering: crispEdges;
 }
+.background path {
+  fill: none;
+  stroke: #ddd;
+  shape-rendering: crispEdges;
+}
+
+.foreground path {
+  fill: none;
+  stroke: steelblue;
+}
