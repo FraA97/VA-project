@@ -844,7 +844,7 @@ function highlightTer(){ //mouseover on legend rectangles
       }
     })
   })
-  mapTer.style('fill','green');
+  mapTer.style('stroke-width','2');
   //valerio (mapTer contiene tutti i territori che hanno il colore del rettangolo del mouseover)
 
 }
@@ -854,17 +854,17 @@ function unlightTer(){ //mouseout on legend rectangles
   var color = rect.style('fill');
   if(visualization=='0'){
     var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('fill');
-      return terFill == 'green';  
+      var terFill = d3.select('#'+this['id']).style('stroke-width');
+      return terFill == '2';  
     });
   } 
   else{
     var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('fill');
-      return terFill == 'green';  
+      var terFill = d3.select('#'+this['id']).style('stroke-width');
+      return terFill == '2';  
     });
   } 
-  mapTer.style('fill',color);
+  mapTer.style('stroke-width','0.5');
   var names=[]
   mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;})
   names.forEach(function(d){
@@ -885,22 +885,22 @@ function unlightTer(){ //mouseout on legend rectangles
 function clickTer(){ //click on legend rectangles
   if(visualization=='0'){
     var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('fill');
-      return terFill == 'green';  
+      var terFill = d3.select('#'+this['id']).style('stroke-width');
+      return terFill == '2';  
     });
     var mapBadTer=d3.select('#mapProv').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('fill');
-      return terFill != 'green';  
+      var terFill = d3.select('#'+this['id']).style('stroke-width');
+      return terFill != '2';  
     });
   }
   else{
     var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('fill');
-      return terFill == 'green';  
+      var terFill = d3.select('#'+this['id']).style('stroke-width');
+      return terFill == '2';  
     });
     var mapBadTer=d3.select('#mapReg').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('fill');
-      return terFill != 'green';  
+      var terFill = d3.select('#'+this['id']).style('stroke-width');
+      return terFill != '2';  
     });
   }
   
