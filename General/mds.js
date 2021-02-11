@@ -86,6 +86,13 @@
             .on("mousedown", function(){
             d3.selectAll(".brushed").attr("class", "non_brushed");
             d3.selectAll(".brushed_text").attr("class", "non_brushed");
+            if(visualization==1){//INTERACTIONS WITH MAP
+                var id =d3.select('#mapReg').selectAll('path').filter(function(d){
+                    var terName = d3.select('#'+this['id']).attr('name');
+                    return brushed_regions.includes(terName);  
+                });
+                id.style('stroke-width','0.5');
+            }
             brushed_regions.forEach(function(d){
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                   if (d3.select(this).attr("name") != null){
@@ -178,6 +185,13 @@
                 brushed_regions = []
             }
             
+            if(visualization==1){//INTERACTIONS WITH MAP
+                var id =d3.select('#mapReg').selectAll('path').filter(function(d){
+                    var terName = d3.select('#'+this['id']).attr('name');
+                    return brushed_regions.includes(terName);  
+                });
+                id.style('stroke-width','2');
+            }
             console.log(brushed_regions)
             brushed_regions.forEach(function(d){
                 d3.select("#my_dataviz").selectAll('path').each(function(t){

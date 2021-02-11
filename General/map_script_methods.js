@@ -146,7 +146,7 @@ function showTooltipReg(d,flag) {
   
       if(flag==150){
         region = d;
-        console.log(flag)
+        //console.log(flag);
         var mouse = [widthMap,heightMap]
       }
       else{
@@ -729,9 +729,7 @@ function selectAllTer(){
     }
   }
   //console.log(CMD_REGIONS)
-
 }
-
 
 function updateLegend(minMax){ //update the legend of map
   var rangeLeg=(minMax[1]-minMax[0])/5;
@@ -745,16 +743,14 @@ function updateLegend(minMax){ //update the legend of map
     keys.push(str);
   }
   
-    // select the svg area
   var legend = d3.select("#legendMap")//.style('font-family','verdana')
   legend.selectAll('g text').remove();
   legend.selectAll('g rect').remove();
-  // Usually you have a color scale in your chart already
+  
   var color = d3.scaleOrdinal()
     .domain(keys)
     .range(['#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026']);
 
-  // Add one dot in the legend for each name.
   var size = 20
   legend.selectAll('rec').data(["a"]).enter().append('rect')
         .attr('id',"recLegendMap")
@@ -764,8 +760,7 @@ function updateLegend(minMax){ //update the legend of map
         .attr("height", heightMap/3 -35)
         .attr("rx","12")
         .style('stroke','');
-        
-        
+         
   legend.append('text')
           .attr("stroke","#000000")
         .attr("stroke-width",'0.2')
@@ -791,9 +786,7 @@ function updateLegend(minMax){ //update the legend of map
       .on('mouseout',unlightTer)
       .on('click',clickTer)
 
-
-  // Add one dot in the legend for each name.
-  legend.selectAll("mylabels")
+  legend.selectAll("mylabels") // Add one dot in the legend for each name
     .data(keys)
     .enter()
     .append("text")
@@ -806,9 +799,6 @@ function updateLegend(minMax){ //update the legend of map
       .text(function(d){ return d})
       .attr("text-anchor", "left")
       .style("alignment-baseline", "middle");
-    
-      
-     
 }
 
 function split(string){ //from a list of string to a list of Float
@@ -846,8 +836,6 @@ function highlightTer(){ //mouseover on legend rectangles
     })
   })
   mapTer.style('stroke-width','2');
-  //valerio (mapTer contiene tutti i territori che hanno il colore del rettangolo del mouseover)
-
 }
 
 function unlightTer(){ //mouseout on legend rectangles
@@ -873,14 +861,10 @@ function unlightTer(){ //mouseout on legend rectangles
       if (d3.select(this).attr("name") != null){
         if(d.trim() == d3.select(this).attr("name").trim()){
           d3.select(this).style("stroke", "#0000CD")
-          console.log(d)
         }
       }
     })
-  })
-  //valerio (mapTer contiene tutti i territori che sono diventati viola
-  
-
+  }) 
 }
 
 function clickTer(){ //click on legend rectangles
