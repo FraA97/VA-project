@@ -31,83 +31,91 @@ function createMDS(year){
   })
 }
 
-  function plotMds(matrix){
-    var regionsPosition = numeric.transpose(mds.classic(matrix));
-      var w = Math.min(720, document.documentElement.clientWidth - 20), 
-      h = w /2;
+function plotMds(matrix){
+  var regionsPosition = numeric.transpose(mds.classic(matrix));
+    var w = Math.min(720, document.documentElement.clientWidth - 20), 
+    h = w /2;
 
-      mds.drawD3ScatterPlot(d3.select("#regions"),
-      regionsPosition[0],
-      regionsPosition[1],
-      labels,
-      {
-          w :  Math.min(720, document.documentElement.clientWidth - 20),
-          h : w /2,
-          padding : 60,
-          reverseX : false,
-          reverseY : false,
-      });
-  }
-  
-
-
-  function chooseCharacteristic(dataCoeff, regions, c, year){
-    if(c == 1){
-        coeff = dataCoeff.map(function(d) { return d.Coeff_reato });   //select only this specific column
-    }
-    else{
-        coeff = dataCoeff.map(function(d) { return d.Coeff_tot_reati });
-    }
-
-    var dissM= [];
-    for(var i=0; i< 22; i++) {
-      dissM[i] = [];
-      for(var j=0; j< 22; j++) {
-        dissM[i][j] = 0;
-      }
-    }
-
-    year.forEach(function(y){
-      var anno = regions.filter(function(d){ return d.anno == y });
-
-      labels = anno.map(function(d){ return d.territorio});
-      for (var i = 0; i < labels.length; i++){                    //manipulating labels
-          labels[i]=labels[i].replace("    ", "")
-          labels[i] = labels[i].replace(" / Vallée d'Aoste","")
-          labels[i] = labels[i].replace(" / Südtirol","")
-          labels[i] = labels[i].replace(" / Bozen","")
-          labels[i] = labels[i].replace("Provincia Autonoma Trento","Trento")
-          labels[i] = labels[i].replace("Provincia Autonoma Bolzano","Bolzano")
-      }
-
-      anno.forEach( d => delete d.territorio);
-      anno.forEach( d => delete d.anno);
-
-      var avg = [];                                        //creating weighted avarage of crime for each region
-      var denominator = d3.sum(coeff)
-    
-      for (var i = 0; i < anno.length; i++) {
-          var crimes=[];
-          var nominator = 0;
-          for (var cr in anno[i]){
-            crimes.push(anno[i][cr])
-          }
-          for(var j=0; j< crimes.length; j++){
-            nominator += crimes[j]*coeff[j]
-          }
-          avg[i]=nominator/denominator
-      }
-      var dissMy = [];                                      //dissimilarity matrix for that year y
-      for(var i=0; i< avg.length; i++) {
-        dissMy[i] = [];
-          for(var j=0; j< avg.length; j++) {
-          dissMy[i][j] = ~~(Math.abs(avg[i]-avg[j]));
-          value =  dissM[i][j]
-          value = value + dissMy[i][j]
-          dissM[i][j] = value
-          }
-      }
+    mds.drawD3ScatterPlot(d3.select("#regions"),
+    regionsPosition[0],
+    regionsPosition[1],
+    labels,
+    {
+        w :  Math.min(720, document.documentElement.clientWidth - 20),
+        h : w /2,
+        padding : 60,
+        reverseX : false,
+        reverseY : false,
     });
-    return dissM
+}
+
+
+
+function chooseCharacteristic(dataCoeff, regions, c, year){
+  if(c == 1){
+      coeff = dataCoeff.map(function(d) { return d.Coeff_reato });   //select only this specific column
   }
+  else{
+      coeff = dataCoeff.map(function(d) { return d.Coeff_tot_reati });
+  }
+
+  var dissM= [];
+  for(var i=0; i< 22; i++) {
+    dissM[i] = [];
+    for(var j=0; j< 22; j++) {
+      dissM[i][j] = 0;
+    }
+  }
+
+  year.forEach(function(y){
+    var anno = regions.filter(function(d){ return d.anno == y });
+
+    labels = anno.map(function(d){ return d.territorio});
+    for (var i = 0; i < labels.length; i++){                    //manipulating labels
+        labels[i]=labels[i].replace("    ", "")
+        labels[i] = labels[i].replace(" / Vallée d'Aoste","")
+        labels[i] = labels[i].replace(" / Südtirol","")
+        labels[i] = labels[i].replace(" / Bozen","")
+        labels[i] = labels[i].replace("Provincia Autonoma Trento","Trento")
+        labels[i] = labels[i].replace("Provincia Autonoma Bolzano","Bolzano")
+    }
+
+    anno.forEach( d => delete d.territorio);
+    anno.forEach( d => delete d.anno);
+
+    var annoC = []                                //year with coefficient
+
+    for (var i = 0; i < anno.length; i++){
+      annoC[i] = []
+      for(var cr in anno[i]){
+        annoC[i].push(anno[i][cr])
+      }
+    }
+    for (var i = 0; i < anno.length; i++){
+      for(var j=0; j < coeff.length; j++){
+        value = annoC[i][j] * coeff[j]                //applying coefficient
+        annoC[i][j] = value
+      }
+    }
+    var dissMy = [];                                 //dissimilarity matrix for that year y
+    for (var i = 0; i < anno.length; i++){
+      dissMy[i] = [];
+      for(var j=0; j < anno.length; j++){          
+        dissMy[i][j] = ~~(euclidean_distance(annoC[i],annoC[j]));
+        value =  dissM[i][j]
+        value = value + dissMy[i][j]
+        dissM[i][j] = value                           //total dissimilarity matrix
+      }
+    }
+  });
+  return dissM
+}
+
+function euclidean_distance(ar1,ar2){
+  var dis = 0
+  for(var i = 0; i < ar1.length; i++){
+      dis = dis + Math.pow(ar1[i]-ar2[i],2)
+  }
+  return Math.sqrt(dis)
+}
 
