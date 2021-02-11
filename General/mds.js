@@ -86,6 +86,16 @@
             .on("mousedown", function(){
             d3.selectAll(".brushed").attr("class", "non_brushed");
             d3.selectAll(".brushed_text").attr("class", "non_brushed");
+            brushed_regions.forEach(function(d){
+                d3.select("#my_dataviz").selectAll('path').each(function(t){
+                  if (d3.select(this).attr("name") != null){
+                    if(d.trim() == d3.select(this).attr("name").trim()){
+                      d3.select(this).style("stroke", "#0000CD")
+                      console.log(d)
+                    }
+                  }
+                })
+              })
             brushed_regions =[]
             console.log(brushed_regions)
             })
