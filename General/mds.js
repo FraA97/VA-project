@@ -111,7 +111,7 @@
                     .attr("fill", "darkgrey")
                     .style("font", "14px times")
             })*/
-
+        var brushed_regions=[]
         function highlightBrushedCircles() {
 
             if (d3.event.selection != null) {
@@ -147,10 +147,10 @@
 
             //clearing brush
             d3.select(this).call(brush.move, null);
+            brushed_regions=[]
 
             var d_brushed =  d3.selectAll(".brushed").data();
-            var brushed_regions=[]
-
+            
             // populate array if one or more elements is brushed
             if (d_brushed.length > 0) {
                 d_brushed.forEach(d_row => brushed_regions.push(d_row))
@@ -158,13 +158,20 @@
             else{
                 brushed_regions = []
             }
+            
             console.log(brushed_regions)
         }
         var brush = d3.brush()
                           .on("brush", highlightBrushedCircles)
-                          .on("end", displayTable); 
+                          .on("end", displayTable)
 
         svg.append("g")
+            .on("mousedown", function(){
+                d3.selectAll(".brushed").attr("class", "non_brushed");
+                d3.selectAll(".brushed_text").attr("class", "non_brushed");
+                brushed_regions =[]
+                console.log(brushed_regions)
+            })
             .call(brush);
 
         function isBrushed(brush_coords, cx, cy) {
