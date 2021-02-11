@@ -116,7 +116,7 @@ function updateMapReg(r,i){  //apply transition + interaction
 
 function updateMapProv(p,i){  //apply transition + interaction
   var tot = '#'+p; //id of clicked region
-  console.log(tot);
+  //console.log(tot);
   var prov = d3.select(tot).attr("name"); //name of clicked region
   //console.log(prov);
   
