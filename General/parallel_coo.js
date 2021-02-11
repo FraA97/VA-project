@@ -28,9 +28,9 @@ for (let i = 2012; i < 2020; i++) {
 
 
 // set the dimensions and margins of the graph
-var margin = {top: 60, right: 10, bottom: 5, left: 0},
+var margin = {top: 20, right: 10, bottom: 5, left: 0},
     width = 5050 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+    height = 350 - margin.top - margin.bottom;
 // append the svg_PC object to the body of the page
 var svg_pc = d3.select("#my_dataviz")
             .append("svg")
@@ -319,7 +319,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         .style("stroke", "#0000CD")
         .style("stroke-width", "3")
         .style("opacity", 0.4);
-    
+    //each
     foreground.attr("name",function(d){
             return d["territorio"]})
         .on("mouseover", function(d) {
