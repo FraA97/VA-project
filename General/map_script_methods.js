@@ -144,8 +144,9 @@ var offsetT = d3.select("#content").offsetTop+10;
 
 function showTooltipReg(d,flag) {
   
-      if(flag==1){
+      if(flag==150){
         region = d;
+        console.log(flag)
         var mouse = [widthMap,heightMap]
       }
       else{
@@ -173,7 +174,7 @@ function showTooltipReg(d,flag) {
               .html(label)
               .attr("style", function(d){
                 if(mouse[0]>= widthMap/2){
-                  if(flag==1) return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-120)+"px";
+                  if(flag==150) return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-120)+"px";
                   else return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";
                 }
                 else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";
@@ -182,7 +183,7 @@ function showTooltipReg(d,flag) {
 }
 
 function showTooltipProv(d,flag) { 
-  if(flag==1){
+  if(flag==150){
     province = d;
     var mouse = [widthMap,heightMap]
   }
@@ -217,7 +218,7 @@ function showTooltipProv(d,flag) {
           .html(label)
           .attr("style", function(d){
             if(mouse[0]>= widthMap/2){ 
-              if(flag==1) return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-120)+"px";
+              if(flag==150) return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-120)+"px";
               else return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";
             }
             else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";

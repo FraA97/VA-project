@@ -326,20 +326,20 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             d3.select(this).raise().classed("active", true);
             d3.select(this).style("stroke", "#FF0000")
             drawTooltip(d["territorio"],d["anno"])
-            name =d['territorio'].trim()
+            name =d['territorio'].trim();
             if(visualization==0){
                 var id =d3.select('#mapProv').selectAll('path').filter(function(d){
                     var terName = d3.select('#'+this['id']).attr('name');
                     return terName == name;  
                 });
-                showTooltipProv(id,1);
+                showTooltipProv(id,150);
             }
             else{
                 var id =d3.select('#mapReg').selectAll('path').filter(function(d){
                     var terName = d3.select('#'+this['id']).attr('name');
                     return terName == name;  
                 });
-                showTooltipReg(id,1)
+                showTooltipReg(id,150);
             }
         
             //currentColour= id.style('stroke-width')
