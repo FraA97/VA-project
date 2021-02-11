@@ -671,6 +671,7 @@ function retrieveNameReg(prov){
 }
 
 function selectAllTer(){
+  REGIONS = changeKindOfTerritory(visualization)
   var elem = d3.select("#selectAll");
   if(elem.property('checked') == true){ //select all territory
     changeCmdRegions("only")
