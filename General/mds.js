@@ -78,6 +78,19 @@
             .attr("transform", "translate(" + (padding - 2*pointRadius) + ",0)")
             .call(yAxis);
 
+        var brush = d3.brush()
+        .on("brush", highlightBrushedCircles)
+        .on("end", displayTable)
+
+        svg.append("g")
+            .on("mousedown", function(){
+            d3.selectAll(".brushed").attr("class", "non_brushed");
+            d3.selectAll(".brushed_text").attr("class", "non_brushed");
+            brushed_regions =[]
+            console.log(brushed_regions)
+            })
+        .call(brush);
+
         var nodes = svg.selectAll("circle")
             .data(labels)
             .enter()
@@ -98,19 +111,21 @@
             .style("font", "14px times")  // Font size
             .attr("class", "non_brushed");
 
-        /*nodes.on('mouseover', function (d, i) {
-            d3.select(this).select("text").transition()
-                 .duration('100')
-                 .attr("fill", "black")
-                .style("font", "20px times");
+        nodes.attr("pointer-events", "all")
+            .on('mouseover', function (d, i) {
+                d3.select(this).select("text").transition()
+                .duration('100')
+                .style("font", "20px times")
+                .attr("class", "brushed_text") 
                 d3.select(this).raise().classed("active", true);
             })
             .on('mouseout', function (d, i) {
                 d3.select(this).select("text").transition()
-                    .duration('200')
-                    .attr("fill", "darkgrey")
-                    .style("font", "14px times")
-            })*/
+                .duration('200')
+                .attr("class", "non_brushed") 
+                .style("font", "14px times");                               
+                    
+            })
         var brushed_regions=[]
         function highlightBrushedCircles() {
 
@@ -118,7 +133,6 @@
 
                 // revert circles to initial style
                 nodes.selectAll("circle").attr("class", "non_brushed");
-                nodes.selectAll("text").attr("class", "non_brushed");
 
                 var brush_coords = d3.brushSelection(this);
 
@@ -131,19 +145,14 @@
                             return isBrushed(brush_coords, cx, cy);
                         })
                         .attr("class", "brushed");
-                nodes.filter(function (){
-
-                    var cx = d3.select(this).select("circle").attr("cx"),
-                        cy = d3.select(this).select("circle").attr("cy");
-
-                    return isBrushed(brush_coords, cx, cy);
-                })
-                .selectAll("text").attr("class", "brushed_text");
             }
         }
         function displayTable() {
 
-            if (!d3.event.selection) return;
+            if (!d3.event.selection){
+                brushed_regions = []
+                return;
+            } 
 
             //clearing brush
             d3.select(this).call(brush.move, null);
@@ -161,18 +170,7 @@
             
             console.log(brushed_regions)
         }
-        var brush = d3.brush()
-                          .on("brush", highlightBrushedCircles)
-                          .on("end", displayTable)
-
-        svg.append("g")
-            .on("mousedown", function(){
-                d3.selectAll(".brushed").attr("class", "non_brushed");
-                d3.selectAll(".brushed_text").attr("class", "non_brushed");
-                brushed_regions =[]
-                console.log(brushed_regions)
-            })
-            .call(brush);
+        
 
         function isBrushed(brush_coords, cx, cy) {
 
