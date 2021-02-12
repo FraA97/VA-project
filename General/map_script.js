@@ -3,7 +3,6 @@ var widthMap = 400,
     heightMap = 540;
 
 var marginZoom = { top: -5, right: -5, bottom: -5, left: -5 }
-
 var sumDelPop=0; //var for the sum of crimes divided population
 var sumDel=0 //var for the sum of crimes
 var colorProv = null; //province colour scale
@@ -94,6 +93,7 @@ var computationType=0; //variable that contain the computationType of the moment
 var selectedYears=["2019"]; //variable tha contain the years selected (start with all years selected))
 var selected_crimes = []; //variable that contain crimes selected
 var list_crimes = []; //list of all crimes retrieved from dataset (in 'manageCrimesSelection.js' file)
+var selY=[[selectedYears],[selectedYears]];
 //MENU CODE
 
 d3.select('#mdsComputation')

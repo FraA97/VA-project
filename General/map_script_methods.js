@@ -546,6 +546,7 @@ function updateSelectedYears(){ //change value of list of selected years
   //manage select all years checkbox
   var selectedC=d3.select(this);
   //console.log(selectedC)
+  selY[0]=selY[1];
   if(selectedC.attr('id')=='tot'){
     if(selectedC.property('checked') == true){
       d3.selectAll(".yearCheckbox").property('checked',true);
@@ -574,6 +575,8 @@ function updateSelectedYears(){ //change value of list of selected years
       console.log(selectedC.attr('id'))
     } 
   }
+  selY[1]=selectedYears;
+  console.log(selY)
   computeColourScales(); //for map 
   YEAR = selectedYears
   draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
@@ -644,7 +647,7 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
           })   
         })
           var oldFill= d3.select(id).style('fill');
-          console.log(oldFill)
+          //console.log(oldFill)
           d3.select(id)
             //interaction with dataset:
             .style("fill", function(){
@@ -661,7 +664,8 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
             .attr('sumDel',sumDel)
             .attr('sumDelPop',sumDelPop)
             .attr('population',population/selectedYears.length);
-          if(oldFill!='rgb(221, 221, 221)' && oldFill!='rgb(255, 255, 255)' && d3.select(id).style('fill') != oldFill){
+            console.log(selY)
+          if(oldFill!='rgb(221, 221, 221)' && oldFill!='rgb(255, 255, 255)' && (selY[1].length>0 && selY[0].length>0) && d3.select(id).style('fill') != oldFill){
             d3.select(id).style('stroke','#007f5f')
           }
           else{
