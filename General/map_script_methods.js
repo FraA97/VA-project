@@ -768,6 +768,8 @@ function updateLegend(minMax){ //update the legend of map
     .domain(keys)
     .range(['#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026']);
 
+  var colorStroke=['#000000','#007F5F']
+
   var size = 20
   legend.selectAll('rec').data(["a"]).enter().append('rect')
         .attr('id',"recLegendMap")
@@ -802,7 +804,40 @@ function updateLegend(minMax){ //update the legend of map
       .on('mouseover',highlightTer)
       .on('mouseout',unlightTer)
       .on('click',clickTer)
+/////////////////////////////////////////////////
+/*
+  legend.append('text')
+    .attr("stroke","#000000")
+    .attr("stroke-width",'0.8')
+    .attr("x", 5)
+    .attr("y", 350) // 100 is where the first dot appears. 25 is the distance between dots
+    .style("fill", '#000000')
+    .text("TERRITORY STROKES")
 
+  legend.selectAll('mylines')
+    .data(colorStroke)
+    .enter()
+    .append('line')
+      .attr("x1", 10)
+      .attr("y1", function(d,i){return 370 +(i*20); })
+      .attr("x2", 40)
+      .attr("y2", function(d,i){return 370 +(i*20); })
+      .style('stroke',function(d){return d})
+      .style('stroke-width',3);
+  
+      legend.selectAll('mylinesLabels')
+      .data(colorStroke)
+      .enter()
+      .append('text')
+        .attr("x", (40*1.2) +5)
+        .attr("y", function(d,i){return 370 +(i*20); })
+        .text(function(d){if(d=="#000000")return 'color Terr unchanged';else return 'color Territory changed'})
+        .style("alignment-baseline", "middle")
+        .style("fill", '#000000')
+        .style('stroke',function(d){return d})
+        .style('stroke-width',0.5);
+    */
+/////////////////////////////////
   legend.selectAll("mylabels") // Add one dot in the legend for each name
     .data(keys)
     .enter()
