@@ -2,6 +2,7 @@
 //url_province = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
 url_regioni = "./datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
 url_province = "./datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
+var countStroke=false;
 function createMapReg(geojson) {
     var projection = d3.geoEquirectangular().fitSize([widthMap,(heightMap+200)*1.4],geojson).scale(0.01);
     
@@ -327,7 +328,8 @@ function loadMap(newData){
         .on('mouseover', null)
         .on('mouseout', null);
     //show province map
-    d3.select("#mapProv").attr('style',"visibility:visible");
+    d3.select("#mapProv").attr('style',"visibility:visible")
+    d3.select('#mapProv').selectAll('path').style('stroke','#746E6E');//on change of vis. are resetted the strokes of provinces
   }
   return 0;
 }
@@ -634,7 +636,8 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
             }
           })   
         })
-        
+          var oldFill= d3.select(id).style('fill');
+          console.log(oldFill)
           d3.select(id)
             //interaction with dataset:
             .style("fill", function(){
@@ -651,6 +654,14 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
             .attr('sumDel',sumDel)
             .attr('sumDelPop',sumDelPop)
             .attr('population',population/selectedYears.length);
+          
+          if(oldFill!='rgb(221, 221, 221)' && d3.select(id).style('fill') != oldFill){
+            d3.select(id).style('stroke','#007f5f')
+          }
+          else{
+            if(visualization==0) d3.select(id).style('stroke','#746E6E');
+            else d3.select(id).style('stroke','#000000');
+          } 
           
             if(visualization=="0" ) {
               var gReg = d3.select('#mapReg')
@@ -815,12 +826,14 @@ function highlightTer(){ //mouseover on legend rectangles
       var terFill = d3.select('#'+this['id']).style('fill');
       return terFill == color;  
     });
+    mapTer.style('stroke-width','1.5')
   } 
   else{
     var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
       var terFill = d3.select('#'+this['id']).style('fill');
       return terFill == color;  
     });
+    mapTer.style('stroke-width','2')
   }
 
   var names=[]
@@ -830,12 +843,10 @@ function highlightTer(){ //mouseover on legend rectangles
       if (d3.select(this).attr("name") != null){
         if(d.trim() == d3.select(this).attr("name").trim()){
           d3.select(this).style("stroke", "#FF0000")
-          console.log(d)
         }
       }
     })
   })
-  mapTer.style('stroke-width','2');
 }
 
 function unlightTer(){ //mouseout on legend rectangles
@@ -844,7 +855,7 @@ function unlightTer(){ //mouseout on legend rectangles
   if(visualization=='0'){
     var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
       var terFill = d3.select('#'+this['id']).style('stroke-width');
-      return terFill == '2';  
+      return terFill == '1.5';  
     });
   } 
   else{
@@ -907,3 +918,4 @@ function clickTer(){ //click on legend rectangles
   if(visualization=='0')  updateClickedProv();
   else  updateClickedReg();
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
