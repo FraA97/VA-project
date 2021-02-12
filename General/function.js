@@ -1,6 +1,6 @@
 //var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
 var dataset_path = "datasets/dataset_crimes/dataset1219.csv"
-function createMDS(coeff, year){
+function createMDS(vis, coeff, year){
   //d3.select("#regions").selectAll("*").remove()
 
   d3.text(dataset_path, function(raw) {//retrive sum of delicts
@@ -9,8 +9,13 @@ function createMDS(coeff, year){
 
     var filteredData = data.filter(function(d,i){ return d.territorio.match(/    /) })      //eliminate macro regions
     var regions = filteredData.filter(function(d,i){
-      if(d.territorio.match(/      /)){return false}                                    //eliminate provinces
-      return true;
+      if(vis==0){
+        return d.territorio.match(/      /)                                                //eliminate regions
+      }
+      else{
+        if(d.territorio.match(/      /)){return false}                                    //eliminate provinces
+        return true;
+      }
     });
     regions.forEach( d => delete d.popolazione);                            //eliminate column popolazione
     regions.forEach( d => delete d.totale);                                 //eliminate column totale
@@ -64,9 +69,10 @@ function chooseCharacteristic(dataCoeff, regions, c, year){
   }
 
   var dissM= [];
-  for(var i=0; i< 20; i++) {
+  size = regions.filter(function(d){ return d.anno == "2019"});
+  for(var i=0; i< size.length; i++) {
     dissM[i] = [];
-    for(var j=0; j< 20; j++) {
+    for(var j=0; j< size.length; j++) {
       dissM[i][j] = 0;
     }
   }
