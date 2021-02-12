@@ -576,9 +576,15 @@ function updateSelectedYears(){ //change value of list of selected years
   computeColourScales(); //for map 
   YEAR = selectedYears
   draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-  createMDS(selectedYears)
+  createMDS(coeff_value, selectedYears)
     //updateYearsParCoord(); DONE (valerio [menu]) la funzione nelle righe sopra cambia la lista 'selectedYears' che contiene gli anni selezionati in ogni momento
 }
+var coeff_value = 0;
+function loadMdsComputationValue(value){
+  coeff_value = value
+  return coeff_value;
+}
+
 
 function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function called for prov, else =1
   //read from dataset of delicts[FUNCTION]

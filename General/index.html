@@ -2,8 +2,9 @@
 <meta charset="utf-8">
 <head>
   <title>Italy Crimes</title>
-  <link rel="stylesheet" href="styles_map_crimes.css">
-  
+  <link rel="stylesheet" href="styles_map_crimes.css">  
+  <link rel="stylesheet" href="style_mds.css">
+
 </head>
 
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
@@ -16,7 +17,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/numeric/1.2.6/numeric.min.js"></script>
 <script src="mds.js"></script>
 <script src="function.js"></script>
-<link rel="stylesheet" href="style_mds.css">
 
   <body>
 
@@ -37,6 +37,16 @@
     <div id="regions"></div>
     <!--html for MENU-->
     <div id="menu" ><br>
+      
+      <div id ="mcomputation" class="custom-select" style="width:200px;">
+        <label for="mdsComputation"><b>MDS computation type:</b></label>
+        <select id ='mdsComputation'>
+          <option value="0" selected>coefficient of danger (default)</option>
+          <option value="1">coefficient over total crimes</option>
+          <option value="2">no additional coefficient</option>
+        </select>
+      </div>
+
       <div id ="computation" class="custom-select" style="width:200px;">
         <label for="computationCrimes"><b>Computation type:</b></label>
         <select id ='computationCrimes'>

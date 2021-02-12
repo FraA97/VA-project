@@ -1,6 +1,6 @@
 //var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
 var dataset_path = "datasets/dataset_crimes/dataset1219.csv"
-function createMDS(year){
+function createMDS(coeff, year){
   d3.select("#regions").selectAll("*").remove()
   d3.text(dataset_path, function(raw) {//retrive sum of delicts
     var dsv = d3.dsvFormat(';');
@@ -21,7 +21,7 @@ function createMDS(year){
         var dataCoeff =dsv.parse(raw)
       //---------------------------------------------Computing  default dissimilarity matrix------------------------------------------------
       
-      var m = chooseCharacteristic(dataCoeff, regions, 1, year)
+      var m = chooseCharacteristic(dataCoeff, regions, coeff, year)
 
       //---------------------------------------------Visualization------------------------------------------------
       plotMds(m)
@@ -52,11 +52,14 @@ function plotMds(matrix){
 
 
 function chooseCharacteristic(dataCoeff, regions, c, year){
-  if(c == 1){
+  if(c == 0){
       coeff = dataCoeff.map(function(d) { return d.Coeff_reato });   //select only this specific column
   }
-  else{
+  else if(c == 1){
       coeff = dataCoeff.map(function(d) { return d.Coeff_tot_reati });
+  }
+  else{
+      coeff = dataCoeff.map(function(d) { return d.No_coeff });
   }
 
   var dissM= [];
@@ -109,6 +112,7 @@ function chooseCharacteristic(dataCoeff, regions, c, year){
     }
   });
   return dissM
+  
 }
 
 function euclidean_distance(ar1,ar2){

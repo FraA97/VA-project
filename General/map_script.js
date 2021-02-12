@@ -89,12 +89,21 @@ d3.select("#selectAll").on("change", selectAllTer)//select or unselect all reg/p
 
 
 //MENU VARIABLES
+var mdsComputationType = 0; //variable that contain the mdsComputationType of the moment: =0 =>coefficient of dangerous; =1 => weighted coeff; =2 => no coefficient
 var visualization = '1'; //variable that contain the visualization type of the moment: =0 =>vis. for provinces; =1 => vis. for regions 
 var computationType=0; //variable that contain the computationType of the moment: =0 =>number of crimes; =1 => num.crimes/population 
 var selectedYears=["2019"]; //variable tha contain the years selected (start with all years selected))
 var selected_crimes = []; //variable that contain crimes selected
 var list_crimes = []; //list of all crimes retrieved from dataset (in 'manageCrimesSelection.js' file)
 //MENU CODE
+
+d3.select('#mdsComputation')
+  .on('change', function() {
+    var newData = eval(d3.select(this).property('value'));//0 if choose only number of crimes or 1 if choose num_crimes/pop
+    mdsComputationType = newData;
+    loadMdsComputationValue(newData);
+    createMDS(mdsComputationType, selectedYears);
+});
 
 //compute for number of crimes or num.crimes/population 
 d3.select('#computationCrimes')
@@ -129,7 +138,7 @@ REGIONS = changeKindOfTerritory(visualization)
 draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
 loadMap(visualization);//Region map
 //loadParallelCoordinates(newData); (valerio [start function]) DONE
-createMDS(selectedYears)
+createMDS(mdsComputationType, selectedYears);
 //Years (valerio=>function to implement is on 'updateSelectedYears' function) DONE
 d3.selectAll(".yearCheckbox").on("change",updateSelectedYears); //update list of selected years ('selectedYears') + map
 
