@@ -545,14 +545,12 @@ function updateClickedProv(){
 function updateSelectedYears(){ //change value of list of selected years
   //manage select all years checkbox
   var selectedC=d3.select(this);
-  //console.log(selectedC)
   selY[0]=selY[1];
   if(selectedC.attr('id')=='tot'){
     if(selectedC.property('checked') == true){
       d3.selectAll(".yearCheckbox").property('checked',true);
       selectedYears.push("2012","2013","2014","2015","2016","2017","2018","2019");
       selectedYears = removeDuplicates(selectedYears);
-      console.log(selectedYears);
     }
     else{
       d3.selectAll(".yearCheckbox").property('checked',false);
@@ -581,7 +579,6 @@ function updateSelectedYears(){ //change value of list of selected years
   YEAR = selectedYears
   draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
   createMDS(visualization, coeff_value, selectedYears)
-    //updateYearsParCoord(); DONE (valerio [menu]) la funzione nelle righe sopra cambia la lista 'selectedYears' che contiene gli anni selezionati in ogni momento
 }
 var coeff_value = 0;
 function loadMdsComputationValue(value){
@@ -664,7 +661,7 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
             .attr('sumDel',sumDel)
             .attr('sumDelPop',sumDelPop)
             .attr('population',population/selectedYears.length);
-            console.log(selY)
+          
           if(oldFill!='rgb(221, 221, 221)' && oldFill!='rgb(255, 255, 255)' && (selY[1].length>0 && selY[0].length>0) && d3.select(id).style('fill') != oldFill){
             d3.select(id).style('stroke','#007f5f')
           }
@@ -760,7 +757,7 @@ function updateLegend(minMax){ //update the legend of map
   for(i=0; i<5;i++){
     var minvalue= minMax[0]+ (i*rangeLeg);
     var maxvalue= minvalue+rangeLeg;
-    var str = '< '+Number(Math.ceil(minvalue.toFixed(3)) ).toLocaleString()+' - '+Number(Math.ceil(maxvalue.toFixed(3)) ).toLocaleString()+' >'
+    var str = '<'+Number(Math.ceil(minvalue.toFixed(3)) ).toLocaleString()+'-'+Number(Math.ceil(maxvalue.toFixed(3)) ).toLocaleString()+'>'
     keys.push(str);
   }
   
@@ -777,7 +774,7 @@ function updateLegend(minMax){ //update the legend of map
   var size = 15
   legend.selectAll('rec').data(["a"]).enter().append('rect')
         .attr('id',"recLegendMap")
-        .attr("x",5)
+        .attr("x",0)
         .attr("y", 322) 
         .attr("width", widthMap/3 +20 )
         .attr("height", heightMap/3 -15)
@@ -798,7 +795,7 @@ function updateLegend(minMax){ //update the legend of map
     .data(keys)
     .enter()
     .append("rect")
-      .attr("x", 10)
+      .attr("x", 5)
       .attr("y", function(d,i){ return 345 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
       .attr("width", size)
       .attr("height", size)
@@ -807,12 +804,26 @@ function updateLegend(minMax){ //update the legend of map
       .on('mouseover',highlightTer)
       .on('mouseout',unlightTer)
       .on('click',clickTer)
+  legend.selectAll("mylabels") // Add one dot in the legend for each name
+      .data(keys)
+      .enter()
+      .append("text")
+        .attr("stroke",function(d){ if(d.includes('NUM. CRIMES')) return "#000000";
+        else return color(d)})
+        .attr("stroke-width",'0.2')
+        .attr("x", 10 + size)
+        .attr("y", function(d,i){ return 345+ i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+        .style("fill", '#000000')
+        .text(function(d){ return d})
+        .attr("text-anchor", "left")
+        .style("alignment-baseline", "middle")
+        .style('font-size','12px');
 /////////////////////////////////////////////////
 
   legend.append('text')
     .attr("stroke","#000000")
     .attr("stroke-width",'0.5')
-    .attr("x", 15)
+    .attr("x", 10)
     .attr("y", 455)
     .style("fill", '#000000')
     .text("TERRITORY STROKES")
@@ -822,18 +833,22 @@ function updateLegend(minMax){ //update the legend of map
     .data(colorStroke)
     .enter()
     .append('line')
-      .attr("x1", 10)
+      .attr("x1", 5)
       .attr("y1", function(d,i){return 455+10 +(i*10); })
-      .attr("x2", 30)
+      .attr("x2", 25  )
       .attr("y2", function(d,i){return 455+10 +(i*10); })
       .style('stroke',function(d){return d})
-      .style('stroke-width',3);
+      .style('stroke-width',5)
+      .style('fill',function(d){return d})
+      .on('mouseover',highlightTer)
+      .on('mouseout',unlightTer)
+      .on('click',clickTer);
   
       legend.selectAll('mylinesLabels')
       .data(colorStroke)
       .enter()
       .append('text')
-        .attr("x", 35)
+        .attr("x", 30)
         .attr("y", function(d,i){return 455+10 +(i*10); })
         .text(function(d){if(d=="#000000")return 'color Terr unchanged';else return 'color Territory changed'})
         .style("alignment-baseline", "middle")
@@ -843,20 +858,7 @@ function updateLegend(minMax){ //update the legend of map
         .style('font-size','12px');
     
 /////////////////////////////////
-  legend.selectAll("mylabels") // Add one dot in the legend for each name
-    .data(keys)
-    .enter()
-    .append("text")
-      .attr("stroke",function(d){ if(d.includes('NUM. CRIMES')) return "#000000";
-      else return color(d)})
-      .attr("stroke-width",'0.2')
-      .attr("x", 15 + size*1.2)
-      .attr("y", function(d,i){ return 345+ i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
-      .style("fill", '#000000')
-      .text(function(d){ return d})
-      .attr("text-anchor", "left")
-      .style("alignment-baseline", "middle")
-      .style('font-size','12px');
+
 }
 
 function split(string){ //from a list of string to a list of Float
@@ -868,16 +870,21 @@ function split(string){ //from a list of string to a list of Float
 function highlightTer(){ //mouseover on legend rectangles
   var rect = d3.select(this);
   var color = rect.style('fill');
+  //if(color=="rgb(116, 110, 110)") color ="rgb(0, 0, 0)";
+  console.log(color)
   if(visualization=='0'){
+    if(color =="rgb(0, 0, 0)") color="rgb(116, 110, 110)";
     var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('fill');
+      if(rect.style('stroke-width')!=5) var terFill = d3.select('#'+this['id']).style('fill');
+      else var terFill = d3.select('#'+this['id']).style('stroke');
       return terFill == color;  
     });
     mapTer.style('stroke-width','1.5')
   } 
   else{
     var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('fill');
+      if(rect.style('stroke-width')!=5) var terFill = d3.select('#'+this['id']).style('fill');
+      else var terFill = d3.select('#'+this['id']).style('stroke');
       return terFill == color;  
     });
     mapTer.style('stroke-width','2')
@@ -897,8 +904,6 @@ function highlightTer(){ //mouseover on legend rectangles
 }
 
 function unlightTer(){ //mouseout on legend rectangles
-  var rect = d3.select(this);
-  var color = rect.style('fill');
   if(visualization=='0'){
     var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
       var terFill = d3.select('#'+this['id']).style('stroke-width');
