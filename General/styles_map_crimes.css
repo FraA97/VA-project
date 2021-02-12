@@ -165,16 +165,13 @@ body {
     shape-rendering: crispEdges;
 }
 
-text {
-    font-size : 12px;
-}
 .axis text {
-    font-size: 10px;
+    font-size: 11px;
 }
 
 circle {
-    stroke: #1f77b4;
-    fill : #1f77b4;
+    stroke: rgba(30, 94, 214, 0.867);
+    fill : rgba(30, 94, 214, 0.867);
 }
 .brushed {
   fill: #00cd;
