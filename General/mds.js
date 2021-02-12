@@ -64,10 +64,14 @@
             yAxis = d3.axisLeft(yScale)
                 .ticks(params.yTicks || 7);
 
-        var svg = element.append("svg")
-                .attr("width", w)
-                .attr("height", h);
-
+        var svg = element.select("svg");
+        if(svg.empty()){
+            var svg = element.append("svg")
+                    .attr("width", w)
+                    .attr("height", h);
+        }
+        element.select("svg").selectAll("*").remove()
+        
         svg.append("g")
             .attr("class", "axis")
             .attr("transform", "translate(0," + (h - padding + 2*pointRadius) + ")")
@@ -79,8 +83,8 @@
             .call(yAxis);
 
         var brush = d3.brush()
-        .on("brush", highlightBrushedCircles)
-        .on("end", displayTable)
+            .on("brush", highlightBrushedCircles)
+            .on("end", displayTable)
 
         svg.append("g")
             .on("mousedown", function(){
@@ -104,7 +108,6 @@
                 })
               })
             brushed_regions =[]
-            console.log(brushed_regions)
             })
         .call(brush);
 
@@ -128,7 +131,8 @@
             .style("font", "14px times")  // Font size
             .attr("class", "non_brushed");
 
-        nodes.attr("pointer-events", "all")
+        nodes.attr("id", "points")
+            .attr("pointer-events", "all")
             .on('mouseover', function (d, i) {
                 d3.select(this).select("text").transition()
                 .duration('100')
@@ -192,7 +196,6 @@
                 });
                 id.style('stroke-width','2');
             }
-            console.log(brushed_regions)
             brushed_regions.forEach(function(d){
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                   if (d3.select(this).attr("name") != null){
