@@ -70,7 +70,9 @@
                     .attr("width", w)
                     .attr("height", h);
         }
-        element.select("svg").selectAll("*").remove()
+        else{
+            element.select("svg").selectAll("*").remove()
+        }
         
         svg.append("g")
             .attr("class", "axis")
