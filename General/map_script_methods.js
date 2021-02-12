@@ -11,7 +11,7 @@ function createMapReg(geojson) {
   
     d3.select('#map')
         .attr('width', widthMap)
-        .attr('height',heightMap)
+        //.attr('height',heightMap)
     var u = d3.select('#mapReg')
       .selectAll('path')
       .data(geojson.features);
@@ -34,7 +34,7 @@ function createMapReg(geojson) {
       });
       
       if(count==0){
-        zoom.scaleTo(d3.select("#map").transition().duration(600), 2.3);
+        zoom.scaleTo(d3.select("#map").transition().duration(600), 2.0);
         count+=1;
       } 
 }
@@ -173,10 +173,11 @@ function showTooltipReg(d,flag) {
                 +"Region Population: "+ Number(region.attr('population')).toLocaleString() 
         tooltip.classed("hidden", false)
               .html(label)
+             // .attr('font-size','10')
               .attr("style", function(d){
                 if(mouse[0]>= widthMap/2){
-                  if(flag==150) return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-120)+"px";
-                  else return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";
+                  if(flag==150) return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-10)+"px;top:"+(mouse[1]-140)+"px";
+                  else return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-100)+"px";
                 }
                 else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";
               });
@@ -219,7 +220,7 @@ function showTooltipProv(d,flag) {
           .html(label)
           .attr("style", function(d){
             if(mouse[0]>= widthMap/2){ 
-              if(flag==150) return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-120)+"px";
+              if(flag==150) return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-10)+"px;top:"+(mouse[1]-140)+"px";
               else return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";
             }
             else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";
@@ -660,8 +661,7 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
             .attr('sumDel',sumDel)
             .attr('sumDelPop',sumDelPop)
             .attr('population',population/selectedYears.length);
-          
-          if(oldFill!='rgb(221, 221, 221)' && d3.select(id).style('fill') != oldFill){
+          if(oldFill!='rgb(221, 221, 221)' && oldFill!='rgb(255, 255, 255)' && d3.select(id).style('fill') != oldFill){
             d3.select(id).style('stroke','#007f5f')
           }
           else{
@@ -752,7 +752,7 @@ function updateLegend(minMax){ //update the legend of map
   var rangeLeg=(minMax[1]-minMax[0])/5;
   var keys =[];
   if(computationType==0) var label =['NUMBER OF CRIMES'];
-  else var label =['NUM. of CRIMES by 10k citizen'];
+  else var label =['N. CRIMES by 10k citizen'];
   for(i=0; i<5;i++){
     var minvalue= minMax[0]+ (i*rangeLeg);
     var maxvalue= minvalue+rangeLeg;
@@ -770,33 +770,32 @@ function updateLegend(minMax){ //update the legend of map
 
   var colorStroke=['#000000','#007F5F']
 
-  var size = 20
+  var size = 15
   legend.selectAll('rec').data(["a"]).enter().append('rect')
         .attr('id',"recLegendMap")
         .attr("x",5)
-        .attr("y", 390) 
-        .attr("width", widthMap/3 +10 )
-        .attr("height", heightMap/3 -35)
+        .attr("y", 322) 
+        .attr("width", widthMap/3 +20 )
+        .attr("height", heightMap/3 -15)
         .attr("rx","12")
         .style('stroke','');
          
   legend.append('text')
           .attr("stroke","#000000")
-        .attr("stroke-width",'0.2')
-        .attr("x", function(d){ if(label =="NUMBER OF CRIMES") return 5 + size*1.2;
-                                else return  5})
-        .attr("y", function(d,i){ return 400+ i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("stroke-width",'0.5')
+        .attr("x", function(d){ if(label =="NUMBER OF CRIMES") return size ;
+                                else return  5;})
+        .attr("y",322+size) 
         .style("fill", '#000000')
         .text(label)
-        //.attr("text-anchor", "left")
-        //.style("alignment-baseline", "middle");
-          
+        .style('font-size','12px')
+  
   legend.selectAll("mydots")
     .data(keys)
     .enter()
     .append("rect")
       .attr("x", 10)
-      .attr("y", function(d,i){ return 420 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+      .attr("y", function(d,i){ return 345 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
       .attr("width", size)
       .attr("height", size)
       .style("fill", function(d){ return color(d)})
@@ -805,23 +804,24 @@ function updateLegend(minMax){ //update the legend of map
       .on('mouseout',unlightTer)
       .on('click',clickTer)
 /////////////////////////////////////////////////
-/*
+
   legend.append('text')
     .attr("stroke","#000000")
-    .attr("stroke-width",'0.8')
-    .attr("x", 5)
-    .attr("y", 350) // 100 is where the first dot appears. 25 is the distance between dots
+    .attr("stroke-width",'0.5')
+    .attr("x", 15)
+    .attr("y", 455)
     .style("fill", '#000000')
     .text("TERRITORY STROKES")
+    .style('font-size','12px');
 
   legend.selectAll('mylines')
     .data(colorStroke)
     .enter()
     .append('line')
       .attr("x1", 10)
-      .attr("y1", function(d,i){return 370 +(i*20); })
-      .attr("x2", 40)
-      .attr("y2", function(d,i){return 370 +(i*20); })
+      .attr("y1", function(d,i){return 455+10 +(i*10); })
+      .attr("x2", 30)
+      .attr("y2", function(d,i){return 455+10 +(i*10); })
       .style('stroke',function(d){return d})
       .style('stroke-width',3);
   
@@ -829,14 +829,15 @@ function updateLegend(minMax){ //update the legend of map
       .data(colorStroke)
       .enter()
       .append('text')
-        .attr("x", (40*1.2) +5)
-        .attr("y", function(d,i){return 370 +(i*20); })
+        .attr("x", 35)
+        .attr("y", function(d,i){return 455+10 +(i*10); })
         .text(function(d){if(d=="#000000")return 'color Terr unchanged';else return 'color Territory changed'})
         .style("alignment-baseline", "middle")
-        .style("fill", '#000000')
+        .style("fill", function(d){return d})
         .style('stroke',function(d){return d})
-        .style('stroke-width',0.5);
-    */
+        .style('stroke-width',0.3)
+        .style('font-size','12px');
+    
 /////////////////////////////////
   legend.selectAll("mylabels") // Add one dot in the legend for each name
     .data(keys)
@@ -846,11 +847,12 @@ function updateLegend(minMax){ //update the legend of map
       else return color(d)})
       .attr("stroke-width",'0.2')
       .attr("x", 15 + size*1.2)
-      .attr("y", function(d,i){ return 420+ i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+      .attr("y", function(d,i){ return 345+ i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
       .style("fill", '#000000')
       .text(function(d){ return d})
       .attr("text-anchor", "left")
-      .style("alignment-baseline", "middle");
+      .style("alignment-baseline", "middle")
+      .style('font-size','12px');
 }
 
 function split(string){ //from a list of string to a list of Float
@@ -923,11 +925,11 @@ function clickTer(){ //click on legend rectangles
   if(visualization=='0'){
     var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
       var terFill = d3.select('#'+this['id']).style('stroke-width');
-      return terFill == '2';  
+      return terFill == '1.5';  
     });
     var mapBadTer=d3.select('#mapProv').selectAll('path').filter(function(d){
       var terFill = d3.select('#'+this['id']).style('stroke-width');
-      return terFill != '2';  
+      return terFill != '1.5';  
     });
   }
   else{

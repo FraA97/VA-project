@@ -1,6 +1,6 @@
 //set width and height of svg shape
 var widthMap = 400,
-    heightMap = 575;
+    heightMap = 540;
 
 var marginZoom = { top: -5, right: -5, bottom: -5, left: -5 }
 
@@ -18,7 +18,7 @@ var population=0;
 
 //create leaflet container
 var leafletCont= d3.select('#content').append('div').attr('class', 'leaflet-control-container')
-                                      .append('div').attr('class','leaflet-top leaflet-left')
+                                      .append('div').attr('class','leaflet-top leaflet-left').attr('id','zoomLeaflet')
                                       .append('div').attr('id','slide').attr('class','leaflet-control-zoom leaflet-bar leaflet-control leaflet-zoom-anim')
 
 
@@ -35,9 +35,10 @@ var drag = d3.drag()
                 .on("drag", dragged)
                 .on("end", dragended);
 
-var slider = d3.select("#slide").append("p").append("input")
+var slider = d3.select("#slide").append("p").attr('id',"pZoomBar").append("input")
                 .datum({})
                 .attr("type", "range")
+                .attr('id','zoomBar')
                 .attr("value", zoom.scaleExtent()[0])
                 .attr("min", zoom.scaleExtent()[0])
                 .attr("max", zoom.scaleExtent()[1])
@@ -74,8 +75,6 @@ var tooltip = d3.select("#content")
      .attr("id","tooltipMap");
  
 var selectAllProv = d3.select('.leaflet-top')
-                    //.append('div').attr('class','leaflet-control-container')
-                    //.append('div').attr('class','leaflet-up leaflet-left')
                     .append('div').attr('id','checkAll').attr('class', 'leaflet-bar leaflet-control')
                     .text('Select All ')
                     .append('input')
