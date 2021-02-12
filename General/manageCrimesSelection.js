@@ -13,12 +13,6 @@ d3.text(dataset_path, function(raw) {
       if(i>2 && i<34) list_crimes.push(key);
       i+=1;
     }
-    d3.select('#crimes').append('br');
-    d3.select('#crimes').append('br');
-    d3.select('#crimes').append('br');
-    d3.select('#crimes').append('br');
-    d3.select('#crimes').append('br');
-    //d3.select('#crimes').append('br');
     var label = d3.select('#crimes')
                   .append('label')
                   .attr('for','selCrime')
@@ -76,13 +70,21 @@ d3.text(dataset_path, function(raw) {
                   .property('multiple','multiple')
                   .style('width','500px')
                   
+
+                  
+                  
     var options = select.selectAll("option").data(list_crimes)
     //console.log(options)
     options.enter()
          .append('option')
          //.attr('class','cr')
          .property('value',function(d){ return d;})
-         .text(function(d){return d;})
+         //.text(function(d){return d;})
+         .text(function(d) {
+           d3.select(this).style("font-size", 500)
+           console.log(d)
+           return d
+          })
          .property('selected',function(d,i){
            if(i<16){
             selected_crimes.push(d);
@@ -90,6 +92,7 @@ d3.text(dataset_path, function(raw) {
            } 
            else return false;
          });
+
   
   $(function()
   {
@@ -97,7 +100,7 @@ d3.text(dataset_path, function(raw) {
     {
       closeOnSelect: false,
       minimumResultsForSearch: Infinity,
-     
+      
       //multiple: true
    // maximumSelectionLength: 16
     });

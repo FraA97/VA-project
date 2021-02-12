@@ -28,9 +28,9 @@ for (let i = 2012; i < 2020; i++) {
 
 
 // set the dimensions and margins of the graph
-var margin = {top: 20, right: 10, bottom: 5, left: 0},
-    width = 5050 - margin.left - margin.right,
-    height = 350 - margin.top - margin.bottom;
+var margin = {top: 50, right: 10, bottom: 10, left: 0},
+    width = Math.max(1700,screen.width + margin.left + margin.right)
+    height = 340 - margin.top - margin.bottom;
 // append the svg_PC object to the body of the page
 var svg_pc = d3.select("#my_dataviz")
             .append("svg")

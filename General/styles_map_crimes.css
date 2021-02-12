@@ -1,16 +1,14 @@
 body {
     font-family: "Helvetica Neue", Helvetica, sans-serif;
-    font-size: 14px;
     color: #333;
   }
 
   #block_container
   {
+    height: 55%;
     position: absolute;
-    height: 60%;
     display: flex;
     justify-content: left;
-    border:3px solid black;
   }
 
   /*CSS ITALY MAP*/
@@ -23,7 +21,7 @@ body {
     background: lightblue;
     border:3px solid black;
     position: relative;
-    height: 550px;
+    height: 450px;
   }
 
   .greyOnlyReg{
@@ -84,53 +82,34 @@ body {
 
 /*CSS FOR MENU*/
   .multiselect {
-    width: 200px;
     margin-left:auto;
     margin-right:auto;
-  }
 
-  .selectBox {
-    position: relative;
-  }
-
-  .selectBox select {
-    width: 100%;
-    font-weight: bold;
-  }
-
-  .overSelect {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
   }
 
   #yearCheckboxes {
-    display: visible;
+    display: table;
+    margin-left: 10px;
+    padding-right: 10px;
+    table-layout: fixed; /*Optional*/
+    border:1px solid black;
+
   }
+  
+  .yearCheckbox {
+    display: table-cell;
+    margin-left: 10px;
+    margin-right: 10px;
 
-  #yearCheckboxes label {
-    display: block;
   }
+  
 
-  #yearCheckboxes label:hover {
-    background-color: #1e90ff;
-  }
-
-  .layoutYears{
-    width: 50%;
-    float: left;
-  }
-
-
-
+  
   #menu
   {
       position: relative;
       height: 100%;
       width: 500px;
-      border:2px solid black;
       display:inline;
       text-align:center;
       vertical-align: middle;
@@ -193,8 +172,8 @@ circle {
   border:3px solid black;
   position: relative;
   bottom: 0px;
-  top: 560px;
-  height: 450px;
+  top: 470px;
+  height: 360px;
 }
 #PCtooltip {
   border-radius: 25px;
@@ -203,9 +182,7 @@ circle {
   padding: 5px;
   font-family: sans-serif;
 }
-#my_dataviz{
-  height: 500px;
-}
+
 .brush .extent {
   fill-opacity: .3;
   stroke: #fff;
@@ -221,3 +198,16 @@ circle {
   fill: none;
   stroke: steelblue;
 }
+
+/*---------*/
+#menu_tendina {
+  display: table;
+  width: 100%; /*Optional*/
+  table-layout: fixed; /*Optional*/
+  border-spacing: 10px; /*Optional*/
+}
+#mcomputation,#computation,#visualizationType {
+  display: table-cell;
+}
+
+

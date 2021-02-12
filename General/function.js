@@ -2,6 +2,7 @@
 var dataset_path = "datasets/dataset_crimes/dataset1219.csv"
 function createMDS(coeff, year){
   //d3.select("#regions").selectAll("*").remove()
+
   d3.text(dataset_path, function(raw) {//retrive sum of delicts
     var dsv = d3.dsvFormat(';');
     var data =dsv.parse(raw);
@@ -63,9 +64,9 @@ function chooseCharacteristic(dataCoeff, regions, c, year){
   }
 
   var dissM= [];
-  for(var i=0; i< 22; i++) {
+  for(var i=0; i< 20; i++) {
     dissM[i] = [];
-    for(var j=0; j< 22; j++) {
+    for(var j=0; j< 20; j++) {
       dissM[i][j] = 0;
     }
   }
@@ -76,11 +77,6 @@ function chooseCharacteristic(dataCoeff, regions, c, year){
     labels = anno.map(function(d){ return d.territorio});
     for (var i = 0; i < labels.length; i++){                    //manipulating labels
         labels[i]=labels[i].replace("    ", "")
-        labels[i] = labels[i].replace(" / Vallée d'Aoste","")
-        labels[i] = labels[i].replace(" / Südtirol","")
-        labels[i] = labels[i].replace(" / Bozen","")
-        labels[i] = labels[i].replace("Provincia Autonoma Trento","Trento")
-        labels[i] = labels[i].replace("Provincia Autonoma Bolzano","Bolzano")
     }
 
     anno.forEach( d => delete d.territorio);
