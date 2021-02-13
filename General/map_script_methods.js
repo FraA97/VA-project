@@ -155,7 +155,19 @@ function showTooltipReg(d,flag) {
         var mouse = d3.mouse(d3.select('#map').node())
                     .map( function(d) { return parseInt(d); } );
       }
-      
+      console.log(region.attr("name"))
+      //HIGHLIGTH PC PATH
+      d3.select("#my_dataviz").selectAll('path').each(function(t){
+        if (d3.select(this).attr("name") != null){
+          if(region.attr("name").trim() == d3.select(this).attr("name").trim()){
+            d3.select(this).style("stroke", "#FF0000")
+          }
+          else{
+            d3.select(this).style("stroke", "#0000CD")
+          }
+        }
+      })
+      //
       if(region.attr('clicked')=='0'){
         label = "<b>"+region.attr('name')+"</b>";
         tooltip.classed("hidden", false)
@@ -268,17 +280,20 @@ function loadMap(newData){
                 d3.select(this)
                   .attr('class','white');
               }
+              
+              
             }
           )
           .on('mouseout',
-                function(){
+                function(region){
                   if(d3.select(this).attr("clicked") != '1'){
                     d3.select(this)
                     .attr('class','greyOnlyReg');
                   }
-                tooltip.attr('style', null)
+                  tooltip.attr('style', null)
                     .classed("hidden", true)
                     .node().innerHTML = null;
+                    
                 }
               );
       });      
