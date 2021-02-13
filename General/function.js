@@ -21,7 +21,6 @@ function createMDS(vis, pop, coeff, year){
       regions.forEach( d => delete d.popolazione);                            //eliminate column popolazione
     }
     regions.forEach( d => delete d.totale);                                 //eliminate column totale
-    regions.forEach( d => delete d['altri delitti']);                       //eliminate column altri delitti
     //var coeff_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/coefficienti.csv"
     var coeff_path = "datasets/coefficienti.csv"
     d3.text(coeff_path, function(raw) {//retrive sum of delicts
