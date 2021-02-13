@@ -1,6 +1,6 @@
 //var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
 var dataset_path = "datasets/dataset_crimes/dataset1219.csv"
-function createMDS(vis, coeff, year){
+function createMDS(vis, pop, coeff, year){
   //d3.select("#regions").selectAll("*").remove()
 
   d3.text(dataset_path, function(raw) {//retrive sum of delicts
@@ -17,7 +17,9 @@ function createMDS(vis, coeff, year){
         return true;
       }
     });
-    regions.forEach( d => delete d.popolazione);                            //eliminate column popolazione
+    if(pop==0){
+      regions.forEach( d => delete d.popolazione);                            //eliminate column popolazione
+    }
     regions.forEach( d => delete d.totale);                                 //eliminate column totale
     regions.forEach( d => delete d['altri delitti']);                       //eliminate column altri delitti
     //var coeff_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/coefficienti.csv"
@@ -27,7 +29,7 @@ function createMDS(vis, coeff, year){
         var dataCoeff =dsv.parse(raw)
       //---------------------------------------------Computing  default dissimilarity matrix------------------------------------------------
       
-      var m = chooseCharacteristic(dataCoeff, regions, coeff, year)
+      var m = chooseCharacteristic(pop, dataCoeff, regions, coeff, year)
 
       //---------------------------------------------Visualization------------------------------------------------
       plotMds(m)
@@ -57,7 +59,7 @@ function plotMds(matrix){
 
 
 
-function chooseCharacteristic(dataCoeff, regions, c, year){
+function chooseCharacteristic(pop, dataCoeff, regions, c, year){
   if(c == 0){
       coeff = dataCoeff.map(function(d) { return d.Coeff_reato });   //select only this specific column
   }
@@ -80,6 +82,11 @@ function chooseCharacteristic(dataCoeff, regions, c, year){
   year.forEach(function(y){
     var anno = regions.filter(function(d){ return d.anno == y });
 
+    if(pop==1){
+      var popolazione = anno.map(function(d){ return d.popolazione});
+      anno.forEach( d => delete d.popolazione);
+    }
+
     labels = anno.map(function(d){ return d.territorio});
     for (var i = 0; i < labels.length; i++){                    //manipulating labels
         labels[i]=labels[i].replace("    ", "")
@@ -94,6 +101,14 @@ function chooseCharacteristic(dataCoeff, regions, c, year){
       annoC[i] = []
       for(var cr in anno[i]){
         annoC[i].push(anno[i][cr])
+      }
+    }
+    if(pop==1){
+      for (var i = 0; i < anno.length; i++){
+        for(var j=0; j < coeff.length; j++){
+          value = annoC[i][j] / popolazione[i] *10000                //applying coefficient
+          annoC[i][j] = value
+        }
       }
     }
     for (var i = 0; i < anno.length; i++){
