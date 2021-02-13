@@ -68,7 +68,9 @@ d3.text(dataset_path, function(raw) {
                   .attr('id', 'selCrime')
                   .attr('class','selectCrimes')
                   .property('multiple','multiple')
-                  .style('width','500px')
+                  // .style="width: 75%
+                  .style('width','100%')
+    //$.fn.select2.defaults.set("theme", "classic");
                   
 
                   
@@ -100,12 +102,11 @@ d3.text(dataset_path, function(raw) {
     {
       closeOnSelect: false,
       minimumResultsForSearch: Infinity,
-      
       //multiple: true
    // maximumSelectionLength: 16
     });
   });
-
+  
   ////Selected a crime
   $('.selectCrimes').on('select2:select', function (e) {
     selected_crimes.push(e.params.data.id); //update list of selected crimes adding 
@@ -126,3 +127,11 @@ d3.text(dataset_path, function(raw) {
     //updateCrimeParCoord(e); (valerio [menu])
   });
 });
+
+function crimeSize(){
+  var crimes = d3.selectAll('.select2-selection__choice');
+  
+  console.log(crimes);
+  
+ // .style('font-size','10px')
+}

@@ -794,6 +794,8 @@ function selectAllTer(){
 }
 
 function updateLegend(minMax){ //update the legend of map
+  //CRIME SELECTION 
+  crimeSize()
   var rangeLeg=(minMax[1]-minMax[0])/5;
   var keys =[];
   if(computationType==0) var label =['NUMBER OF CRIMES'];
