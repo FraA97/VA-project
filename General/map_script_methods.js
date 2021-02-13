@@ -161,6 +161,9 @@ function showTooltipReg(d,flag) {
         if (d3.select(this).attr("name") != null){
           if(region.attr("name").trim() == d3.select(this).attr("name").trim()){
             d3.select(this).style("stroke", "#FF0000")
+            if(!REGIONS.includes(region.attr("name").trim())){
+              REGIONS.push(region.attr("name").trim())
+            }
           }
           else{
             d3.select(this).style("stroke", "#0000CD")
@@ -293,7 +296,12 @@ function loadMap(newData){
                   tooltip.attr('style', null)
                     .classed("hidden", true)
                     .node().innerHTML = null;
-                    
+                    //DE-HIGHLIGTH PC PATH
+                    d3.select("#my_dataviz").selectAll('path').each(function(t){
+                      if (d3.select(this).attr("name") != null){
+                          d3.select(this).style("stroke", "#0000CD")
+                      }
+                    })
                 }
               );
       });      
