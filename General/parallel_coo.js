@@ -318,8 +318,8 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         .enter().append("path")
         .attr("d", path)
         .style("stroke", "#0000CD")
-        .style("stroke-width", "3")
-        .style("opacity", 0.4);
+        .style("stroke-width", "1")
+        .style("opacity", 0.9);
     //each
     foreground.attr("name",function(d){
             return d["territorio"]})
