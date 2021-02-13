@@ -808,7 +808,7 @@ function updateLegend(minMax){ //update the legend of map
   var legend = d3.select("#legendMap")//.style('font-family','verdana')
   legend.selectAll('g text').remove();
   legend.selectAll('g rect').remove();
-  
+  legend.selectAll('g line').remove();
   var color = d3.scaleOrdinal()
     .domain(keys)
     .range(['#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026']);
