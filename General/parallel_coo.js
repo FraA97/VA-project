@@ -31,6 +31,7 @@ for (let i = 2012; i < 2020; i++) {
 var margin = {top: 50, right: 10, bottom: 10, left: 0},
     width = Math.max(1700,screen.width + margin.left + margin.right)
     height = 340 - margin.top - margin.bottom;
+    console.log(width)
 // append the svg_PC object to the body of the page
 var svg_pc = d3.select("#my_dataviz")
             .append("svg")
@@ -265,11 +266,11 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     //asse x -> it find the best position for each Y axis
     x = d3.scalePoint() //Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
         .domain(dimensions)  ///.domain(["territorio", "anno", "popolazione",..])
-        .range([0, Math.min(1650,99*dimensions.length)])///general width of the graph, varia a seconda di quanti crimini metti
+        .range([0, Math.min(screen.width,99*dimensions.length)])///general width of the graph, varia a seconda di quanti crimini metti
         .padding(0.5);
         //.range([0, (350-11*dimensions.length)*dimensions.length])///general width of the graph, varia a seconda di quanti crimini metti
 
-
+    console.log(Math.min(screen.width,60*dimensions.length))
     function path(d) {
         return d3.line()(dimensions.map(function(p) {
         //console.log(x(p))
@@ -290,7 +291,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         var d = document.getElementById('PCtooltip');
         PCtooltip.style('display', 'block');
         d.style.position = "absolute"; 
-        d.style.top = event.pageY-450+"px"
+        d.style.top = event.pageY-500+"px"
         d.style.left = event.pageX+"px"
     }
     function removeTooltip() {
@@ -375,6 +376,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                   d3.select(this).style("stroke", "#0000CD")
                 }
             })
+            d3.select(this).raise().classed("active", true);
             d3.select(this).style("stroke", "#FF0000")
         })
 
@@ -395,9 +397,9 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         .attr("y", -9)
         .text(function(d) {
             d3.select(this).style("font-size", 10)
-            if(d.length > 23) {
+            if(d.length > 30) {
                 //d3.select(this).attr("transform", "rotate(-5)")
-                return d.substring(0,22)
+                return d.substring(0,29)
             }
             return d; })
         .on("mouseover", function(d) {
@@ -405,7 +407,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             //if(d.length > 23) document.getElementById("par-coord").style.border = 'none'
             })
         .on("mouseout", function(d) {
-            if(d.length > 23) d3.select(this).text(d.substring(0,22))
+            if(d.length > 30) d3.select(this).text(d.substring(0,29))
             //document.getElementById("par-coord").style.border = '3px solid black'
             })
         .on("click",function(d){

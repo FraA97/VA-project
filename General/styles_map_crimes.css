@@ -192,7 +192,6 @@ circle {
 #par-coord{
   border:3px solid black;
   position: absolute;
-  bottom: 0px;
   top:57%;
 }
 #PCtooltip {
