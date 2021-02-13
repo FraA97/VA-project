@@ -155,15 +155,13 @@ function showTooltipReg(d,flag) {
         var mouse = d3.mouse(d3.select('#map').node())
                     .map( function(d) { return parseInt(d); } );
       }
-      console.log(region.attr("name"))
+      //console.log(region.attr("name"))
       //HIGHLIGTH PC PATH
       d3.select("#my_dataviz").selectAll('path').each(function(t){
         if (d3.select(this).attr("name") != null){
           if(region.attr("name").trim() == d3.select(this).attr("name").trim()){
+            d3.select(this).raise().classed("active", true);
             d3.select(this).style("stroke", "#FF0000")
-            if(!REGIONS.includes(region.attr("name").trim())){
-              REGIONS.push(region.attr("name").trim())
-            }
           }
           else{
             d3.select(this).style("stroke", "#0000CD")
@@ -210,6 +208,20 @@ function showTooltipProv(d,flag) {
                 .map( function(d) { return parseInt(d); } );
   }
   var nameReg=retrieveNameReg(province);
+  //console.log(region.attr("name"))
+      //HIGHLIGTH PC PATH
+      d3.select("#my_dataviz").selectAll('path').each(function(t){
+        if (d3.select(this).attr("name") != null){
+          if(province.attr("name").trim() == d3.select(this).attr("name").trim()){
+            d3.select(this).raise().classed("active", true);
+            d3.select(this).style("stroke", "#FF0000")
+          }
+          else{
+            d3.select(this).style("stroke", "#0000CD")
+          }
+        }
+      })
+      //
   if(province.attr('clicked')=='0'){
     label = "<b>"+province.attr('name')+ "</b>"+" ("+nameReg+")";
   
@@ -333,7 +345,13 @@ function loadMap(newData){
                   }
                 tooltip.attr('style', null)
                     .classed("hidden", true)
-                    .node().innerHTML = null;        
+                    .node().innerHTML = null;    
+                    //DE-HIGHLIGTH PC PATH
+                  d3.select("#my_dataviz").selectAll('path').each(function(t){
+                    if (d3.select(this).attr("name") != null){
+                        d3.select(this).style("stroke", "#0000CD")
+                    }
+                  })    
                 }
               );
               d3.select("#selectAll").property('checked',true);//check checkbox for select all territory
@@ -919,6 +937,7 @@ function highlightTer(){ //mouseover on legend rectangles
     d3.select("#my_dataviz").selectAll('path').each(function(t){
       if (d3.select(this).attr("name") != null){
         if(d.trim() == d3.select(this).attr("name").trim()){
+          d3.select(this).raise().classed("active", true);
           d3.select(this).style("stroke", "#FF0000")
         }
       }

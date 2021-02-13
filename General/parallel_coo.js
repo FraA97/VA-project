@@ -255,7 +255,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 return +d[name];
                 }
                 else{
-                r = d[name]/d["popolazione"]*10000
+                r = (d[name]/d["popolazione"])*10000
                 return +r;
                 }
             }))
@@ -445,7 +445,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                         result = active.extent[1] <= d[active.dimension] && d[active.dimension] <= active.extent[0];
                     }
                     else{
-                        result = active.extent[1] <= d[active.dimension]/d["popolazione"]*10000 && d[active.dimension]/d["popolazione"]*10000 <= active.extent[0];
+                        result = active.extent[1] <= (d[active.dimension]/d["popolazione"])*10000 && (d[active.dimension]/d["popolazione"])*10000 <= active.extent[0];
                     }
                     return result;
                 });
