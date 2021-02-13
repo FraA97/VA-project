@@ -144,11 +144,12 @@ var offsetL = d3.select("#content").offsetLeft+10;
 var offsetT = d3.select("#content").offsetTop+10;
 
 function showTooltipReg(d,flag) {
-  
+
       if(flag==150){
         region = d;
-        //console.log(flag);
-        var mouse = [widthMap,heightMap]
+        var height = d3.select('#map').style('height').slice(0, -2);
+        var width = d3.select('#map').style('width').slice(0, -2);
+        var mouse = [width,height]
       }
       else{
         region = d3.select(this);
@@ -189,7 +190,7 @@ function showTooltipReg(d,flag) {
              // .attr('font-size','10')
               .attr("style", function(d){
                 if(mouse[0]>= widthMap/2){
-                  if(flag==150) return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-10)+"px;top:"+(mouse[1]-140)+"px";
+                  if(flag==150) return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-10)+"px;top:"+(mouse[1]-parseInt(tooltip.style('height').slice(0, -2))-10 )+"px";
                   else return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-100)+"px";
                 }
                 else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";
@@ -200,7 +201,9 @@ function showTooltipReg(d,flag) {
 function showTooltipProv(d,flag) { 
   if(flag==150){
     province = d;
-    var mouse = [widthMap,heightMap]
+    var height = d3.select('#map').style('height').slice(0, -2);
+    var width = d3.select('#map').style('width').slice(0, -2);
+    var mouse = [width,height]
   }
   else{
     province = d3.select(this);
@@ -247,7 +250,7 @@ function showTooltipProv(d,flag) {
           .html(label)
           .attr("style", function(d){
             if(mouse[0]>= widthMap/2){ 
-              if(flag==150) return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-10)+"px;top:"+(mouse[1]-140)+"px";
+              if(flag==150)return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-10)+"px;top:"+(mouse[1]-parseInt(tooltip.style('height').slice(0, -2))-10 )+"px";
               else return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";
             }
             else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";
@@ -813,8 +816,7 @@ function updateLegend(minMax){ //update the legend of map
   var colorStroke=['#000000','#007F5F']
 
   var size = 15
-  var height = d3.select('#map').style('height')
-  height = height.slice(0,height.length-2);
+  var height = d3.select('#map').style('height').slice(0, -2);
   heightLegend=165;
   startYlegend=height-heightLegend
   legend.selectAll('rec').data(["a"]).enter().append('rect')
