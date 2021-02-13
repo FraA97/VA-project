@@ -191,10 +191,9 @@ circle {
 /*PARALLEL COORDINATES*/
 #par-coord{
   border:3px solid black;
-  position: relative;
+  position: absolute;
   bottom: 0px;
-  top: 490px;
-  height: 360px;
+  top:57%;
 }
 #PCtooltip {
   border-radius: 25px;

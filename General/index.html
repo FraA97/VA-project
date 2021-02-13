@@ -18,99 +18,107 @@
 
   <body>
 
-  <div id="block_container">
-    <!--html for MAP-->
-    <div id="content" >
-        <svg id='map' >
-            <g id ='mapProv' class="map"></g>
-            <g id ='mapReg' class="map"></g>
-            <!--legend for italy map-->
-            <g class='mapLegend' id='legendMap' > </g> 
-             <!-- <svg id="legendMap" ></svg>-->
-            
-        </svg>    
-        
-    </div>
-    <!--html for MDS-->
+
     
-      <div id ="central_view">
-        <div id = "years">
-          <form>
-            <div class="multiselect">
-              <div id="yearCheckboxes">
-                  <label for="tot">
-                    <input class ="yearCheckbox" type="checkbox" id="tot" />Select All Years</label>
-                  <label for="2012">
-                    <input class ="yearCheckbox" type="checkbox" id="2012" />2012</label>
-                  <label for="2013">
-                    <input class ="yearCheckbox" type="checkbox" id="2013" />2013</label>
-                  <label for="2014">
-                    <input class ="yearCheckbox" type="checkbox" id="2014" />2014</label>
-                  <label for="2015">
-                    <input class ="yearCheckbox" type="checkbox" id="2015" />2015</label>
-                  <label for="2016">
-                    <input class ="yearCheckbox" type="checkbox" id="2016" />2016</label>
-                  <label for="2017">
-                    <input class ="yearCheckbox" type="checkbox" id="2017" />2017</label>
-                  <label for="2018">
-                    <input class ="yearCheckbox" type="checkbox" id="2018" />2018</label>
-                  <label for="2019">
-                    <input class ="yearCheckbox" type="checkbox" id="2019" />2019</label>
+
+      <div id="block_container">
+        <!--html for MAP-->
+        <div id="content" >
+            <svg id='map' >
+                <g id ='mapProv' class="map"></g>
+                <g id ='mapReg' class="map"></g>
+                <!--legend for italy map-->
+                <g class='mapLegend' id='legendMap' > </g> 
+                 <!-- <svg id="legendMap" ></svg>-->
                 
+            </svg>    
+            
+        </div>
+        <!--html for MDS-->
+        
+          <div id ="central_view">
+            <div id = "years">
+              <form>
+                <div class="multiselect">
+                  <div id="yearCheckboxes">
+                      <label for="tot">
+                        <input class ="yearCheckbox" type="checkbox" id="tot" />Select All Years</label>
+                      <label for="2012">
+                        <input class ="yearCheckbox" type="checkbox" id="2012" />2012</label>
+                      <label for="2013">
+                        <input class ="yearCheckbox" type="checkbox" id="2013" />2013</label>
+                      <label for="2014">
+                        <input class ="yearCheckbox" type="checkbox" id="2014" />2014</label>
+                      <label for="2015">
+                        <input class ="yearCheckbox" type="checkbox" id="2015" />2015</label>
+                      <label for="2016">
+                        <input class ="yearCheckbox" type="checkbox" id="2016" />2016</label>
+                      <label for="2017">
+                        <input class ="yearCheckbox" type="checkbox" id="2017" />2017</label>
+                      <label for="2018">
+                        <input class ="yearCheckbox" type="checkbox" id="2018" />2018</label>
+                      <label for="2019">
+                        <input class ="yearCheckbox" type="checkbox" id="2019" />2019</label>
+                    
+                  </div>
+                </div>
+              </form>
+            
+            </div>
+    
+            <div id="menu_tendina">
+              <div id ="mcomputation" class="custom-select" style="width:200px;">
+                <label for="mdsComputation"><b>MDS computation type:</b></label>
+                <select id ='mdsComputation'>
+                  <option value="0" selected>coefficient of danger (default)</option>
+                  <option value="1">coefficient over total crimes</option>
+                  <option value="2">no additional coefficient</option>
+                </select>
+              </div>
+      
+              <div id ="computation" class="custom-select" style="width:200px;">
+                <label for="computationCrimes"><b>Computation type:</b></label>
+                <select id ='computationCrimes'>
+                  <option value="0" selected>number of crimes (default)</option>
+                  <option value="1">number of crimes each 10k citizen</option>
+                </select>
+              </div>
+      
+              <div id ='visualizationType' class="custom-select" style="width:200px;">
+                <label for='visualization'><b>Visualization type:</b></label>
+                <select id ='visualization'>
+                  <option value="0">Visualize for Province </option>
+                  <option value="1" selected>Visualize for Region (default)</option>
+                </select>
               </div>
             </div>
-          </form>
+            
+            <div id="regions"></div>
+    
+            
+          </div>
+          
+        <!--html for MENU-->
+        <div id="menu" >
+        
+          <div id='crimes'></div>
         
         </div>
-
-        <div id="menu_tendina">
-          <div id ="mcomputation" class="custom-select" style="width:200px;">
-            <label for="mdsComputation"><b>MDS computation type:</b></label>
-            <select id ='mdsComputation'>
-              <option value="0" selected>coefficient of danger (default)</option>
-              <option value="1">coefficient over total crimes</option>
-              <option value="2">no additional coefficient</option>
-            </select>
-          </div>
-  
-          <div id ="computation" class="custom-select" style="width:200px;">
-            <label for="computationCrimes"><b>Computation type:</b></label>
-            <select id ='computationCrimes'>
-              <option value="0" selected>number of crimes (default)</option>
-              <option value="1">number of crimes each 10k citizen</option>
-            </select>
-          </div>
-  
-          <div id ='visualizationType' class="custom-select" style="width:200px;">
-            <label for='visualization'><b>Visualization type:</b></label>
-            <select id ='visualization'>
-              <option value="0">Visualize for Province </option>
-              <option value="1" selected>Visualize for Region (default)</option>
-            </select>
-          </div>
-        </div>
         
-        <div id="regions"></div>
-
         
       </div>
-      
-    <!--html for MENU-->
-    <div id="menu" >
-    
-      <div id='crimes'></div>
-    
-    </div>
-    
-    
-  </div>
-  
-    <!--html for PARALLEL COORDINATES-->
-  <div id= "par-coord">
-      <div id='PCtooltip'></div>
 
-      <div id="my_dataviz"></div>
-  <div>
+
+
+
+      <!--html for PARALLEL COORDINATES-->
+      <div id= "par-coord">
+        <div id='PCtooltip'></div>
+
+        <div id="my_dataviz"></div>
+      <div>
+
+
 
                                                                 <!--SCRIPTS-->
   <!--script for Parallel coordinates-->
