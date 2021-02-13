@@ -10,9 +10,21 @@ var colorReg = null; //province colour scale
 var numbers = []; //for set of numbers of delicts of each territory
 var count = 0; //count number of swapping among maps 
 var population=0;
+var legC=0;
 
-
-
+function updLeg(){if(legC==0) {legC+=1;console.log('iii'); return null;}
+                  else  return updateLegend( split(d3.select('#mapReg').attr('minMax')) )}
+(function(){
+  var lastWidth = 0;
+  function pollZoomFireEvent() {
+    var widthNow = jQuery(window).width();
+    if (lastWidth == widthNow) return;
+    lastWidth = widthNow;
+    // Length changed, user must have zoomed, invoke listeners.
+    updLeg();
+  }
+  setInterval(pollZoomFireEvent, 100);
+})();
 
 
 //create leaflet container
