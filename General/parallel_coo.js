@@ -347,7 +347,12 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             
         })                
         .on("mouseout", function(d) {
-            d3.select(this).style("stroke", "#0000CD")
+            d3.select("#my_dataviz").selectAll('path').each(function(t){
+                if (d3.select(this).attr("name") != null){
+                  d3.select(this).style("stroke", "#0000CD")
+                }
+            })
+            //d3.select(this).style("stroke", "#0000CD")
             removeTooltip()
             name =d['territorio'].trim()
             if(visualization==0){
@@ -363,6 +368,14 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 });
             }
             id.style('stroke-width','0.5');
+        })
+        .on("click", function(d) {
+            d3.select("#my_dataviz").selectAll('path').each(function(t){
+                if (d3.select(this).attr("name") != null){
+                  d3.select(this).style("stroke", "#0000CD")
+                }
+            })
+            d3.select(this).style("stroke", "#FF0000")
         })
 
      // Add a group element for each dimension.
