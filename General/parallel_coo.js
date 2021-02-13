@@ -388,6 +388,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         .attr("transform", function(d) { return "translate(" + x(d) + ")"; });
     
     // Add an axis and title.
+   
     g.append("g")
         .attr("class", "axis")
         .each(function(d) { d3.select(this).call(d3.axisLeft().scale(y[d])); })

@@ -93,12 +93,13 @@
             computeColourScales()
         })
         .style("fill", "black")
-         */
-
-
-
-//draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
-
+        */
+       
+       
+       
+       //draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
+       
+        
 
 
 
