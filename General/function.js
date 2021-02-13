@@ -47,7 +47,7 @@ function plotMds(matrix){
     regionsPosition[1],
     labels,
     {
-        w :  Math.min(720, document.documentElement.clientWidth - 20),
+        w :  Math.min(720, document.documentElement.clientWidth),
         h : w /2,
         padding : 60,
         reverseX : false,
