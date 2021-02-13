@@ -813,12 +813,16 @@ function updateLegend(minMax){ //update the legend of map
   var colorStroke=['#000000','#007F5F']
 
   var size = 15
+  var height = d3.select('#map').style('height')
+  height = height.slice(0,height.length-2);
+  heightLegend=165;
+  startYlegend=height-heightLegend
   legend.selectAll('rec').data(["a"]).enter().append('rect')
         .attr('id',"recLegendMap")
         .attr("x",0)
-        .attr("y", 322) 
+        .attr("y",startYlegend) 
         .attr("width", widthMap/3 +20 )
-        .attr("height", heightMap/3 -15)
+        .attr("height",heightLegend)
         .attr("rx","12")
         .style('stroke','');
          
@@ -827,7 +831,7 @@ function updateLegend(minMax){ //update the legend of map
         .attr("stroke-width",'0.5')
         .attr("x", function(d){ if(label =="NUMBER OF CRIMES") return size ;
                                 else return  5;})
-        .attr("y",322+size) 
+        .attr("y",startYlegend+size) 
         .style("fill", '#000000')
         .text(label)
         .style('font-size','12px')
@@ -837,7 +841,7 @@ function updateLegend(minMax){ //update the legend of map
     .enter()
     .append("rect")
       .attr("x", 5)
-      .attr("y", function(d,i){ return 345 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
+      .attr("y", function(d,i){ return startYlegend+20 + i*(size+5)}) // 100 is where the first dot appears. 25 is the distance between dots
       .attr("width", size)
       .attr("height", size)
       .style("fill", function(d){ return color(d)})
@@ -853,7 +857,7 @@ function updateLegend(minMax){ //update the legend of map
         else return color(d)})
         .attr("stroke-width",'0.2')
         .attr("x", 10 + size)
-        .attr("y", function(d,i){ return 345+ i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+        .attr("y", function(d,i){ return startYlegend+20 + i*(size+5) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
         .style("fill", '#000000')
         .text(function(d){ return d})
         .attr("text-anchor", "left")
@@ -865,7 +869,7 @@ function updateLegend(minMax){ //update the legend of map
     .attr("stroke","#000000")
     .attr("stroke-width",'0.5')
     .attr("x", 10)
-    .attr("y", 455)
+    .attr("y", startYlegend+130)
     .style("fill", '#000000')
     .text("TERRITORY STROKES")
     .style('font-size','12px');
@@ -875,9 +879,9 @@ function updateLegend(minMax){ //update the legend of map
     .enter()
     .append('line')
       .attr("x1", 5)
-      .attr("y1", function(d,i){return 455+10 +(i*10); })
+      .attr("y1", function(d,i){return startYlegend+140 +(i*15); })
       .attr("x2", 25  )
-      .attr("y2", function(d,i){return 455+10 +(i*10); })
+      .attr("y2", function(d,i){return startYlegend+140 +(i*15); })
       .style('stroke',function(d){return d})
       .style('stroke-width',5)
       .style('fill',function(d){return d})
@@ -890,7 +894,7 @@ function updateLegend(minMax){ //update the legend of map
       .enter()
       .append('text')
         .attr("x", 30)
-        .attr("y", function(d,i){return 455+10 +(i*10); })
+        .attr("y", function(d,i){return startYlegend+140 +(i*15); })
         .text(function(d){if(d=="#000000")return 'color Terr unchanged';else return 'color Territory changed'})
         .style("alignment-baseline", "middle")
         .style("fill", function(d){return d})
