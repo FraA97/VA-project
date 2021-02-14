@@ -24,7 +24,7 @@ function createMDS(vis, pop, coeff, year){
     //var coeff_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/coefficienti.csv"
     var coeff_path = "datasets/coefficienti.csv"
     d3.text(coeff_path, function(raw) {//retrive sum of delicts
-        var dsv = d3.dsvFormat(',')
+        var dsv = d3.dsvFormat(';')
         var dataCoeff =dsv.parse(raw)
       //---------------------------------------------Computing  default dissimilarity matrix------------------------------------------------
       

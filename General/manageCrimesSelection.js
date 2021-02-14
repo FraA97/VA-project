@@ -5,14 +5,11 @@
 //var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
 var dataset_path = "datasets/dataset_crimes/dataset1219.csv"
 
-d3.text(dataset_path, function(raw) {
+d3.text("datasets/coefficienti.csv", function(raw) {
     var dsv = d3.dsvFormat(';');
     var data =dsv.parse(raw);
-    var i = 0;
-    for (const [key, value] of Object.entries(data[0])) {
-      if(i>2 && i<34) list_crimes.push(key);
-      i+=1;
-    }
+    //data = data.sort(function(a,b){return b.Coeff_reato - a.Coeff_reato})   //sort according to coeff of danger
+    list_crimes = data.map(function(d) { return d.Reati });
     var label = d3.select('#crimes')
                   .append('label')
                   .attr('for','selCrime')
