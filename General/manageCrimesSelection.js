@@ -127,8 +127,10 @@ d3.text("datasets/coefficienti.csv", function(raw) {
 
 function crimeSize(){
   var crimes = d3.selectAll('.select2-selection__choice');
-  
-  console.log(crimes);
-  
- // .style('font-size','10px')
+  crimes.each(function(d){
+    var crime = d3.select(this).attr('title');//name of the crime
+    d3.select(this).style('font-size',function(){
+      //write the function for manage the font size of crime 'crime'
+    })
+  })
 }

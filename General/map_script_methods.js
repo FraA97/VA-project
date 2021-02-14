@@ -940,7 +940,7 @@ function highlightTer(){ //mouseover on legend rectangles
   }
 
   var names=[]
-  mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;})
+  mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;});
   names.forEach(function(d){
     d3.select("#my_dataviz").selectAll('path').each(function(t){
       if (d3.select(this).attr("name") != null){
