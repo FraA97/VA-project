@@ -4,7 +4,7 @@ url_regioni = "./datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
 url_province = "./datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
 var countStroke=false;
 function createMapReg(geojson) {
-    var projection = d3.geoEquirectangular().fitSize([widthMap,(heightMap+200)*1.4],geojson).scale(0.01);
+    var projection = d3.geoEquirectangular().fitSize([widthMap,heightMap*1.95],geojson).scale(0.01);
     
     var geoGenerator = d3.geoPath()
       .projection(projection);
@@ -53,7 +53,7 @@ if(container) {
    L.geoJson(geojson).addTo(map);
 }
 */
-  var projection = d3.geoEquirectangular().fitSize([widthMap,(heightMap+200)*1.4],geojson)
+  var projection = d3.geoEquirectangular().fitSize([widthMap,heightMap*1.95],geojson)
                                           .scale(0.01);
   
   var geoGenerator = d3.geoPath().projection(projection);
@@ -421,7 +421,7 @@ function computeColourScales(){
                   else{ //if some crimes are been selected
                     for (const [key, value] of Object.entries(d)) {
                       if(selected_crimes.includes(key)){ //"selected_crimes" is the array that contain all crimes slected by user (by default it start with all crimes)
-                          tot_selected_crimes_per_year+=parseInt(value);
+                          tot_selected_crimes_per_year+=parseFloat(value);
                       }
                     }
                     return tot_selected_crimes_per_year;
@@ -439,7 +439,7 @@ function computeColourScales(){
                   else{ //if some crimes are been selected
                     for (const [key, value] of Object.entries(d)) {
                       if(selected_crimes.includes(key)){ //"selected_crimes" is the array that contain all crimes slected by user (by default it start with all crimes)
-                        tot_selected_crimes_per_year+=parseInt(value);
+                        tot_selected_crimes_per_year+=parseFloat(value);
                       }
                     }
                     return (tot_selected_crimes_per_year/d.popolazione)*10000;
@@ -507,7 +507,7 @@ function computeColourScales(){
                       else{ //if some crimes are been selected
                         for (const [key, value] of Object.entries(d)) {
                             if(selected_crimes.includes(key)){ ////FILTER CRIMES. "selected_crimes" is the array that contain all crimes slected by user (by default it start with all crimes)
-                                tot_selected_crimes_per_year+=parseInt(value);            
+                                tot_selected_crimes_per_year+=parseFloat(value);            
                             }
                         }
                         return tot_selected_crimes_per_year;
@@ -523,7 +523,7 @@ function computeColourScales(){
                       else{ //if some crimes are been selected
                         for (const [key, value] of Object.entries(d)) {
                             if(selected_crimes.includes(key)){ //FILTER CRIMES "selected_crimes" is the array that contain all crimes sElected by user (by default it start with all crimes)
-                                tot_selected_crimes_per_year+=parseInt(value);
+                                tot_selected_crimes_per_year+=parseFloat(value);
                             }
                         }
                         return (tot_selected_crimes_per_year/d.popolazione)*10000; //num crimes each 10000 inhabitants
@@ -796,6 +796,7 @@ function selectAllTer(){
 function updateLegend(minMax){ //update the legend of map
   //CRIME SELECTION 
   crimeSize()
+  console.log(minMax)
   var rangeLeg=(minMax[1]-minMax[0])/5;
   var keys =[];
   if(computationType==0) var label =['NUMBER OF CRIMES'];
@@ -803,7 +804,8 @@ function updateLegend(minMax){ //update the legend of map
   for(i=0; i<5;i++){
     var minvalue= minMax[0]+ (i*rangeLeg);
     var maxvalue= minvalue+rangeLeg;
-    var str = '<'+Number(Math.ceil(minvalue.toFixed(3)) ).toLocaleString()+'-'+Number(Math.ceil(maxvalue.toFixed(3)) ).toLocaleString()+'>'
+    if(computationType==0 || maxvalue>5)var str = '<'+Number(Math.ceil(minvalue.toFixed(3)) ).toLocaleString()+'-'+Number(Math.ceil(maxvalue.toFixed(3)) ).toLocaleString()+'>'
+    else var str = '<'+Number(minvalue.toFixed(3) ).toLocaleString()+'-'+Number(maxvalue.toFixed(3) ).toLocaleString()+'>'
     keys.push(str);
   }
   
