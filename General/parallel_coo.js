@@ -28,10 +28,10 @@ for (let i = 2012; i < 2020; i++) {
 
 
 // set the dimensions and margins of the graph
-var margin = {top: 50, right: 15, bottom: 10, left: 0},
+var margin = {top: 50, right: 15, bottom: 15, left: 0},
     width = document.getElementById("my_dataviz").clientWidth+ margin.left + margin.right
-    height = 340 - margin.top - margin.bottom;
-    console.log(width)
+    height = document.getElementById("my_dataviz").clientHeight - margin.top - margin.bottom;
+    //console.log(width)
 // append the svg_PC object to the body of the page
 var svg_pc = d3.select("#my_dataviz")
             .append("svg")
@@ -227,7 +227,11 @@ function fillCrimeSelect(dimensions){
 
 
 function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
+    //clean and retrieve measuremenets
     d3.select("#my_dataviz").selectAll("*").remove();
+    margin = {top: 50, right: 15, bottom: 15, left: 0},
+    width = document.getElementById("my_dataviz").clientWidth+ margin.left + margin.right
+    height = document.getElementById("my_dataviz").clientHeight - margin.top - margin.bottom;
     svg_pc = d3.select("#my_dataviz")
             .append("svg")
             .attr("width", width +margin.left + margin.right)
@@ -481,3 +485,16 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         }
     })        
 }
+function updLeg(){if(legC==0) {legC+=1;console.log('iii'); return null;}
+                  else  return updateLegend( split(d3.select('#mapReg').attr('minMax')) )}
+(function(){
+  var lastWidth = 0;
+  function pollZoomFireEvent() {
+    var widthNow = jQuery(window).width();
+    if (lastWidth == widthNow) return;
+    lastWidth = widthNow;
+    // Length changed, user must have zoomed, invoke listeners.
+    draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+  }
+  setInterval(pollZoomFireEvent, 100);
+})();
