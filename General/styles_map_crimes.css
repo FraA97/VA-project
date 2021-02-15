@@ -138,7 +138,13 @@ body {
 
   #crimes {
     width: 500px;
-    text-align: center;
+    text-align: left;
+  }
+  #scrollBar{
+    position: absolute;
+    width: 100%;
+    height:30%;
+    margin-top: 70%;
   }
 
   #computation, #mcomputation, #visualizationType
@@ -156,12 +162,6 @@ body {
     fill: none;
     stroke: black;
     shape-rendering: crispEdges;
-}
-
-#regions{
-  height: 80%;
-  width: 100%;
-  position: relative;
 }
 
 .axis text {
@@ -192,8 +192,8 @@ circle {
   border:3px solid black;
   position: absolute;
   top:57%;
-  height: 42%;
-  width: 98%;
+  height: 45%;
+  width: 100%;
 }
 #my_dataviz{
   height: 100%;
@@ -201,8 +201,7 @@ circle {
   position: relative;
 }
 #PCtooltip {
-  border-radius: 10px;
-  border-color: #333;
+  border-radius: 25px;
   background: lightgray; 
   display:none;
   padding: 5px;

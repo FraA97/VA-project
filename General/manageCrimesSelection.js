@@ -25,13 +25,17 @@ d3.text("datasets/coefficienti.csv", function(raw) {
     .append('b')
     .text('Clear')
     .on('click',function(d){
+      var crimes = d3.selectAll('.select2-selection__choice');
+      crimes.each(function(d){
+        d3.select(this).transition().style('font-size','0px').duration(300);
+        setTimeout(() => {  $('.selectCrimes').val(null).trigger('change'); }, 500); //deselect crimes
+      })
       selected_crimes = []; //clear list of selected crimes  
-      console.log(selected_crimes);
       computeColourScales(); //recompute 
       CRIMES = []
       draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
       //(valerio) //clear all crimes
-      $('.selectCrimes').val(null).trigger('change'); //deselect crimes
+     // $('.selectCrimes').val(null).trigger('change'); //deselect crimes
     });
     var selAllButton = d3.select('#crimes')
     .append('button')
@@ -71,8 +75,6 @@ d3.text("datasets/coefficienti.csv", function(raw) {
     //$.fn.select2.defaults.set("theme", "classic");
                   
 
-                  
-                  
     var options = select.selectAll("option").data(list_crimes)
     //console.log(options)
     options.enter()
@@ -92,14 +94,19 @@ d3.text("datasets/coefficienti.csv", function(raw) {
            } 
            else return false;
          });
-
+    
+         d3.select('#crimes').append('div').attr('id','scrollBar');
+    
   
   $(function()
   {
     $(".selectCrimes").select2(
     {
       closeOnSelect: false,
+      openOnDeselect:false,
       minimumResultsForSearch: Infinity,
+      scrollAfterSelect:false,
+      dropdownParent: $('#scrollBar'),
       //multiple: true
    // maximumSelectionLength: 16
     });
@@ -122,7 +129,6 @@ d3.text("datasets/coefficienti.csv", function(raw) {
     computeColourScales();
     CRIMES = selected_crimes
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-    //updateCrimeParCoord(e); (valerio [menu])
   });
 });
 colorCr()
@@ -140,18 +146,7 @@ function crimeSize(){
   })
 }
 
-//selected_crimes
-//funzione che ritorna il minimo e il massimo per i crimini selezionati
-/*colorCrime = d3.scaleQuantile()
-              .domain([minMax[0], minMax[1]]) //select min an max of retrived values
-              .range(['#ffffb2',
-                      '#fecc5c',
-                      '#fd8d3c',
-                      '#f03b20',
-                      '#bd0026']);*/
-
 /*function(crime){
-
 }*/
 function colorCr(crime){
   d3.text(dataset_path, function(raw) {
@@ -188,14 +183,19 @@ function colorCr(crime){
     var minMax= d3.extent(numbers)
     colorCrime = d3.scaleQuantile()
             .domain([minMax[0], minMax[1]]) //select min an max of retrived values
-            .range(['#ffffb2',
-                    '#fecc5c',
-                    '#fd8d3c',
-                    '#f03b20',
-                    '#bd0026']);   
+            .range(['#ffffcc',
+            '#ffeda0',
+            '#fed976',
+            '#feb24c',
+            '#fd8d3c',
+            '#fc4e2a',
+            '#e31a1c',
+            '#bd0026',
+            '#800026']);
+              
     //console.log(diz_selected_crimes)
     var crimeName = crime.attr('title');//name of the crime
-    crime.style('border','5px solid '+colorCrime(diz_selected_crimes[crimeName])) 
+    crime.transition().style('border','5px solid '+colorCrime(diz_selected_crimes[crimeName])).duration(1000);
   })  
 
 }
