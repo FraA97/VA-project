@@ -158,6 +158,12 @@ body {
     shape-rendering: crispEdges;
 }
 
+#regions{
+  height: 80%;
+  width: 100%;
+  position: relative;
+}
+
 .axis text {
     font-size: 11px;
 }
