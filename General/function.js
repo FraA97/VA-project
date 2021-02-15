@@ -48,8 +48,8 @@ function plotMds(matrix){
     regionsPosition[1],
     labels,
     {
-        w :  Math.min(720, document.documentElement.clientWidth),
-        h : w /2,
+        w :  document.getElementById("regions").clientWidth,
+        h : document.getElementById("regions").clientHeight,
         padding : 60,
         reverseX : false,
         reverseY : false,
@@ -139,3 +139,16 @@ function euclidean_distance(ar1,ar2){
   return Math.sqrt(dis)
 }
 
+function updLeg(){if(legC==0) {legC+=1;console.log('iii'); return null;}
+                  else  return updateLegend( split(d3.select('#mapReg').attr('minMax')) )}
+(function(){
+  var lastWidth = 0;
+  function pollZoomFireEvent() {
+    var widthNow = jQuery(window).width();
+    if (lastWidth == widthNow) return;
+    lastWidth = widthNow;
+    d3.select("#regions").selectAll("*").remove()
+    createMDS(visualization, computationType, coeff_value, selectedYears)
+  }
+  setInterval(pollZoomFireEvent, 100);
+})();

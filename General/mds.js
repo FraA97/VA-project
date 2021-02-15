@@ -62,7 +62,7 @@
                 .ticks(params.xTicks || 7),
 
             yAxis = d3.axisLeft(yScale)
-                .ticks(params.yTicks || 7);
+                .ticks(5);
 
         var svg = element.select("svg");
         if(svg.empty()){
@@ -203,6 +203,7 @@
 
                 // revert circles to initial style
                 nodes.selectAll("circle").attr("class", "non_brushed");
+                nodes.selectAll("#text").attr("class", "non_brushed");
 
                 var brush_coords = d3.brushSelection(this);
 
