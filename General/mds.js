@@ -78,7 +78,7 @@
             .attr("id", "clip")
             .append("svg:rect")
             .attr("width", w - (padding*0.8))       //asse di destra
-            .attr("height", h - (padding*1.2))   //asse di sotto
+            .attr("height", h - (padding*1.1))   //asse di sotto
             .attr("x", (padding*0.45))         //asse di sinistra
             .attr("y", (padding*0.7));         //asse di sopra
         
@@ -99,7 +99,7 @@
             .on("end", displayTable)
 
         var zoom = d3.zoom()
-            .scaleExtent([.5, 20])
+            .scaleExtent([.5, 25])
             .extent([[-padding, -padding], [width+padding, height+padding]])
             .on("zoom", zoomed);
 
@@ -132,12 +132,31 @@
                 })
               })
             brushed_regions =[]
-            xScale.domain(xDomain);
+            //brush zoom
+            /*xScale.domain(xDomain);
             yScale.domain(yDomain);
-            zooming();
+            zooming();*/
             })
-        .call(brush)
-        /*.call(zoom)*/;
+        .call(brush);
+        //.call(zoom);
+
+        //zoom over x axis
+        svg.append("rect")
+            .attr("width", w)
+            .attr("height", h/2)
+            .attr("y", h/1.3)            
+            .style("fill", "none")
+            .style("pointer-events", "all")
+            .call(zoom);
+
+        //zoom over y axis
+        /*svg.append("rect")
+            .attr("width", h/3)
+            .attr("height", h)
+            .attr("x", 0)            
+            .style("fill", "none")
+            .style("pointer-events", "all")
+            .call(zoom);*/
 
         var nodes = svg.attr("clip-path", "url(#clip)")
             .selectAll("circle")
@@ -150,7 +169,6 @@
             .attr("cx", function(d, i) { return xScale(xPos[i]); })
             .attr("cy", function(d, i) { return yScale(yPos[i]); })
             .attr("class", "non_brushed");
-
         nodes.append("text")
             .attr("id", "text")
             .attr("text-anchor", "middle")
@@ -160,9 +178,8 @@
             .attr("fill", "black")   // Font color
             .style("font", "14px times")  // Font size
             .attr("class", "non_brushed");
-
-        /*nodes.attr("id", "points")
-            .attr("pointer-events", "all")
+        
+        /*nodes.attr("pointer-events", "all")
             .on('mouseover', function (d, i) {
                 d3.select(this).select("text").transition()
                 .duration('100')
@@ -175,7 +192,7 @@
             .on('mouseout', function (d, i) {
                 d3.select(this).select("text").transition()
                 .duration('200')
-                .attr("class", "non_brushed") 
+                //.attr("class", "non_brushed") 
                 .style("font", "14px times");                               
                     
             })*/
@@ -198,6 +215,13 @@
                             return isBrushed(brush_coords, cx, cy);
                         })
                         .attr("class", "brushed");
+                nodes.selectAll("#text").filter(function (){
+                                var cx = d3.select(this).attr("x"),
+                                cy = d3.select(this).attr("y");
+
+                            return isBrushed(brush_coords, cx, cy);
+                        })
+                        .attr("class", "brushed_text");
             }
         }
         function displayTable() {
@@ -206,10 +230,10 @@
                 return;
             } 
 
-            //zoom
-            xScale.domain([s[0][0], s[1][0]].map(xScale.invert, xScale));
+            //brush zoom
+            /*xScale.domain([s[0][0], s[1][0]].map(xScale.invert, xScale));
             yScale.domain([s[1][1], s[0][1]].map(yScale.invert, yScale));
-            zooming();
+            zooming();*/
             //clearing brush
             d3.select(this).call(brush.move, null);
             brushed_regions=[]
