@@ -813,9 +813,17 @@ function updateLegend(minMax){ //update the legend of map
   legend.selectAll('g text').remove();
   legend.selectAll('g rect').remove();
   legend.selectAll('g line').remove();
-  var color = d3.scaleOrdinal()
+  if(minMax[1]==0){
+    var color = d3.scaleOrdinal()
+    .domain(keys)
+    .range(['#bd0026','#bd0026','#bd0026','#bd0026','#bd0026']);
+  }
+  else{
+    var color = d3.scaleOrdinal()
     .domain(keys)
     .range(['#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026']);
+  }
+  
 
   var colorStroke=['#000000','#007F5F']
 

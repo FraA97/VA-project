@@ -4,7 +4,8 @@
 //generate list of crimes reading dataset of crimes
 //var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
 var dataset_path = "datasets/dataset_crimes/dataset1219.csv"
-
+diz_selected_crimes={}
+colorCrime= null;
 d3.text("datasets/coefficienti.csv", function(raw) {
     var dsv = d3.dsvFormat(';');
     var data =dsv.parse(raw);
@@ -124,13 +125,77 @@ d3.text("datasets/coefficienti.csv", function(raw) {
     //updateCrimeParCoord(e); (valerio [menu])
   });
 });
+colorCr()
 
 function crimeSize(){
   var crimes = d3.selectAll('.select2-selection__choice');
   crimes.each(function(d){
-    var crime = d3.select(this).attr('title');//name of the crime
+    //var crime = d3.select(this).attr('title');//name of the crime
+    colorCr(d3.select(this));
     d3.select(this).style('font-size',function(){
-      //write the function for manage the font size of crime 'crime'
+      if(selected_crimes.length<20) return '20px'
+      else return '15px'
     })
+    //d3.select(this).style('border','5px solid '+colorCrime(diz_selected_crimes[crime]))
   })
+}
+
+//selected_crimes
+//funzione che ritorna il minimo e il massimo per i crimini selezionati
+/*colorCrime = d3.scaleQuantile()
+              .domain([minMax[0], minMax[1]]) //select min an max of retrived values
+              .range(['#ffffb2',
+                      '#fecc5c',
+                      '#fd8d3c',
+                      '#f03b20',
+                      '#bd0026']);*/
+
+/*function(crime){
+
+}*/
+function colorCr(crime){
+  d3.text(dataset_path, function(raw) {
+    var dsv = d3.dsvFormat(';');
+    var data =dsv.parse(raw);
+
+  var italia = d3.nest() //create dictionary on regions name
+              .key(function(d) { 
+                  if(d.territorio=='Italia') return d.territorio; })
+              .entries(stocks = data);      
+
+  // console.log(italia[0])
+    diz_selected_crimes={}
+    for(i=0; i<selected_crimes.length;i++){//initialize all crimes to 0
+      diz_selected_crimes[selected_crimes[i]]=0;
+    }
+    //console.log(diz_selected_crimes);
+
+    italia[0].values.forEach(function(d) { 
+      if(selectedYears.includes(d.anno)){
+        for (const [key, value] of Object.entries(d)) {
+          if(selected_crimes.includes(key)){ //"selected_crimes" is the array that contain all crimes slected by user (by default it start with all crimes)
+            diz_selected_crimes[key]+=parseInt(value);
+          }
+        }
+      }
+    
+    })
+    var numbers=[]
+    for (var prop in diz_selected_crimes) {
+      numbers.push(diz_selected_crimes[prop]);
+    }
+    //console.log(diz_selected_crimes)
+    var minMax= d3.extent(numbers)
+    colorCrime = d3.scaleQuantile()
+            .domain([minMax[0], minMax[1]]) //select min an max of retrived values
+            .range(['#ffffb2',
+                    '#fecc5c',
+                    '#fd8d3c',
+                    '#f03b20',
+                    '#bd0026']);   
+    //console.log(diz_selected_crimes)
+    var crimeName = crime.attr('title');//name of the crime
+    crime.style('border','5px solid '+colorCrime(diz_selected_crimes[crimeName])) 
+  })  
+
 }
