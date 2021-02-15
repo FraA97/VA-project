@@ -186,6 +186,13 @@ circle {
   border:3px solid black;
   position: absolute;
   top:57%;
+  height: 45%;
+  width: 100%;
+}
+#my_dataviz{
+  height: 100%;
+  width: 100%;
+  position: relative;
 }
 #PCtooltip {
   border-radius: 25px;
