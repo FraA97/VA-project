@@ -39,8 +39,8 @@
             h = params.h || w,
             xDomain = [Math.min.apply(null, xPos),
                        Math.max.apply(null, xPos)],
-            yDomain = [Math.max.apply(null, yPos),
-                       Math.min.apply(null, yPos)],
+            yDomain = [Math.min.apply(null, yPos),
+                       Math.max.apply(null, yPos)],
             pointRadius = params.pointRadius || 3;
 
         if (params.reverseX) {
@@ -56,7 +56,7 @@
 
             yScale = d3.scaleLinear().
                 domain(yDomain)
-                .range([padding, h-padding]),
+                .range([h-padding, padding]),
 
             xAxis = d3.axisBottom(xScale)
                 .ticks(params.xTicks || 7),
@@ -73,20 +73,35 @@
         else{
             element.select("svg").selectAll("*").remove()
         }
+
+        var clip = svg.append("defs").append("svg:clipPath")
+            .attr("id", "clip")
+            .append("svg:rect")
+            .attr("width", w - (padding*0.8))       //asse di destra
+            .attr("height", h - (padding*1.2))   //asse di sotto
+            .attr("x", (padding*0.45))         //asse di sinistra
+            .attr("y", (padding*0.7));         //asse di sopra
         
         svg.append("g")
             .attr("class", "axis")
+            .attr("id", "xaxis")
             .attr("transform", "translate(0," + (h - padding + 2*pointRadius) + ")")
             .call(xAxis);
 
         svg.append("g")
             .attr("class", "axis")
+            .attr("id", "yaxis")
             .attr("transform", "translate(" + (padding - 2*pointRadius) + ",0)")
             .call(yAxis);
 
         var brush = d3.brush()
             .on("brush", highlightBrushedCircles)
             .on("end", displayTable)
+
+        var zoom = d3.zoom()
+            .scaleExtent([.5, 20])
+            .extent([[-padding, -padding], [width+padding, height+padding]])
+            .on("zoom", zoomed);
 
         svg.append("g")
             .on("mousedown", function(){
@@ -117,10 +132,15 @@
                 })
               })
             brushed_regions =[]
+            xScale.domain(xDomain);
+            yScale.domain(yDomain);
+            zooming();
             })
-        .call(brush);
+        .call(brush)
+        /*.call(zoom)*/;
 
-        var nodes = svg.selectAll("circle")
+        var nodes = svg.attr("clip-path", "url(#clip)")
+            .selectAll("circle")
             .data(labels)
             .enter()
             .append("g");
@@ -132,6 +152,7 @@
             .attr("class", "non_brushed");
 
         nodes.append("text")
+            .attr("id", "text")
             .attr("text-anchor", "middle")
             .text(function(d) { return d; })
             .attr("x", function(d, i) { return xScale(xPos[i]); })
@@ -140,7 +161,7 @@
             .style("font", "14px times")  // Font size
             .attr("class", "non_brushed");
 
-        nodes.attr("id", "points")
+        /*nodes.attr("id", "points")
             .attr("pointer-events", "all")
             .on('mouseover', function (d, i) {
                 d3.select(this).select("text").transition()
@@ -148,6 +169,8 @@
                 .style("font", "20px times")
                 .attr("class", "brushed_text") 
                 d3.select(this).raise().classed("active", true);
+                console.log(xPos[i], yPos[i])
+                console.log(xScale(xPos[i]), yScale(yPos[i]))
             })
             .on('mouseout', function (d, i) {
                 d3.select(this).select("text").transition()
@@ -155,7 +178,7 @@
                 .attr("class", "non_brushed") 
                 .style("font", "14px times");                               
                     
-            })
+            })*/
         var brushed_regions=[]
         function highlightBrushedCircles() {
 
@@ -178,12 +201,15 @@
             }
         }
         function displayTable() {
-
-            if (!d3.event.selection){
-                brushed_regions = []
+            var s = d3.event.selection
+            if (!s){
                 return;
             } 
 
+            //zoom
+            xScale.domain([s[0][0], s[1][0]].map(xScale.invert, xScale));
+            yScale.domain([s[1][1], s[0][1]].map(yScale.invert, yScale));
+            zooming();
             //clearing brush
             d3.select(this).call(brush.move, null);
             brushed_regions=[]
@@ -235,5 +261,38 @@
 
         return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
         }
+
+        //zoom with brush
+
+        function zooming() {
+
+            var t = svg.transition().duration(750);
+            svg.select("#xaxis").transition(t).call(xAxis);
+            svg.select("#yaxis").transition(t).call(yAxis);
+            svg.selectAll("circle").transition(t)
+                .attr('cx', function(d,i) {return xScale(xPos[i])})
+                .attr('cy', function(d,i) {return yScale(yPos[i])});
+            svg.selectAll("#text").transition(t)                
+                .attr("text-anchor", "middle")
+                .attr('x', function(d,i) {return xScale(xPos[i])})
+                .attr('y', function(d,i) {return yScale(yPos[i]) - 2 *pointRadius;});
+        }
+
+        /* zoom with mouse */
+        function zoomed() {
+            // create new scale ojects based on event
+                var new_xScale = d3.event.transform.rescaleX(xScale);
+                var new_yScale = d3.event.transform.rescaleY(yScale);
+            // update axes
+                svg.select("#xaxis").call(xAxis.scale(new_xScale));
+                svg.select("#yaxis").call(yAxis.scale(new_yScale));
+                svg.selectAll("circle")
+                 .attr('cx', function(d,i) {return new_xScale(xPos[i])})
+                 .attr('cy', function(d,i) {return new_yScale(yPos[i])});
+                svg.selectAll("#text")                
+                .attr("text-anchor", "middle")
+                 .attr('x', function(d,i) {return new_xScale(xPos[i])})
+                 .attr('y', function(d,i) {return new_yScale(yPos[i]) - 2 *pointRadius;});
+            }
     };
 }(window.mds = window.mds || {}));
