@@ -229,6 +229,10 @@ function fillCrimeSelect(dimensions){
 function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     svg_PC.selectAll("*").remove();
     //console.log(REGIONS)
+    svg_pc = d3.select("#my_dataviz")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height + margin.top + margin.bottom)
     const PCtooltip = d3.select('#PCtooltip');
     d3.text(dataset_path, function(raw) {//retrive sum of delicts
         var dsv = d3.dsvFormat(';');
@@ -266,7 +270,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     //asse x -> it find the best position for each Y axis
     x = d3.scalePoint() //Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
         .domain(dimensions)  ///.domain(["territorio", "anno", "popolazione",..])
-        .range([0, Math.min(screen.width,99*dimensions.length)])///general width of the graph, varia a seconda di quanti crimini metti
+        .range([0, Math.min(width,99*dimensions.length) ])///general width of the graph, varia a seconda di quanti crimini metti
         .padding(0.5);
         //.range([0, (350-11*dimensions.length)*dimensions.length])///general width of the graph, varia a seconda di quanti crimini metti
 
