@@ -622,12 +622,12 @@ function updateSelectedYears(){ //change value of list of selected years
   computeColourScales(); //for map 
   YEAR = selectedYears
   draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-  createMDS(visualization, computationType, coeff_value, selectedYears)
+  createMDS(visualization, computationType, mdsComputationType, selectedYears)
 }
-var coeff_value = 0;
+
 function loadMdsComputationValue(value){
-  coeff_value = value
-  return coeff_value;
+  mdsComputationType = value
+  return mdsComputationType;
 }
 
 

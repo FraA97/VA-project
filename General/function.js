@@ -148,7 +148,7 @@ function updLeg(){if(legC==0) {legC+=1;console.log('iii'); return null;}
     if (lastWidth == widthNow) return;
     lastWidth = widthNow;
     d3.select("#regions").selectAll("*").remove()
-    createMDS(visualization, computationType, coeff_value, selectedYears)
+    createMDS(visualization, computationType, mdsComputationType, selectedYears)
   }
   setInterval(pollZoomFireEvent, 100);
 })();
