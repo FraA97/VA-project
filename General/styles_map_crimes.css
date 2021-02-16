@@ -109,6 +109,10 @@ body {
 
   }
 
+  #central_view{
+    position: relative;
+    width: 45%;
+  }
   #yearCheckboxes {
     display: table;
     margin-left: 10px;

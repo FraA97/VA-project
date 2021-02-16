@@ -4,7 +4,7 @@ url_regioni = "./datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
 url_province = "./datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
 var countStroke=false;
 function createMapReg(geojson) {
-    var projection = d3.geoEquirectangular().fitSize([widthMap,heightMap*1.95],geojson).scale(0.01);
+    var projection = d3.geoEquirectangular().fitSize([widthMap,heightMap*1.99],geojson).scale(0.01);
     
     var geoGenerator = d3.geoPath()
       .projection(projection);
@@ -34,7 +34,7 @@ function createMapReg(geojson) {
       });
       
       if(count==0){
-        zoom.scaleTo(d3.select("#map").transition().duration(600), 2.0);
+        zoom.scaleTo(d3.select("#map").transition().duration(600), 2.3);
         count+=1;
       } 
 }
@@ -53,7 +53,7 @@ if(container) {
    L.geoJson(geojson).addTo(map);
 }
 */
-  var projection = d3.geoEquirectangular().fitSize([widthMap,heightMap*1.95],geojson)
+  var projection = d3.geoEquirectangular().fitSize([widthMap,heightMap*1.99],geojson)
                                           .scale(0.01);
   
   var geoGenerator = d3.geoPath().projection(projection);
@@ -835,7 +835,7 @@ function updateLegend(minMax){ //update the legend of map
         .attr('id',"recLegendMap")
         .attr("x",0)
         .attr("y",startYlegend) 
-        .attr("width", widthMap/3 +20 )
+        .attr("width", widthMap/3 )
         .attr("height",heightLegend)
         .attr("rx","12")
         .style('stroke','');

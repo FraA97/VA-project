@@ -1,5 +1,5 @@
 //set width and height of svg shape
-var widthMap = 400,
+var widthMap = 500,
     heightMap = 540;
 
 var marginZoom = { top: -5, right: -5, bottom: -5, left: -5 }
