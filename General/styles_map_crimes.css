@@ -6,6 +6,7 @@ body {
   #block_container
   {
     height: 55%;
+    width:94%;
     position: absolute;
     display: flex;
     justify-content: left;
@@ -144,7 +145,7 @@ body {
     position: absolute;
     width: 100%;
     height:30%;
-    margin-top: 70%;
+    margin-top: 50%;
   }
 
   #computation, #mcomputation, #visualizationType
@@ -197,8 +198,8 @@ circle {
   border:3px solid black;
   position: absolute;
   top:57%;
-  height: 45%;
-  width: 100%;
+  height: 42%;
+  width: 97%;
 }
 #my_dataviz{
   height: 100%;
