@@ -111,10 +111,11 @@ body {
 
   #central_view{
     position: relative;
-    width: 45%;
+    width: 48%;
   }
   #yearCheckboxes {
     display: table;
+    width:95%;
     margin-left: 10px;
     padding-right: 10px;
     table-layout: fixed; /*Optional*/

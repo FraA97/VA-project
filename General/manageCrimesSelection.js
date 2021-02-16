@@ -139,8 +139,8 @@ function crimeSize(){
     //var crime = d3.select(this).attr('title');//name of the crime
     colorCr(d3.select(this));
     d3.select(this).style('font-size',function(){
-      if(selected_crimes.length<20) return '20px'
-      else return '15px'
+      if(selected_crimes.length<20) return '110%';
+      else return '88%';
     })
     //d3.select(this).style('border','5px solid '+colorCrime(diz_selected_crimes[crime]))
   })

@@ -34,7 +34,7 @@ function createMapReg(geojson) {
       });
       
       if(count==0){
-        zoom.scaleTo(d3.select("#map").transition().duration(600), 2.3);
+        zoom.scaleTo(d3.select("#map").transition().duration(600), 2.5);
         count+=1;
       } 
 }
