@@ -66,7 +66,7 @@
 
         var svg = element.select("svg");
         if(svg.empty()){
-            var svg = element.append("svg")
+            var svg = element.append("svg")                 //append svg only if there isn't
                     .attr("width", w)
                     .attr("height", h);
         }
@@ -74,7 +74,7 @@
             element.select("svg").selectAll("*").remove()
         }
 
-        var clip = svg.append("defs").append("svg:clipPath")
+        var clip = svg.append("defs").append("svg:clipPath")        //out of this region the points will be cancelled (for zoom)
             .attr("id", "clip")
             .append("svg:rect")
             .attr("width", w - (padding*0.8))       //asse di destra
@@ -96,32 +96,32 @@
 
         var brush = d3.brush()
             .on("brush", highlightBrushedCircles)
-            .on("end", displayTable)
+            .on("end", displayLocation)
 
         var zoom = d3.zoom()
             .scaleExtent([.5, 25])
-            .extent([[-padding, -padding], [width+padding, height+padding]])
+            .extent([[-padding, -padding], [w+padding, h+padding]])
             .on("zoom", zoomed);
 
         svg.append("g")
-            .on("mousedown", function(){
+            .on("mousedown", function(){                                           //eliminate brush
             d3.selectAll(".brushed").attr("class", "non_brushed");
             d3.selectAll(".brushed_text").attr("class", "non_brushed");
             if(visualization==1){//INTERACTIONS WITH MAP
                 var id =d3.select('#mapReg').selectAll('path').filter(function(d){
                     var terName = d3.select('#'+this['id']).attr('name');
-                    return brushed_regions.includes(terName);  
+                    return brushed_points.includes(terName);  
                 });
                 id.style('stroke-width','0.5');
             }
             else{//INTERACTIONS WITH MAP
                 var id =d3.select('#mapProv').selectAll('path').filter(function(d){
                     var terName ='  '+ d3.select('#'+this['id']).attr('name');
-                    return brushed_regions.includes(terName);  
+                    return brushed_points.includes(terName);  
                 });
                 id.style('stroke-width','0.5');
             }
-            brushed_regions.forEach(function(d){
+            brushed_points.forEach(function(d){
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                   if (d3.select(this).attr("name") != null){
                     if(d.trim() == d3.select(this).attr("name").trim()){
@@ -131,14 +131,13 @@
                   }
                 })
               })
-            brushed_regions =[]
+            brushed_points =[]
             //brush zoom
             /*xScale.domain(xDomain);
             yScale.domain(yDomain);
             zooming();*/
             })
         .call(brush);
-        //.call(zoom);
 
         //zoom over x axis
         svg.append("rect")
@@ -196,7 +195,7 @@
                 .style("font", "14px times");                               
                     
             })*/
-        var brushed_regions=[]
+        var brushed_points=[]
         function highlightBrushedCircles() {
 
             if (d3.event.selection != null) {
@@ -225,7 +224,7 @@
                         .attr("class", "brushed_text");
             }
         }
-        function displayTable() {
+        function displayLocation() {
             var s = d3.event.selection
             if (!s){
                 return;
@@ -237,21 +236,21 @@
             zooming();*/
             //clearing brush
             d3.select(this).call(brush.move, null);
-            brushed_regions=[]
+            brushed_points=[]
 
             var d_brushed =  d3.selectAll(".brushed").data();
             
             // populate array if one or more elements is brushed
             if (d_brushed.length > 0) {
-                d_brushed.forEach(d_row => brushed_regions.push(d_row))
+                d_brushed.forEach(d_row => brushed_points.push(d_row))
             }
             else{
-                brushed_regions = []
+                brushed_points = []
             }
             if(visualization==1){//INTERACTIONS WITH MAP
                 var id =d3.select('#mapReg').selectAll('path').filter(function(d){
                     var terName = d3.select('#'+this['id']).attr('name');
-                    return brushed_regions.includes(terName);  
+                    return brushed_points.includes(terName);  
                 });
                 id.style('stroke-width','2');
             }
@@ -259,12 +258,12 @@
                 var id =d3.select('#mapProv').selectAll('path').filter(function(d){
                     var terName = '  '+d3.select('#'+this['id']).attr('name');
                     //console.log(terName)
-                    return brushed_regions.includes(terName);  
+                    return brushed_points.includes(terName);  
                 });
                 //console.log(id)
                 id.style('stroke-width','1.5');
             }
-            brushed_regions.forEach(function(d){
+            brushed_points.forEach(function(d){
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                   if (d3.select(this).attr("name") != null){
                     if(d.trim() == d3.select(this).attr("name").trim()){

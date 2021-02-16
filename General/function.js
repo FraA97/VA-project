@@ -1,9 +1,8 @@
 //var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
 var dataset_path = "datasets/dataset_crimes/dataset1219.csv"
 function createMDS(vis, pop, coeff, year){
-  //d3.select("#regions").selectAll("*").remove()
 
-  d3.text(dataset_path, function(raw) {//retrive sum of delicts
+  d3.text(dataset_path, function(raw) {
     var dsv = d3.dsvFormat(';');
     var data =dsv.parse(raw);
 
@@ -13,14 +12,14 @@ function createMDS(vis, pop, coeff, year){
         return d.territorio.match(/      /)                                                //eliminate regions
       }
       else{
-        if(d.territorio.match(/      /)){return false}                                    //eliminate provinces
+        if(d.territorio.match(/      /)){return false}                                     //eliminate provinces
         return true;
       }
     });
     if(pop==0){
-      regions.forEach( d => delete d.popolazione);                            //eliminate column popolazione
+      regions.forEach( d => delete d.popolazione);                                        //eliminate column popolazione
     }
-    regions.forEach( d => delete d.totale);                                 //eliminate column totale
+    regions.forEach( d => delete d.totale);                                               //eliminate column totale
     //var coeff_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/coefficienti.csv"
     var coeff_path = "datasets/coefficienti.csv"
     d3.text(coeff_path, function(raw) {//retrive sum of delicts
@@ -39,16 +38,14 @@ function createMDS(vis, pop, coeff, year){
 }
 
 function plotMds(matrix){
-  var regionsPosition = numeric.transpose(mds.classic(matrix));
-    var w = Math.min(720, document.documentElement.clientWidth - 20), 
-    h = w /2;
+  var locationCoordinates = numeric.transpose(mds.classic(matrix));               //mds computation
 
-    mds.drawD3ScatterPlot(d3.select("#regions"),
-    regionsPosition[0],
-    regionsPosition[1],
+    mds.drawD3ScatterPlot(d3.select("#regions"),                                  //mds plot
+    locationCoordinates[0],
+    locationCoordinates[1],
     labels,
     {
-        w :  document.getElementById("regions").clientWidth,
+        w : document.getElementById("regions").clientWidth,
         h : document.getElementById("regions").clientHeight,
         padding : 60,
         reverseX : false,
@@ -60,7 +57,7 @@ function plotMds(matrix){
 
 function chooseCharacteristic(pop, dataCoeff, regions, c, year){
   if(c == 0){
-      coeff = dataCoeff.map(function(d) { return d.Coeff_reato });   //select only this specific column
+      coeff = dataCoeff.map(function(d) { return d.Coeff_reato });            //select only this specific column
   }
   else if(c == 1){
       coeff = dataCoeff.map(function(d) { return d.Coeff_tot_reati });
@@ -70,7 +67,7 @@ function chooseCharacteristic(pop, dataCoeff, regions, c, year){
   }
 
   var dissM= [];
-  size = regions.filter(function(d){ return d.anno == "2019"});
+  size = regions.filter(function(d){ return d.anno == "2019"});             //establish size of dissimilarity matrix
   for(var i=0; i< size.length; i++) {
     dissM[i] = [];
     for(var j=0; j< size.length; j++) {
@@ -82,7 +79,7 @@ function chooseCharacteristic(pop, dataCoeff, regions, c, year){
     var anno = regions.filter(function(d){ return d.anno == y });
 
     if(pop==1){
-      var popolazione = anno.map(function(d){ return d.popolazione});
+      var popolazione = anno.map(function(d){ return d.popolazione});     //take population values and eliminate them from dataset
       anno.forEach( d => delete d.popolazione);
     }
 
@@ -94,7 +91,7 @@ function chooseCharacteristic(pop, dataCoeff, regions, c, year){
     anno.forEach( d => delete d.territorio);
     anno.forEach( d => delete d.anno);
 
-    var annoC = []                                //year with coefficient
+    var annoC = []                                //year matrix with coefficient
 
     for (var i = 0; i < anno.length; i++){
       annoC[i] = []
@@ -105,7 +102,7 @@ function chooseCharacteristic(pop, dataCoeff, regions, c, year){
     if(pop==1){
       for (var i = 0; i < anno.length; i++){
         for(var j=0; j < coeff.length; j++){
-          value = annoC[i][j] / popolazione[i] *10000                //applying coefficient
+          value = annoC[i][j] / popolazione[i] *10000                //weigthing over population
           annoC[i][j] = value
         }
       }
@@ -139,8 +136,7 @@ function euclidean_distance(ar1,ar2){
   return Math.sqrt(dis)
 }
 
-function updLeg(){if(legC==0) {legC+=1;console.log('iii'); return null;}
-                  else  return updateLegend( split(d3.select('#mapReg').attr('minMax')) )}
+
 (function(){
   var lastWidth = 0;
   function pollZoomFireEvent() {
