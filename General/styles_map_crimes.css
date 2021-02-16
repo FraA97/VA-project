@@ -157,6 +157,11 @@ body {
 
 
 /*MDS*/
+#regions{
+  height: 80%;
+  width: 100%;
+  position: relative;
+}
 .axis path,
 .axis line {
     fill: none;
