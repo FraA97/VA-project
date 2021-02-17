@@ -1,6 +1,6 @@
 //var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
 var dataset_path = "datasets/dataset_crimes/dataset1219.csv"
-function createMDS(vis, pop, coeff, year){
+function createMDS(vis, pop, coeff, year, labelmode, visibleLabel){
 
   d3.text(dataset_path, function(raw) {
     var dsv = d3.dsvFormat(';');
@@ -30,14 +30,14 @@ function createMDS(vis, pop, coeff, year){
       var m = chooseCharacteristic(pop, dataCoeff, regions, coeff, year)
 
       //---------------------------------------------Visualization------------------------------------------------
-      plotMds(m)
+      plotMds(m, labelmode, visibleLabel)
       
     });
 
   })
 }
 
-function plotMds(matrix){
+function plotMds(matrix, labelmode, visibleLabel){
   var locationCoordinates = numeric.transpose(mds.classic(matrix));               //mds computation
 
     mds.drawD3ScatterPlot(d3.select("#regions"),                                  //mds plot
@@ -50,6 +50,8 @@ function plotMds(matrix){
         padding : 60,
         reverseX : false,
         reverseY : false,
+        visibleLabel : visibleLabel,
+        labelmode : labelmode,
     });
 }
 
@@ -135,7 +137,6 @@ function euclidean_distance(ar1,ar2){
   }
   return Math.sqrt(dis)
 }
-
 
 (function(){
   var lastWidth = 0;
