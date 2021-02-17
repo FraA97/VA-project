@@ -187,12 +187,12 @@ body {
 }
 
 circle {
-    stroke: rgba(30, 94, 214, 0.867);
-    fill : rgba(30, 94, 214, 0.867);
+    stroke: #00cd;
+    fill : #00cd;
 }
 .brushed {
-  fill: #00cd;
-  stroke: #00cd;
+  fill: red;
+  stroke: red;
   opacity: 1.0;
 }
 
@@ -203,6 +203,16 @@ circle {
 .brushed_text{
   fill: #0e0d0d;
   opacity: 1.0;
+}
+
+div.mdsTooltip {
+  position: absolute;
+  text-align: center;
+  padding: 5px;
+  font: sans-serif;
+  background: lightgray;
+  border-radius: 25px;
+  pointer-events: none;
 }
 
 /*PARALLEL COORDINATES*/
