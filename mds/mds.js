@@ -39,8 +39,8 @@
             h = params.h || w,
             xDomain = [Math.min.apply(null, xPos),
                        Math.max.apply(null, xPos)],
-            yDomain = [Math.max.apply(null, yPos),
-                       Math.min.apply(null, yPos)],
+            yDomain = [Math.min.apply(null, yPos),
+                       Math.max.apply(null, yPos)],
             pointRadius = params.pointRadius || 3;
 
         if (params.reverseX) {
@@ -56,42 +56,250 @@
 
             yScale = d3.scaleLinear().
                 domain(yDomain)
-                .range([padding, h-padding]),
+                .range([h-padding, padding]),
 
             xAxis = d3.axisBottom(xScale)
                 .ticks(params.xTicks || 7),
 
             yAxis = d3.axisLeft(yScale)
-                .ticks(params.yTicks || 7);
+                .ticks(5);
 
-        var svg = element.append("svg")
-                .attr("width", w)
-                .attr("height", h);
 
+        if(params.labelmode){
+            if(params.visibleLabel){
+                var t = d3.selectAll("#text")
+                t.style("visibility", "visible")
+                element.selectAll(".mdsTooltip").style("display", "none");
+                return;
+            }
+            else{
+                var s = element.select("svg");
+                if(!s.empty()){
+                    var t = d3.selectAll("#text")
+                    t.style("visibility", "hidden")
+                    element.selectAll(".mdsTooltip").style("display", "block");
+                    return;
+                }
+            }
+        }
+
+        var svg = element.select("svg");
+        if(svg.empty()){
+            var svg = element.append("svg")                 //append svg only if there isn't
+                    .attr("width", w)
+                    .attr("height", h);
+        }
+        else{
+            element.select("svg").selectAll("*").remove()
+            
+            
+        }
+        element.selectAll(".mdsTooltip").remove()
+
+        var clip = svg.append("defs").append("svg:clipPath")        //out of this region the points will be cancelled (for zoom)
+            .attr("id", "clip")
+            .append("svg:rect")
+            .attr("width", w - (padding*0.8))       //asse di destra
+            .attr("height", h - (padding*1.1))   //asse di sotto
+            .attr("x", (padding*0.45))         //asse di sinistra
+            .attr("y", (padding*0.7));         //asse di sopra
+        
         svg.append("g")
             .attr("class", "axis")
+            .attr("id", "xaxis")
             .attr("transform", "translate(0," + (h - padding + 2*pointRadius) + ")")
             .call(xAxis);
 
         svg.append("g")
             .attr("class", "axis")
+            .attr("id", "yaxis")
             .attr("transform", "translate(" + (padding - 2*pointRadius) + ",0)")
             .call(yAxis);
 
-        var nodes = svg.selectAll("circle")
+        var mtooltip = element.append("div")
+            .attr("class", "mdsTooltip")
+            .style("opacity", 0);
+
+        var brush = d3.brush()
+            .on("brush", highlightBrushedCircles)
+            .on("end", displayLocation)
+
+        var zoom = d3.zoom()
+            .scaleExtent([.5, 25])
+            .extent([[-padding, -padding], [w+padding, h+padding]])
+            .on("zoom", zoomed);
+
+        svg.append("g")
+            .on("mousedown", function(){                                           //eliminate brush
+            d3.selectAll(".brushed").attr("class", "non_brushed");
+            d3.selectAll(".brushed_text").attr("class", "non_brushed");
+            brushed_points =[]
+            //brush zoom
+            /*xScale.domain(xDomain);
+            yScale.domain(yDomain);
+            zooming();*/
+            })
+        .call(brush);
+
+        //zoom over x axis
+        svg.append("rect")
+            .attr("width", w)
+            .attr("height", h/2)
+            .attr("y", h/1.3)            
+            .style("fill", "none")
+            .style("pointer-events", "all")
+            .call(zoom);
+
+        //zoom over y axis
+        /*svg.append("rect")
+            .attr("width", h/3)
+            .attr("height", h)
+            .attr("x", 0)            
+            .style("fill", "none")
+            .style("pointer-events", "all")
+            .call(zoom);*/
+
+        var nodes = svg.attr("clip-path", "url(#clip)")
+            .selectAll("circle")
             .data(labels)
             .enter()
-            .append("g");
+            .append("g")
+            .attr("id","nodes");
         
         nodes.append("circle")
             .attr("r", pointRadius)
             .attr("cx", function(d, i) { return xScale(xPos[i]); })
-            .attr("cy", function(d, i) { return yScale(yPos[i]); });
+            .attr("cy", function(d, i) { return yScale(yPos[i]); })
+            .attr("class", "non_brushed")
+            .on("mouseover", function(d) {
+                mtooltip.transition()
+                  .duration(200)
+                  .style("opacity", .9);
+                mtooltip.html(d)
+                  .style("left", (d3.mouse(this)[0]) + "px")
+                  .style("top", (d3.mouse(this)[1]-25) + "px");
+                     
+              })
+              .on("mouseout", function(d) {
+                mtooltip.transition()
+                  .duration(500)
+                  .style("opacity", 0);
+              });
 
         nodes.append("text")
+            .attr("id", "text")
             .attr("text-anchor", "middle")
             .text(function(d) { return d; })
             .attr("x", function(d, i) { return xScale(xPos[i]); })
-            .attr("y", function(d, i) { return yScale(yPos[i]) - 2 *pointRadius; });
+            .attr("y", function(d, i) { return yScale(yPos[i]) - 2 *pointRadius; })
+            .attr("fill", "black")   // Font color
+            .style("font", "14px times")  // Font size
+            .style("visibility", "hidden")
+            .attr("class", "non_brushed");
+
+        if(params.visibleLabel){                                            //remeber last label mode asked 
+            var t = d3.selectAll("#text")
+            t.style("visibility", "visible")
+            element.selectAll(".mdsTooltip").style("display", "none");
+        }
+
+        var brushed_points=[]
+        function highlightBrushedCircles() {
+
+            if (d3.event.selection != null) {
+
+                // revert circles to initial style
+                nodes.selectAll("circle").attr("class", "non_brushed");
+                nodes.selectAll("#text").attr("class", "non_brushed");
+
+                var brush_coords = d3.brushSelection(this);
+
+                // style brushed circles
+                nodes.selectAll("circle").filter(function (){
+
+                            var cx = d3.select(this).attr("cx"),
+                                cy = d3.select(this).attr("cy");
+
+                            return isBrushed(brush_coords, cx, cy);
+                        })
+                        .attr("class", "brushed");
+                nodes.selectAll("#text").filter(function (){
+                                var cx = d3.select(this).attr("x"),
+                                cy = d3.select(this).attr("y");
+
+                            return isBrushed(brush_coords, cx, cy);
+                        })
+                        .attr("class", "brushed_text");
+            }
+        }
+        function displayLocation() {
+            var s = d3.event.selection
+            if (!s){
+                return;
+            } 
+
+            //brush zoom
+            /*xScale.domain([s[0][0], s[1][0]].map(xScale.invert, xScale));
+            yScale.domain([s[1][1], s[0][1]].map(yScale.invert, yScale));
+            zooming();*/
+            //clearing brush
+            d3.select(this).call(brush.move, null);
+            brushed_points=[]
+
+            var d_brushed =  d3.selectAll(".brushed").data();
+            
+            // populate array if one or more elements is brushed
+            if (d_brushed.length > 0) {
+                d_brushed.forEach(d_row => brushed_points.push(d_row))
+            }
+            else{
+                brushed_points = []
+            }
+        }
+
+        function isBrushed(brush_coords, cx, cy) {
+
+            var x0 = brush_coords[0][0],
+                x1 = brush_coords[1][0],
+                y0 = brush_coords[0][1],
+                y1 = brush_coords[1][1];
+
+        return x0 <= cx && cx <= x1 && y0 <= cy && cy <= y1;
+        }
+
+        //zoom with brush
+
+        function zooming() {
+
+            var t = svg.transition().duration(750);
+            svg.select("#xaxis").transition(t).call(xAxis);
+            svg.select("#yaxis").transition(t).call(yAxis);
+            svg.selectAll("circle").transition(t)
+                .attr('cx', function(d,i) {return xScale(xPos[i])})
+                .attr('cy', function(d,i) {return yScale(yPos[i])});
+            svg.selectAll("#text").transition(t)                
+                .attr("text-anchor", "middle")
+                .attr('x', function(d,i) {return xScale(xPos[i])})
+                .attr('y', function(d,i) {return yScale(yPos[i]) - 2 *pointRadius;});
+        }
+
+        /* zoom with mouse */
+        function zoomed() {
+            // create new scale ojects based on event
+                var new_xScale = d3.event.transform.rescaleX(xScale);
+                var new_yScale = d3.event.transform.rescaleY(yScale);
+                
+            // update axes
+                svg.select("#xaxis").call(xAxis.scale(new_xScale));
+                svg.select("#yaxis").call(yAxis.scale(new_yScale));
+                svg.selectAll("circle")
+                 .attr('cx', function(d,i) {return new_xScale(xPos[i])})
+                 .attr('cy', function(d,i) {return new_yScale(yPos[i])});
+                svg.selectAll("#text")                
+                .attr("text-anchor", "middle")
+                 .attr('x', function(d,i) {return new_xScale(xPos[i])})
+                 .attr('y', function(d,i) {return new_yScale(yPos[i]) - 2 *pointRadius;});
+            }
+
     };
 }(window.mds = window.mds || {}));

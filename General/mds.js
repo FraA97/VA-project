@@ -116,18 +116,9 @@
             .attr("transform", "translate(" + (padding - 2*pointRadius) + ",0)")
             .call(yAxis);
 
-        var mtooltip = element.append("div")
-            .attr("class", "mdsTooltip")
-            .style("opacity", 0);
-
         var brush = d3.brush()
             .on("brush", highlightBrushedCircles)
             .on("end", displayLocation)
-
-        var zoom = d3.zoom()
-            .scaleExtent([.5, 25])
-            .extent([[-padding, -padding], [w+padding, h+padding]])
-            .on("zoom", zoomed);
 
         svg.append("g")
             .on("mousedown", function(){                                           //eliminate brush
@@ -165,6 +156,11 @@
             })
         .call(brush);
 
+        var zoom = d3.zoom()
+            .scaleExtent([.5, 25])
+            .extent([[-padding, -padding], [w+padding, h+padding]])
+            .on("zoom", zoomed);
+
         //zoom over x axis
         svg.append("rect")
             .attr("width", w)
@@ -183,12 +179,15 @@
             .style("pointer-events", "all")
             .call(zoom);*/
 
+        var mtooltip = element.append("div")
+            .attr("class", "mdsTooltip")
+            .style("opacity", 0);
+
         var nodes = svg.attr("clip-path", "url(#clip)")
             .selectAll("circle")
             .data(labels)
             .enter()
-            .append("g")
-            .attr("id","nodes");
+            .append("g");
         
         nodes.append("circle")
             .attr("r", pointRadius)
@@ -220,6 +219,12 @@
             .style("font", "14px times")  // Font size
             .style("visibility", "hidden")
             .attr("class", "non_brushed");
+
+        if(params.visibleLabel){                                            //remeber last label mode asked 
+            var t = d3.selectAll("#text")
+            t.style("visibility", "visible")
+            element.selectAll(".mdsTooltip").style("display", "none");
+        }
 
         var brushed_points=[]
         function highlightBrushedCircles() {
