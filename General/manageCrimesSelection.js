@@ -34,7 +34,6 @@ d3.text("datasets/coefficienti.csv", function(raw) {
       computeColourScales(); //recompute 
       CRIMES = []
       draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-      //(valerio) //clear all crimes
      // $('.selectCrimes').val(null).trigger('change'); //deselect crimes
     });
     var selAllButton = d3.select('#crimes')
@@ -59,7 +58,6 @@ d3.text("datasets/coefficienti.csv", function(raw) {
     .on('click',function(d){
           selected_crimes = list_crimes.slice(0,16); //add all crimes to the list
           computeColourScales(); //recompute 
-          //(valerio) //select main crimes
           CRIMES = selected_crimes
           draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
           $('.selectCrimes').val(selected_crimes).trigger('change');
@@ -83,8 +81,6 @@ d3.text("datasets/coefficienti.csv", function(raw) {
          .property('value',function(d){ return d;})
          //.text(function(d){return d;})
          .text(function(d) {
-           d3.select(this).style("font-size", 500)
-           console.log(d)
            return d
           })
          .property('selected',function(d,i){
@@ -139,8 +135,8 @@ function crimeSize(){
     //var crime = d3.select(this).attr('title');//name of the crime
     colorCr(d3.select(this));
     d3.select(this).style('font-size',function(){
-      if(selected_crimes.length<20) return '110%';
-      else return '88%';
+      if(selected_crimes.length<20) return '80%';
+      else return '60%';
     })
     //d3.select(this).style('border','5px solid '+colorCrime(diz_selected_crimes[crime]))
   })

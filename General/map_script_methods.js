@@ -4,13 +4,14 @@ url_regioni = "./datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
 url_province = "./datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
 var countStroke=false;
 function createMapReg(geojson) {
-    var projection = d3.geoEquirectangular().fitSize([widthMap,heightMap*1.99],geojson).scale(0.01);
+ // widthMap=s3.select('#map').style('width')
+    var projection = d3.geoEquirectangular().fitSize([widthMap-100,heightMap*1.85],geojson).scale(0.01);
     
     var geoGenerator = d3.geoPath()
       .projection(projection);
   
     d3.select('#map')
-        .attr('width', widthMap)
+        //.attr('width', widthMap)
         //.attr('height',heightMap)
     var u = d3.select('#mapReg')
       .selectAll('path')
@@ -34,7 +35,7 @@ function createMapReg(geojson) {
       });
       
       if(count==0){
-        zoom.scaleTo(d3.select("#map").transition().duration(600), 2.5);
+        zoom.scaleTo(d3.select("#map").transition().duration(600), 1.8);
         count+=1;
       } 
 }
@@ -53,7 +54,7 @@ if(container) {
    L.geoJson(geojson).addTo(map);
 }
 */
-  var projection = d3.geoEquirectangular().fitSize([widthMap,heightMap*1.99],geojson)
+  var projection = d3.geoEquirectangular().fitSize([widthMap-100,heightMap*1.85],geojson)
                                           .scale(0.01);
   
   var geoGenerator = d3.geoPath().projection(projection);
@@ -691,7 +692,7 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
           //console.log(oldFill)
           d3.select(id)
             //interaction with dataset:
-            .transition().style("fill", function(){
+            .style("fill", function(){
               if (computationType==0){
                 if(typeOfTer==0) return colorProv(sumDel);
                 else return  colorReg(sumDel);
@@ -700,14 +701,14 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
                 if(typeOfTer==0) return colorProv(sumDelPop);
                 else return colorReg(sumDelPop);
               }
-            }).duration(1000)
+            })
             .attr('clicked','1')
             .attr('sumDel',sumDel)
             .attr('sumDelPop',sumDelPop)
             .attr('population',population/selectedYears.length);
           
-          if(oldFill!='rgb(221, 221, 221)' && oldFill!='rgb(255, 255, 255)' && (selY[1].length>0 && selY[0].length>0) && d3.select(id).style('fill') != oldFill){
-            d3.select(id).style('stroke','#007f5f')
+          if(oldFill!='rgb(221, 221, 221)' && oldFill!='rgb(190, 189, 189)' && (selY[1].length>0 && selY[0].length>0) && d3.select(id).style('fill') != oldFill){
+            d3.select(id).style('stroke','#007f5f');
           }
           else{
             if(visualization==0) d3.select(id).style('stroke','#746E6E');
