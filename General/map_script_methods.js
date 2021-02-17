@@ -691,7 +691,7 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
           //console.log(oldFill)
           d3.select(id)
             //interaction with dataset:
-            .style("fill", function(){
+            .transition().style("fill", function(){
               if (computationType==0){
                 if(typeOfTer==0) return colorProv(sumDel);
                 else return  colorReg(sumDel);
@@ -700,7 +700,7 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
                 if(typeOfTer==0) return colorProv(sumDelPop);
                 else return colorReg(sumDelPop);
               }
-            })
+            }).duration(1000)
             .attr('clicked','1')
             .attr('sumDel',sumDel)
             .attr('sumDelPop',sumDelPop)

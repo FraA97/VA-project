@@ -27,7 +27,7 @@ d3.text("datasets/coefficienti.csv", function(raw) {
     .on('click',function(d){
       var crimes = d3.selectAll('.select2-selection__choice');
       crimes.each(function(d){
-        d3.select(this).transition().style('font-size','0px').duration(300);
+        d3.select(this).transition().style('font-size','0%').duration(300);
         setTimeout(() => {  $('.selectCrimes').val(null).trigger('change'); }, 500); //deselect crimes
       })
       selected_crimes = []; //clear list of selected crimes  

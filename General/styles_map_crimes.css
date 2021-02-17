@@ -49,7 +49,7 @@ body {
 
   .white{
     fill-opacity: 1;
-    fill: white;
+    fill: rgb(190, 189, 189);
     stroke:rgb(116, 110, 110);
     stroke-opacity: "1";
     stroke-linecap: "butt";
@@ -150,7 +150,7 @@ body {
     position: absolute;
     width: 100%;
     height:30%;
-    margin-top: 50%;
+    margin-top: 40%;
   }
 
   #computation, #mcomputation, #visualizationType
