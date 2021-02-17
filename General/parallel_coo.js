@@ -303,7 +303,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         var d = document.getElementById('PCtooltip');
         PCtooltip.style('display', 'block');
         d.style.position = "absolute"; 
-        d.style.top = event.pageY-550+"px"
+        d.style.top = event.pageY-500+"px"
         d.style.left = event.pageX+"px"
         d3.selectAll('#PCtooltip').raise().classed("active", true);
     }
