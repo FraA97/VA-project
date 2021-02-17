@@ -190,9 +190,9 @@ function showTooltipReg(d,flag) {
               .html(label)
              // .attr('font-size','10')
               .attr("style", function(d){
-                if(mouse[0]>= widthMap/2){
+                if(mouse[0]>= d3.select('#map').style('width').slice(0,-2)/2){
                   if(flag==150) return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-10)+"px;top:"+(mouse[1]-parseInt(tooltip.style('height').slice(0, -2))-10 )+"px";
-                  else return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-100)+"px";
+                  else return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1])/*-parseInt(tooltip.style('width').slice(0, -2)))*/+"px";
                 }
                 else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";
               });
@@ -250,7 +250,7 @@ function showTooltipProv(d,flag) {
           //.attr("style", "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px")
           .html(label)
           .attr("style", function(d){
-            if(mouse[0]>= widthMap/2){ 
+            if(mouse[0]>= d3.select('#map').style('width').slice(0,-2)/2){ 
               if(flag==150)return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-10)+"px;top:"+(mouse[1]-parseInt(tooltip.style('height').slice(0, -2))-10 )+"px";
               else return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";
             }
@@ -879,7 +879,14 @@ function updateLegend(minMax){ //update the legend of map
         .style("alignment-baseline", "middle")
         .style('font-size','12px');
 /////////////////////////////////////////////////
-
+  legend.append('line')
+    .attr("x1", 0)
+    .attr("y1", startYlegend+98)
+    .attr("x2", widthMap/3)
+    .attr("y2", startYlegend+98)
+    .style('stroke','black')
+    .style('stroke-width',1)
+    //.style('fill',function(d){return d})
   legend.append('text')
     .attr("stroke","#000000")
     .attr("stroke-width",'0.5')
