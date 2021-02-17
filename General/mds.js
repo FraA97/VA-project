@@ -69,6 +69,7 @@
             if(params.visibleLabel){
                 var t = d3.selectAll("#text")
                 t.style("visibility", "visible")
+                element.selectAll(".mdsTooltip").style("display", "none");
                 return;
             }
             else{
@@ -76,6 +77,7 @@
                 if(!s.empty()){
                     var t = d3.selectAll("#text")
                     t.style("visibility", "hidden")
+                    element.selectAll(".mdsTooltip").style("display", "block");
                     return;
                 }
             }
@@ -89,7 +91,10 @@
         }
         else{
             element.select("svg").selectAll("*").remove()
+            
+            
         }
+        element.selectAll(".mdsTooltip").remove()
 
         var clip = svg.append("defs").append("svg:clipPath")        //out of this region the points will be cancelled (for zoom)
             .attr("id", "clip")

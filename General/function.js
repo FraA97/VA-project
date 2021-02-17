@@ -145,7 +145,7 @@ function euclidean_distance(ar1,ar2){
     if (lastWidth == widthNow) return;
     lastWidth = widthNow;
     d3.select("#regions").selectAll("*").remove()
-    createMDS(visualization, computationType, mdsComputationType, selectedYears)
+    createMDS(visualization, computationType, mdsComputationType, selectedYears, false, visibleLabel)
   }
   setInterval(pollZoomFireEvent, 100);
 })();
