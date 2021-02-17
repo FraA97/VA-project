@@ -64,6 +64,23 @@
             yAxis = d3.axisLeft(yScale)
                 .ticks(5);
 
+
+        if(params.labelmode){
+            if(params.visibleLabel){
+                var t = d3.selectAll("#text")
+                t.style("visibility", "visible")
+                return;
+            }
+            else{
+                var s = element.select("svg");
+                if(!s.empty()){
+                    var t = d3.selectAll("#text")
+                    t.style("visibility", "hidden")
+                    return;
+                }
+            }
+        }
+
         var svg = element.select("svg");
         if(svg.empty()){
             var svg = element.append("svg")                 //append svg only if there isn't
@@ -161,13 +178,15 @@
             .selectAll("circle")
             .data(labels)
             .enter()
-            .append("g");
+            .append("g")
+            .attr("id","nodes");
         
         nodes.append("circle")
             .attr("r", pointRadius)
             .attr("cx", function(d, i) { return xScale(xPos[i]); })
             .attr("cy", function(d, i) { return yScale(yPos[i]); })
             .attr("class", "non_brushed");
+
         nodes.append("text")
             .attr("id", "text")
             .attr("text-anchor", "middle")
@@ -176,6 +195,7 @@
             .attr("y", function(d, i) { return yScale(yPos[i]) - 2 *pointRadius; })
             .attr("fill", "black")   // Font color
             .style("font", "14px times")  // Font size
+            .style("visibility", "hidden")
             .attr("class", "non_brushed");
         
         /*nodes.attr("pointer-events", "all")
@@ -307,6 +327,7 @@
             // create new scale ojects based on event
                 var new_xScale = d3.event.transform.rescaleX(xScale);
                 var new_yScale = d3.event.transform.rescaleY(yScale);
+                
             // update axes
                 svg.select("#xaxis").call(xAxis.scale(new_xScale));
                 svg.select("#yaxis").call(yAxis.scale(new_yScale));
@@ -318,5 +339,6 @@
                  .attr('x', function(d,i) {return new_xScale(xPos[i])})
                  .attr('y', function(d,i) {return new_yScale(yPos[i]) - 2 *pointRadius;});
             }
+
     };
 }(window.mds = window.mds || {}));
