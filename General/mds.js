@@ -69,6 +69,7 @@
             if(params.visibleLabel){
                 var t = d3.selectAll("#text")
                 t.style("visibility", "visible")
+                element.selectAll(".mdsTooltip").style("display", "none");
                 return;
             }
             else{
@@ -76,6 +77,7 @@
                 if(!s.empty()){
                     var t = d3.selectAll("#text")
                     t.style("visibility", "hidden")
+                    element.selectAll(".mdsTooltip").style("display", "block");
                     return;
                 }
             }
@@ -89,7 +91,10 @@
         }
         else{
             element.select("svg").selectAll("*").remove()
+            
+            
         }
+        element.selectAll(".mdsTooltip").remove()
 
         var clip = svg.append("defs").append("svg:clipPath")        //out of this region the points will be cancelled (for zoom)
             .attr("id", "clip")
@@ -110,6 +115,10 @@
             .attr("id", "yaxis")
             .attr("transform", "translate(" + (padding - 2*pointRadius) + ",0)")
             .call(yAxis);
+
+        var mtooltip = element.append("div")
+            .attr("class", "mdsTooltip")
+            .style("opacity", 0);
 
         var brush = d3.brush()
             .on("brush", highlightBrushedCircles)
@@ -185,7 +194,21 @@
             .attr("r", pointRadius)
             .attr("cx", function(d, i) { return xScale(xPos[i]); })
             .attr("cy", function(d, i) { return yScale(yPos[i]); })
-            .attr("class", "non_brushed");
+            .attr("class", "non_brushed")
+            .on("mouseover", function(d) {
+                mtooltip.transition()
+                  .duration(200)
+                  .style("opacity", .9);
+                mtooltip.html(d)
+                  .style("left", (d3.mouse(this)[0]) + "px")
+                  .style("top", (d3.mouse(this)[1]-25) + "px");
+                     
+              })
+              .on("mouseout", function(d) {
+                mtooltip.transition()
+                  .duration(500)
+                  .style("opacity", 0);
+              });
 
         nodes.append("text")
             .attr("id", "text")
@@ -197,24 +220,7 @@
             .style("font", "14px times")  // Font size
             .style("visibility", "hidden")
             .attr("class", "non_brushed");
-        
-        /*nodes.attr("pointer-events", "all")
-            .on('mouseover', function (d, i) {
-                d3.select(this).select("text").transition()
-                .duration('100')
-                .style("font", "20px times")
-                .attr("class", "brushed_text") 
-                d3.select(this).raise().classed("active", true);
-                console.log(xPos[i], yPos[i])
-                console.log(xScale(xPos[i]), yScale(yPos[i]))
-            })
-            .on('mouseout', function (d, i) {
-                d3.select(this).select("text").transition()
-                .duration('200')
-                //.attr("class", "non_brushed") 
-                .style("font", "14px times");                               
-                    
-            })*/
+
         var brushed_points=[]
         function highlightBrushedCircles() {
 

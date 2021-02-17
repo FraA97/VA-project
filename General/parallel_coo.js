@@ -277,7 +277,8 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     //asse x -> it find the best position for each Y axis
     x = d3.scalePoint() //Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
         .domain(dimensions)  ///.domain(["territorio", "anno", "popolazione",..])
-        .range([0, Math.min(document.getElementById("my_dataviz").clientWidth-margin.right,99*dimensions.length)])///general width of the graph, varia a seconda di quanti crimini metti
+        .range([0, document.getElementById("my_dataviz").clientWidth-margin.right])
+        //.range([0, Math.min(document.getElementById("my_dataviz").clientWidth-margin.right,99*dimensions.length)])///general width of the graph, varia a seconda di quanti crimini metti
         .padding(0.5);
         //.range([0, (350-11*dimensions.length)*dimensions.length])///general width of the graph, varia a seconda di quanti crimini metti
 
@@ -302,7 +303,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         var d = document.getElementById('PCtooltip');
         PCtooltip.style('display', 'block');
         d.style.position = "absolute"; 
-        d.style.top = event.pageY-550+"px"
+        d.style.top = event.pageY-500+"px"
         d.style.left = event.pageX+"px"
         d3.selectAll('#PCtooltip').raise().classed("active", true);
     }
