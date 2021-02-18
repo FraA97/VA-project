@@ -108,7 +108,7 @@ var list_crimes = []; //list of all crimes retrieved from dataset (in 'manageCri
 var selY=[[selectedYears],[selectedYears]];
 var visibleLabel = false
 //MENU CODE
-
+d3.select('#legendCrimes').append('svg').attr('id','svgLegCr')
  function changeLabelMode (){
     visibleLabel = !visibleLabel
     createMDS(visualization, computationType, mdsComputationType, selectedYears, true,  visibleLabel);
