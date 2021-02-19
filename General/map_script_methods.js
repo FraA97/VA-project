@@ -460,6 +460,7 @@ function computeColourScales(){
     var minMax=d3.extent(numbers);
     if(visualization=='0'){
       updateLegend(minMax); //update the legend of map
+      d3.select('#scrollBar').style('position', 'absolute')
     } 
     d3.select('#mapProv').attr('minMax',minMax);
     colorProv = d3.scaleQuantile()
@@ -540,6 +541,7 @@ function computeColourScales(){
     });
     var minMax=d3.extent(numbers);
     if(visualization=='1') updateLegend(minMax); //update the legend of map
+    d3.select('#scrollBar').style('position', 'absolute')
     d3.select('#mapReg').attr('minMax',minMax);
     colorReg = d3.scaleQuantile()
               .domain([minMax[0], minMax[1]]) //select min an max of retrived values
@@ -1101,7 +1103,7 @@ function updateLegCr(minMax){ //update the legend of map
       } )    
       .on('mouseover',highlightCr)
       .on('mouseout',unlightCr)
-      /*.on('click',clickCr)*/
+      .on('click',clickCr);
 
   legendCr.selectAll("mylabels") // Add one dot in the legend for each name
       .data(keys)
@@ -1122,7 +1124,7 @@ function updateLegCr(minMax){ //update the legend of map
         .style('font-size','10px');
 }
 
-function highlightCr(){ //mouseover on legend rectangles
+function highlightCr(){ //mouseover on legend crimes
   var line = d3.select(this);
   var color = line.style('stroke');
   var crimes = d3.selectAll('.select2-selection__choice');
@@ -1135,7 +1137,7 @@ function highlightCr(){ //mouseover on legend rectangles
   })
 }
 
-function unlightCr(){ //mouseout on legend rectangles
+function unlightCr(){ //mouseout on legend crimes
   var line = d3.select(this);
   var color = line.style('stroke');
   var crimes = d3.selectAll('.select2-selection__choice');
@@ -1145,8 +1147,24 @@ function unlightCr(){ //mouseout on legend rectangles
   })
   
 }
-/*
-function clickTer(){ //click on legend rectangles
+
+function clickCr(){ //click on legend crimes
+
+  var line = d3.select(this);
+  var color = line.style('stroke');
+  var crimes = d3.selectAll('.select2-selection__choice');
+  var corrCr=[];
+  crimes.each(function(d,i){
+      var crimeCol = d3.select(this).style('border').slice(9,-1) +'n';
+      if(crimeCol.includes('green')) corrCr.push( d3.select(this).node().outerText.slice(2,) );
+  })
+ 
+  selected_crimes = corrCr; //add all crimes to the list
+          computeColourScales(); //recompute 
+          CRIMES = selected_crimes
+          draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+          $('.selectCrimes').val(selected_crimes).trigger('change');
+  /*
   if(visualization=='0'){
     var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
       var terFill = d3.select('#'+this['id']).style('stroke-width');
@@ -1184,5 +1202,5 @@ function clickTer(){ //click on legend rectangles
   d3.select("#selectAll").property('checked',false);
 
   if(visualization=='0')  updateClickedProv();
-  else  updateClickedReg();
-}*/
+  else  updateClickedReg();*/
+}
