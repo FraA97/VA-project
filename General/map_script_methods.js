@@ -1143,7 +1143,7 @@ function unlightCr(){ //mouseout on legend crimes
   var crimes = d3.selectAll('.select2-selection__choice');
   crimes.each(function(d,i){
       var crimeCol = d3.select(this).style('border').slice(9,-1) +'n';
-      if(crimeCol.includes('green'))  d3.select(this).style('border','4px solid '+color);
+      if(crimeCol.includes('green'))  d3.select(this).style('border','3.5px solid '+color);
   })
   
 }

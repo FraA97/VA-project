@@ -154,7 +154,8 @@ body {
   #crimes {
     width: 100%;
     text-align: left;
-    height:80%
+    height:80%;
+  /*  overflow:auto;*/
   }
   #legendCrimes{
     width: 100%;

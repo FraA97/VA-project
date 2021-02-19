@@ -15,8 +15,8 @@ d3.text("datasets/coefficienti.csv", function(raw) {
                   .append('label')
                   .attr('for','selCrime')
                   .append('b')
-                  .text('Select Crimes:');
-    label.append('br')
+                  .text('Select Crimes:   ');
+   // label.append('br')
     //label.style("padding","100px")
 
     var clearButton = d3.select('#crimes')
@@ -44,7 +44,6 @@ d3.text("datasets/coefficienti.csv", function(raw) {
     .on('click',function(d){
           selected_crimes = list_crimes; //add all crimes to the list
           computeColourScales(); //recompute 
-          //(valerio) //select all crimes
           
           $('.selectCrimes').val(list_crimes).trigger('change');
           CRIMES = selected_crimes
@@ -132,14 +131,9 @@ colorCr()
 function crimeSize(){
   var crimes = d3.selectAll('.select2-selection__choice');
   crimes.each(function(d,i){
-    //var crime = d3.select(this).attr('title');//name of the crime
     colorCr(d3.select(this));
-    d3.select(this).style('font-size',function(){
-      if(selected_crimes.length<20) return '80%';
-      else return '62%';
-    })
-    //d3.select(this).style('border','5px solid '+colorCrime(diz_selected_crimes[crime]))
   })
+  
 }
 
 /*function(crime){
@@ -184,20 +178,30 @@ function colorCr(crime){
             '#fd8d3c',
             '#f03b20',
             '#bd0026']);
-              
-            /*['#ffffcc',
-            '#ffeda0',
-            '#fed976',
-            '#feb24c',
-            '#fd8d3c',
-            '#fc4e2a',
-            '#e31a1c',
-            '#bd0026',
-            '#800026']*/
-    //console.log(diz_selected_crimes)
+    
     var crimeName = crime.attr('title');//name of the crime
-    crime/*.transition()*/.style('border','4px solid '+colorCrime(diz_selected_crimes[crimeName]))/*.duration(1000)*/;
+    crime/*.transition()*/.style('border','3.5px solid '+colorCrime(diz_selected_crimes[crimeName]))/*.duration(1000)*/;
     updateLegCr(minMax);
+
+      crime.style('font-size',function(){
+        //console.log( parseFloat( d3.select('.select2-selection--multiple').style('height').slice(0,-2) ) )
+        console.log(crime.style('border') )
+        if(parseFloat( d3.select('.select2-selection--multiple').style('height').slice(0,-2) )< (parseFloat( d3.select('#crimes').style('height').slice(0,-2)) -100) ){
+          if(crime.style('border')== '3.5px solid rgb(255, 255, 178)') return '60%';
+          else if(crime.style('border')== '3.5px solid rgb(254,204,92)') return '65%';
+          else if(crime.style('border')== '3.5px solid rgb(253,141,60)') return '70%';
+          else if(crime.style('border')== '3.5px solid rgb(240,59,32)') return '75%';
+          else return '82%';
+        }
+        else{
+          if(crime.style('border')== '3.5px solid rgb(255, 255, 178)') return '60%';
+          else if(crime.style('border')== '4px solid rgb(254,204,92)') return '60%';
+          else if(crime.style('border')== '4px solid rgb(253,141,60)') return '60%';
+          else if(crime.style('border')== '4px solid rgb(240,59,32)') return '70%';
+          else return '82%';
+        }
+      })
+  
   })  
 
 }
