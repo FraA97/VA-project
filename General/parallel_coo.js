@@ -237,6 +237,40 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             .append("svg")
             .attr("width", width +margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
+            .on("click",function(d){ //!When clicked return everything to normal
+                MDS_PC_LOCK = false
+                brushed_points=[]
+                var d_brushed =  d3.selectAll(".brushed").data();
+                // populate array if one or more elements is brushed
+                if (d_brushed.length > 0) {
+                    d_brushed.forEach(d_row => brushed_points.push(d_row))
+                }
+                else{
+                    brushed_points = []
+                }
+                d3.selectAll(".brushed").attr("class", "non_brushed");
+                d3.selectAll(".brushed_text").attr("class", "non_brushed");
+                d3.select("#my_dataviz").selectAll('path').each(function(t){
+                    if (d3.select(this).attr("name") != null){
+                    d3.select(this).style("stroke", "#0000CD")
+                    }
+                })
+                if(visualization==1){//INTERACTIONS WITH MAP
+                    var id =d3.select('#mapReg').selectAll('path').filter(function(d){
+                        var terName = d3.select('#'+this['id']).attr('name');
+                        return brushed_points.includes(terName);  
+                    });
+                    id.style('stroke-width','0.5');
+                }
+                else{//INTERACTIONS WITH MAP
+                    var id =d3.select('#mapProv').selectAll('path').filter(function(d){
+                        var terName =d3.select('#'+this['id']).attr('name');
+                        return brushed_points.includes(terName);  
+                    });
+                    id.style('stroke-width','0.5');
+                }
+            })
+    
     svg_PC = svg_pc.append("g")
                     .attr("transform",
                         "translate(" + margin.left + "," + margin.top + ")");
@@ -304,7 +338,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         var d = document.getElementById('PCtooltip');
         PCtooltip.style('display', 'block');
         d.style.position = "absolute"; 
-        d.style.top = event.pageY-500+"px"
+        d.style.top = event.pageY-450+"px"
         d.style.left = event.pageX+"px"
         d3.selectAll('#PCtooltip').raise().classed("active", true);
     }
