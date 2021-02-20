@@ -223,6 +223,12 @@ circle {
   opacity: 1.0;
 }
 
+#coordination{
+  fill:green;
+  stroke: green;
+  opacity: 1.0;
+}
+
 div.mdsTooltip {
   position: absolute;
   text-align: center;

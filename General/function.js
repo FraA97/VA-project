@@ -87,7 +87,7 @@ function chooseCharacteristic(pop, dataCoeff, regions, c, year){
 
     labels = anno.map(function(d){ return d.territorio});
     for (var i = 0; i < labels.length; i++){                    //manipulating labels
-        labels[i]=labels[i].replace("    ", "")
+        labels[i]=labels[i].trim();
     }
 
     anno.forEach( d => delete d.territorio);

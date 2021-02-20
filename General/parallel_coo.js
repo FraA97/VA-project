@@ -358,6 +358,13 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         
             //currentColour= id.style('stroke-width')
             id.style('stroke-width','2')
+            //HIGHLIGTH MDS POINTS
+            d3.select("#regions").selectAll("circle").each(function(d){
+                if(name == d){
+                    d3.select(this).raise().classed("active", true);
+                    d3.select(this).attr("id", "coordination").attr("r","4")
+                }
+            })
             
         })                
         .on("mouseout", function(d) {
@@ -382,6 +389,10 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 });
             }
             id.style('stroke-width','0.5');
+            //DE-HIGHLIGTH MDS POINTS
+            d3.select("#regions").selectAll("svg").selectAll("#coordination").each(function(d){
+                d3.select(this).attr("id", "null").attr("r","3")
+              })
         })
         .on("click", function(d) {
             d3.select("#my_dataviz").selectAll('path').each(function(t){

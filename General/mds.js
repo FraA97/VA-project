@@ -133,7 +133,7 @@
             }
             else{//INTERACTIONS WITH MAP
                 var id =d3.select('#mapProv').selectAll('path').filter(function(d){
-                    var terName ='  '+ d3.select('#'+this['id']).attr('name');
+                    var terName =d3.select('#'+this['id']).attr('name');
                     return brushed_points.includes(terName);  
                 });
                 id.style('stroke-width','0.5');
@@ -287,7 +287,7 @@
             }
             else{//INTERACTIONS WITH MAP
                 var id =d3.select('#mapProv').selectAll('path').filter(function(d){
-                    var terName = '  '+d3.select('#'+this['id']).attr('name');
+                    var terName = d3.select('#'+this['id']).attr('name');
                     //console.log(terName)
                     return brushed_points.includes(terName);  
                 });
