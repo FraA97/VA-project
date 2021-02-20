@@ -166,6 +166,13 @@ function showTooltipReg(d,flag) {
           }
         }
       })
+      //HIGHLIGTH MDS POINTS
+      d3.select("#regions").selectAll("circle").each(function(d){
+        if(region.attr("name") == d){
+          d3.select(this).raise().classed("active", true);
+          d3.select(this).attr("id", "coordination").attr("r","4")
+        }
+      })
       //
       if(region.attr('clicked')=='0'){
         label = "<b>"+region.attr('name')+"</b>";
@@ -218,6 +225,13 @@ function showTooltipProv(d,flag) {
           else{
             d3.select(this).style("stroke", "#0000CD")
           }
+        }
+      })
+      //HIGHLIGTH MDS POINTS
+      d3.select("#regions").selectAll("circle").each(function(d){
+        if(province.attr("name") == d){
+          d3.select(this).raise().classed("active", true);
+          d3.select(this).attr("id", "coordination").attr("r","4")
         }
       })
       //
@@ -313,6 +327,10 @@ function loadMap(newData){
                           d3.select(this).style("stroke", "#0000CD")
                       }
                     })
+                    //DE-HIGHLIGTH MDS POINTS
+                    d3.select("#regions").selectAll("svg").selectAll("#coordination").each(function(d){
+                      d3.select(this).attr("id", "null").attr("r","3")
+                    })
                 }
               );
       });      
@@ -350,6 +368,10 @@ function loadMap(newData){
                     if (d3.select(this).attr("name") != null){
                         d3.select(this).style("stroke", "#0000CD")
                     }
+                  })
+                  //DE-HIGHLIGTH MDS POINTS
+                  d3.select("#regions").selectAll("svg").selectAll("#coordination").each(function(d){
+                    d3.select(this).attr("id", "null").attr("r","3")
                   })    
                 }
               );
@@ -955,6 +977,15 @@ function highlightTer(){ //mouseover on legend rectangles
       }
     })
   })
+  //HIGHLIGTH MDS POINTS
+  names.forEach(function(d){
+    d3.select("#regions").selectAll("circle").each(function(t){
+      if(d.trim() == t){
+          d3.select(this).raise().classed("active", true);
+          d3.select(this).attr("id", "coordination").attr("r","4")
+      }
+    })
+  })
 }
 
 function unlightTer(){ //mouseout on legend rectangles
@@ -981,7 +1012,19 @@ function unlightTer(){ //mouseout on legend rectangles
         }
       }
     })
-  }) 
+  })
+  //DE-HIGHLIGTH MDS POINTS
+  /*names.forEach(function(t){
+    d3.select("#regions").selectAll("circle").each(function(d){
+      if(d.trim() == t){
+          d3.select(this).raise().classed("active", true);
+          d3.select(this).attr("id", "coordination").attr("r","4")
+      }
+    })
+  }) */
+  d3.select("#regions").selectAll("svg").selectAll("#coordination").each(function(t){
+    d3.select(this).attr("id", "null").attr("r","3")
+  })
 }
 
 function clickTer(){ //click on legend rectangles

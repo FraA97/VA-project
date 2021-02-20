@@ -169,8 +169,6 @@ body {
     height: 100%;
   }
   
-
-  }
   #scrollBar{
     position: absolute;
     width: 100%;
@@ -220,6 +218,12 @@ circle {
 
 .brushed_text{
   fill: #0e0d0d;
+  opacity: 1.0;
+}
+
+#coordination{
+  fill:green;
+  stroke: green;
   opacity: 1.0;
 }
 
