@@ -12,7 +12,7 @@ var count = 0; //count number of swapping among maps
 var population=0;
 var legC=0;
 
-function updLeg(){if(legC==0) {legC+=1;console.log('iii'); return null;}
+function updLeg(){if(legC==0) {legC+=1; return null;}
                   else  return updateLegend( split(d3.select('#mapReg').attr('minMax')) )}
 (function(){
   var lastWidth = 0;

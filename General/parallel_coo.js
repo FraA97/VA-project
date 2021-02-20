@@ -13,6 +13,7 @@ KIND_OF_TERRITORY = "region"
 CMD_CRIMES = "only"
 ABSOLUTE = false
 CRIMES = []
+MDS_PC_LOCK = false
 //per evitare il cross origin
 //var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
 var dataset_path = "datasets/dataset_crimes/dataset1219.csv"
@@ -282,7 +283,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         .padding(0.5);
         //.range([0, (350-11*dimensions.length)*dimensions.length])///general width of the graph, varia a seconda di quanti crimini metti
 
-    console.log(document.getElementById("my_dataviz").clientWidth)
+    //console.log(document.getElementById("my_dataviz").clientWidth)
     function path(d) {
         return d3.line()(dimensions.map(function(p) {
         //console.log(x(p))
@@ -337,8 +338,11 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     foreground.attr("name",function(d){
             return d["territorio"]})
         .on("mouseover", function(d) {
-            d3.select(this).raise().classed("active", true);
-            d3.select(this).style("stroke", "#FF0000")
+            
+            if(!MDS_PC_LOCK){
+                d3.select(this).raise().classed("active", true);
+                d3.select(this).style("stroke", "#FF0000")
+            }
             drawTooltip(d["territorio"],d["anno"])
             name =d['territorio'].trim();
             if(visualization==0){
@@ -366,13 +370,17 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 }
             })
             
+            
         })                
         .on("mouseout", function(d) {
-            d3.select("#my_dataviz").selectAll('path').each(function(t){
-                if (d3.select(this).attr("name") != null){
-                  d3.select(this).style("stroke", "#0000CD")
-                }
-            })
+            
+            if(!MDS_PC_LOCK){
+                d3.select("#my_dataviz").selectAll('path').each(function(t){
+                    if (d3.select(this).attr("name") != null){
+                    d3.select(this).style("stroke", "#0000CD")
+                    }
+                })
+            }
             //d3.select(this).style("stroke", "#0000CD")
             removeTooltip()
             name =d['territorio'].trim()
@@ -395,6 +403,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             })
         })
         .on("click", function(d) {
+            MDS_PC_LOCK = false
             d3.select("#my_dataviz").selectAll('path').each(function(t){
                 if (d3.select(this).attr("name") != null){
                   d3.select(this).style("stroke", "#0000CD")

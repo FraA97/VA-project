@@ -159,10 +159,10 @@ function showTooltipReg(d,flag) {
         if (d3.select(this).attr("name") != null){
           if(region.attr("name").trim() == d3.select(this).attr("name").trim()){
             d3.select(this).raise().classed("active", true);
-            d3.select(this).style("stroke", "#FF0000")
+            if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#FF0000")
           }
           else{
-            d3.select(this).style("stroke", "#0000CD")
+            if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#0000CD")
           }
         }
       })
@@ -699,7 +699,7 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
           })   
         })
           var oldFill= d3.select(id).style('fill');
-          console.log(oldFill)
+          //console.log(oldFill)
           d3.select(id)
             //interaction with dataset:
             .style("fill", function(){
@@ -1206,6 +1206,7 @@ function unlightCr(){ //mouseout on legend crimes
   var crimes = d3.selectAll('.select2-selection__choice');
   crimes.each(function(d,i){
       var crimeStr = d3.select(this).style('-webkit-text-stroke-width').slice(0,-2);
+
       console.log(crimeStr)
       if(crimeStr.includes('0.8')){
         d3.select(this).style('-webkit-text-stroke-width',null);
