@@ -296,7 +296,7 @@
             }
             //INTERACTIONS WITH PC
             MDS_PC_LOCK = true
-            console.log(MDS_PC_LOCK)
+            //console.log(MDS_PC_LOCK)
             brushed_points.forEach(function(d){
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                   if (d3.select(this).attr("name") != null){

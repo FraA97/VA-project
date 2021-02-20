@@ -322,11 +322,11 @@ function loadMap(newData){
                     .classed("hidden", true)
                     .node().innerHTML = null;
                     //DE-HIGHLIGTH PC PATH
-                    d3.select("#my_dataviz").selectAll('path').each(function(t){
-                      if (d3.select(this).attr("name") != null){
-                          d3.select(this).style("stroke", "#0000CD")
-                      }
-                    })
+                    if(!MDS_PC_LOCK){d3.select("#my_dataviz").selectAll('path').each(function(t){
+                        if (d3.select(this).attr("name") != null){
+                            d3.select(this).style("stroke", "#0000CD")
+                        }
+                      })}
                     //DE-HIGHLIGTH MDS POINTS
                     d3.select("#regions").selectAll("svg").selectAll("#coordination").each(function(d){
                       d3.select(this).attr("id", "null").attr("r","3")
@@ -1207,7 +1207,7 @@ function unlightCr(){ //mouseout on legend crimes
   crimes.each(function(d,i){
       var crimeStr = d3.select(this).style('-webkit-text-stroke-width').slice(0,-2);
 
-      console.log(crimeStr)
+      //console.log(crimeStr)
       if(crimeStr.includes('0.8')){
         d3.select(this).style('-webkit-text-stroke-width',null);
         d3.select(this).style('border','3.5px solid '+color);
