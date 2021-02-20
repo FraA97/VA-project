@@ -132,12 +132,12 @@ function crimeSize(){
   var crimes = d3.selectAll('.select2-selection__choice');
   crimes.each(function(d,i){
     colorCr(d3.select(this));
-  })
-  
+  }).call(fu);
 }
-
-/*function(crime){
-}*/
+function fu(){
+   oldCrime='small';
+}
+var oldCrime='big';
 function colorCr(crime){
   d3.text(dataset_path, function(raw) {
     var dsv = d3.dsvFormat(';');
@@ -148,12 +148,10 @@ function colorCr(crime){
                   if(d.territorio=='Italia') return d.territorio; })
               .entries(stocks = data);      
 
-  // console.log(italia[0])
     diz_selected_crimes={}
     for(i=0; i<selected_crimes.length;i++){//initialize all crimes to 0
       diz_selected_crimes[selected_crimes[i]]=0;
     }
-    //console.log(diz_selected_crimes);
 
     italia[0].values.forEach(function(d) { 
       if(selectedYears.includes(d.anno)){
@@ -163,13 +161,11 @@ function colorCr(crime){
           }
         }
       }
-    
     })
     var numbers=[]
     for (var prop in diz_selected_crimes) {
       numbers.push(diz_selected_crimes[prop]);
     }
-    //console.log(diz_selected_crimes)
     var minMax= d3.extent(numbers)
     colorCrime = d3.scaleQuantile()
             .domain([minMax[0], minMax[1]]) //select min an max of retrived values
@@ -184,24 +180,34 @@ function colorCr(crime){
     updateLegCr(minMax);
 
       crime.style('font-size',function(){
-        //console.log( parseFloat( d3.select('.select2-selection--multiple').style('height').slice(0,-2) ) )
-        console.log(crime.style('border') )
-        if(parseFloat( d3.select('.select2-selection--multiple').style('height').slice(0,-2) )< (parseFloat( d3.select('#crimes').style('height').slice(0,-2)) -100) ){
-          if(crime.style('border')== '3.5px solid rgb(255, 255, 178)') return '60%';
-          else if(crime.style('border')== '3.5px solid rgb(254,204,92)') return '65%';
-          else if(crime.style('border')== '3.5px solid rgb(253,141,60)') return '70%';
-          else if(crime.style('border')== '3.5px solid rgb(240,59,32)') return '75%';
-          else return '82%';
+       // console.log( parseFloat( d3.select('.select2-selection--multiple').style('height').slice(0,-2) ) )
+      //  console.log(parseFloat( d3.select('#crimes').style('height').slice(0,-2)) )
+        if(parseFloat( d3.select('.select2-selection--multiple').style('height').slice(0,-2) )< (parseFloat( d3.select('#crimes').style('height').slice(0,-2))/1.3) ||oldCrime=='big' ){
+          oldcrime='big';
+          if(crime.style('border')== '3.5px solid rgb(255, 255, 178)'){ return '70%';}
+          else if(crime.style('border')== '3.5px solid rgb(254, 204, 92)'){ return '80%';}
+          else if(crime.style('border')== '3.5px solid rgb(253, 141, 60)'){ return '90%';}
+          else if(crime.style('border')== '3.5px solid rgb(240, 59, 32)'){  return '100%';}
+          else return '110%';
         }
         else{
-          if(crime.style('border')== '3.5px solid rgb(255, 255, 178)') return '60%';
-          else if(crime.style('border')== '4px solid rgb(254,204,92)') return '60%';
-          else if(crime.style('border')== '4px solid rgb(253,141,60)') return '60%';
-          else if(crime.style('border')== '4px solid rgb(240,59,32)') return '70%';
-          else return '82%';
+         // console.log(oldCrime);
+          /*if(oldCrime=='big'){
+            if(crime.style('border')== '3.5px solid rgb(255, 255, 178)') return '70%';
+            else if(crime.style('border')== '3.5px solid rgb(254, 204, 92)') return '75%';
+            else if(crime.style('border')== '3.5px solid rgb(253, 141, 60)') return '80%';
+            else if(crime.style('border')== '3.5px solid rgb(240, 59, 32)') return '85%';
+            else return '90%';
+          }
+          else{*/
+            oldcrime='small';
+            if(crime.style('border')== '3.5px solid rgb(255, 255, 178)'){   return '60%';}
+            else if(crime.style('border')== '3.5px solid rgb(254, 204, 92)'){ return '70%';}
+            else if(crime.style('border')== '3.5px solid rgb(253, 141, 60)'){  return '80%';}
+            else if(crime.style('border')== '3.5px solid rgb(240, 59, 32)'){  return '90%';}
+            else return '100%';
+          //}
         }
       })
-  
   })  
-
 }

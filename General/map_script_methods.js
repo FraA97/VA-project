@@ -1128,79 +1128,40 @@ function highlightCr(){ //mouseover on legend crimes
   var line = d3.select(this);
   var color = line.style('stroke');
   var crimes = d3.selectAll('.select2-selection__choice');
-  /*console.log(color);
-  console.log(crimes);*/
   crimes.each(function(d,i){
       var crimeCol = d3.select(this).style('border').slice(9,-1) +')';
-    //  console.log(crimeCol);
-      if(crimeCol.includes(color))  d3.select(this).style('border','4px solid '+'green');
+      if(crimeCol.includes(color)){
+        d3.select(this).style('-webkit-text-stroke-width','1.0px');
+        d3.select(this).style('border','4px solid '+color);
+      }  
   })
 }
-
 function unlightCr(){ //mouseout on legend crimes
   var line = d3.select(this);
   var color = line.style('stroke');
   var crimes = d3.selectAll('.select2-selection__choice');
   crimes.each(function(d,i){
-      var crimeCol = d3.select(this).style('border').slice(9,-1) +'n';
-      if(crimeCol.includes('green'))  d3.select(this).style('border','3.5px solid '+color);
+      var crimeStr = d3.select(this).style('-webkit-text-stroke-width').slice(0,-2);
+      console.log(crimeStr)
+      if(crimeStr.includes('1')){
+        d3.select(this).style('-webkit-text-stroke-width',null);
+        d3.select(this).style('border','3.5px solid '+color);
+      }  
   })
-  
 }
 
 function clickCr(){ //click on legend crimes
-
   var line = d3.select(this);
   var color = line.style('stroke');
   var crimes = d3.selectAll('.select2-selection__choice');
   var corrCr=[];
   crimes.each(function(d,i){
-      var crimeCol = d3.select(this).style('border').slice(9,-1) +'n';
-      if(crimeCol.includes('green')) corrCr.push( d3.select(this).node().outerText.slice(2,) );
+      var crimeStr = d3.select(this).style('-webkit-text-stroke-width').slice(0,-2);
+      if(crimeStr.includes('1')) corrCr.push( d3.select(this).node().outerText.slice(2,) );
   })
- 
   selected_crimes = corrCr; //add all crimes to the list
           computeColourScales(); //recompute 
           CRIMES = selected_crimes
           draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
           $('.selectCrimes').val(selected_crimes).trigger('change');
-  /*
-  if(visualization=='0'){
-    var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('stroke-width');
-      return terFill == '1.5';  
-    });
-    var mapBadTer=d3.select('#mapProv').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('stroke-width');
-      return terFill != '1.5';  
-    });
-  }
-  else{
-    var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('stroke-width');
-      return terFill == '2';  
-    });
-    var mapBadTer=d3.select('#mapReg').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('stroke-width');
-      return terFill != '2';  
-    });
-  }
-  
-  mapTer.attr('clicked','1');
-  mapBadTer.attr('clicked','0')
-          .style('fill',null)
-          .attr('class',function(d){
-            if(visualization=='0')  return 'greyProv';
-            else return 'greyOnlyReg';
-          });
-   //valerio (mapTer contiene tutti i territori che devono rimanere selezionati)
-  var names=[]
-  mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;})
-  REGIONS = names
-  draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-
-  d3.select("#selectAll").property('checked',false);
-
-  if(visualization=='0')  updateClickedProv();
-  else  updateClickedReg();*/
-}
+ }
