@@ -392,7 +392,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             //DE-HIGHLIGTH MDS POINTS
             d3.select("#regions").selectAll("svg").selectAll("#coordination").each(function(d){
                 d3.select(this).attr("id", "null").attr("r","3")
-              })
+            })
         })
         .on("click", function(d) {
             d3.select("#my_dataviz").selectAll('path').each(function(t){
