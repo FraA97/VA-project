@@ -201,12 +201,58 @@
                 mtooltip.html(d)
                   .style("left", (d3.mouse(this)[0]) + "px")
                   .style("top", (d3.mouse(this)[1]-25) + "px");
+                if(visualization==1){//INTERACTIONS WITH MAP
+                    var id =d3.select('#mapReg').selectAll('path').filter(function(t){
+                        var terName = d3.select('#'+this['id']).attr('name');
+                        return terName==d;  
+                    });
+                    id.style('stroke-width','2');
+                }
+                else{//INTERACTIONS WITH MAP
+                    var id =d3.select('#mapProv').selectAll('path').filter(function(t){
+                        var terName = d3.select('#'+this['id']).attr('name');
+                        return terName==d;  
+                    });
+                    id.style('stroke-width','1.5');
+                }
+                d3.select("#my_dataviz").selectAll('path').each(function(t){
+                    if (d3.select(this).attr("name") != null){
+                      if(d.trim() == d3.select(this).attr("name").trim()){
+                        d3.select(this).style("stroke", "#FF0000")
+                        d3.select(this).raise().classed("active", true);
+                      }
+                    }
+                })
                      
               })
               .on("mouseout", function(d) {
                 mtooltip.transition()
                   .duration(500)
                   .style("opacity", 0);
+                if(d3.select(this).attr("class")!= "brushed"){
+                    if(visualization==1){//INTERACTIONS WITH MAP
+                        var id =d3.select('#mapReg').selectAll('path').filter(function(t){
+                            var terName = d3.select('#'+this['id']).attr('name');
+                            return terName==d  
+                        });
+                        id.style('stroke-width','0.5');
+                    }
+                    else{//INTERACTIONS WITH MAP
+                        var id =d3.select('#mapProv').selectAll('path').filter(function(t){
+                            var terName = d3.select('#'+this['id']).attr('name');
+                            return terName==d;  
+                        });
+                        //console.log(id)
+                        id.style('stroke-width','0.5');
+                    }
+                    d3.select("#my_dataviz").selectAll('path').each(function(t){
+                        if (d3.select(this).attr("name") != null){
+                        if(d.trim() == d3.select(this).attr("name").trim()){
+                            d3.select(this).style("stroke", "#0000CD")
+                        }
+                        }
+                    })
+                }                    
               });
 
         nodes.append("text")
