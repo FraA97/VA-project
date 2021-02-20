@@ -395,7 +395,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             }
         
             //currentColour= id.style('stroke-width')
-            id.style('stroke-width','2')
+            if(!MDS_PC_LOCK) id.style('stroke-width','2');
             //HIGHLIGTH MDS POINTS
             d3.select("#regions").selectAll("circle").each(function(d){
                 if(name == d){
@@ -430,7 +430,10 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                     return terName == name;  
                 });
             }
-            id.style('stroke-width','0.5');
+         /*   d3.select('g .foreground').selectAll('path').each(function(d){
+                if(d3.select(this).style('stroke')=='rgb(255, 0, 0)') brushedForMap='true'
+            })*/
+            if(!MDS_PC_LOCK) id.style('stroke-width','0.5');
             //DE-HIGHLIGTH MDS POINTS
             d3.select("#regions").selectAll("svg").selectAll("#coordination").each(function(d){
                 d3.select(this).attr("id", "null").attr("r","3")
