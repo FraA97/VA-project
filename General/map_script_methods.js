@@ -1033,7 +1033,7 @@ function updateLegCr(minMax){ //update the legend of map
   var rangeLeg=(minMax[1]-minMax[0])/5;
   var keys =[];
   
-  var label =['NUMBER OF CRIME'];
+  var label =['RECURRENCE RATE'];
   
   for(i=0; i<5;i++){
     var minvalue= minMax[0]+ (i*rangeLeg);
@@ -1085,6 +1085,23 @@ function updateLegCr(minMax){ //update the legend of map
         .text(label)
         .style('font-size','12px')
  
+  legendCr.selectAll("myliness")
+        .data(keys)
+        .enter()
+        .append("line")
+          .attr("x1", function(d,i){ 
+            if(i==0) return 20 +(i*((widthLegendCr-30)/5 ))
+            else return 20 +(i*((widthLegendCr-30)/5 ) )
+          })
+          .attr("y1", size*3)
+          .attr("x2", function(d,i){ return (widthLegendCr-30)/5 +10 +(i* ((widthLegendCr-30)/5))})
+          .attr("y2", size*3)
+          .style('stroke','black')
+          .style('stroke-width',function(d,i){
+            if(i<5) return 7.5 +i;
+            else return 0;
+          } ) ;
+
   legendCr.selectAll("mylines")
     .data(keys)
     .enter()
@@ -1098,13 +1115,14 @@ function updateLegCr(minMax){ //update the legend of map
       .attr("y2", size*3)
       .style('stroke',function(d){ return color(d)})
       .style('stroke-width',function(d,i){
-        if(i<5) return 7;
+        if(i<5) return 7 +i;
         else return 0;
       } )    
       .on('mouseover',highlightCr)
       .on('mouseout',unlightCr)
       .on('click',clickCr);
 
+      
   legendCr.selectAll("mylabels") // Add one dot in the legend for each name
       .data(keys)
       .enter()
@@ -1131,8 +1149,11 @@ function highlightCr(){ //mouseover on legend crimes
   crimes.each(function(d,i){
       var crimeCol = d3.select(this).style('border').slice(9,-1) +')';
       if(crimeCol.includes(color)){
-        d3.select(this).style('-webkit-text-stroke-width','1.0px');
+        d3.select(this).style('-webkit-text-stroke-width','0.8px');
+        d3.select(this).style('-webkit-text-stroke-color','black');
         d3.select(this).style('border','4px solid '+color);
+        //d3.select(this).style('font-weight','bold');
+        
       }  
   })
 }
@@ -1143,7 +1164,7 @@ function unlightCr(){ //mouseout on legend crimes
   crimes.each(function(d,i){
       var crimeStr = d3.select(this).style('-webkit-text-stroke-width').slice(0,-2);
       console.log(crimeStr)
-      if(crimeStr.includes('1')){
+      if(crimeStr.includes('0.8')){
         d3.select(this).style('-webkit-text-stroke-width',null);
         d3.select(this).style('border','3.5px solid '+color);
       }  
@@ -1157,7 +1178,8 @@ function clickCr(){ //click on legend crimes
   var corrCr=[];
   crimes.each(function(d,i){
       var crimeStr = d3.select(this).style('-webkit-text-stroke-width').slice(0,-2);
-      if(crimeStr.includes('1')) corrCr.push( d3.select(this).node().outerText.slice(2,) );
+      console.log(typeof(crimeStr))
+      if(crimeStr=='0.8') corrCr.push( d3.select(this).node().outerText.slice(2,) );
   })
   selected_crimes = corrCr; //add all crimes to the list
           computeColourScales(); //recompute 
