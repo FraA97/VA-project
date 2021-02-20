@@ -220,10 +220,10 @@ function showTooltipProv(d,flag) {
         if (d3.select(this).attr("name") != null){
           if(province.attr("name").trim() == d3.select(this).attr("name").trim()){
             d3.select(this).raise().classed("active", true);
-            d3.select(this).style("stroke", "#FF0000")
+            if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#FF0000")
           }
           else{
-            d3.select(this).style("stroke", "#0000CD")
+            if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#0000CD")
           }
         }
       })
