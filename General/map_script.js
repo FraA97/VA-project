@@ -153,6 +153,49 @@ d3.select('#visualization')
     createMDS(visualization, computationType, mdsComputationType, selectedYears, false, visibleLabel);
     //loadParallelCoordinates(newData); (valerio [menu]) (must load par. coord. with prov or reg) DONE
 });
+
+/*var running = false;
+var timer;
+
+d3.select('#play').on("click", function() {
+		
+  var duration = 1000,
+    maxstep = 2019,
+    minstep = 2012;
+  
+  if (running == true) {
+    $("#play").html("Play MDS evolution");
+				running = false;
+				clearInterval(timer);
+  }
+  else if (running == false) {
+			
+    $("#play").html("Pause");
+    
+    sliderValue = $("#slider").val();
+    
+    timer = setInterval( function(){
+        if (sliderValue < maxstep){
+          sliderValue++;
+          $("#slider").val(sliderValue);
+          $('#range').html(sliderValue);
+        }
+        $("#slider").val(sliderValue);
+        createMDS(visualization, computationType,mdsComputationType, [sliderValue], false, visibleLabel);
+      
+    }, duration);
+    running = true;    
+  }
+})
+
+$("#slider").on("change", function(){
+  sliderValue = $("#slider").val()
+  createMDS(visualization, computationType,mdsComputationType, [sliderValue], false, visibleLabel);
+  $("#range").html($("#slider").val());
+  clearInterval(timer);
+  $("button").html("Play MDS evolution");
+});*/
+
 //console.log(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
 REGIONS = changeKindOfTerritory(visualization)
 draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw

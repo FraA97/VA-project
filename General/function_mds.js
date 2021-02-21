@@ -38,9 +38,9 @@ function createMDS(vis, pop, coeff, year, labelmode, visibleLabel){
 }
 
 function plotMds(matrix, labelmode, visibleLabel){
-  var locationCoordinates = numeric.transpose(mds.classic(matrix));               //mds computation
+  var locationCoordinates = numeric.transpose(classic(matrix));               //mds computation
 
-    mds.drawD3ScatterPlot(d3.select("#regions"),                                  //mds plot
+    drawD3ScatterPlot(d3.select("#regions"),                                  //mds plot
     locationCoordinates[0],
     locationCoordinates[1],
     labels,

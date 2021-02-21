@@ -1014,14 +1014,6 @@ function unlightTer(){ //mouseout on legend rectangles
     })
   })
   //DE-HIGHLIGTH MDS POINTS
-  /*names.forEach(function(t){
-    d3.select("#regions").selectAll("circle").each(function(d){
-      if(d.trim() == t){
-          d3.select(this).raise().classed("active", true);
-          d3.select(this).attr("id", "coordination").attr("r","4")
-      }
-    })
-  }) */
   d3.select("#regions").selectAll("svg").selectAll("#coordination").each(function(t){
     d3.select(this).attr("id", "null").attr("r","3")
   })
