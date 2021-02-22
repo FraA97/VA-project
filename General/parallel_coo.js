@@ -367,7 +367,6 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             }
             else{
                 overed = d3.select(this).attr("name").trim()
-                console.log(overed.trim())
             }
             d3.select(this).style("stroke", "#FF0000")
             //drawTooltip
@@ -451,8 +450,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                     }
                 }
             })
-            console.log(brushed_p.includes("Trentino Alto Adige"))
-            console.log(brushed_p)
+            
             //DE-HIGHLIGTH MDS POINTS
             d3.select("#regions").selectAll("svg").selectAll("#coordination").each(function(d){
                 d3.select(this).attr("id", "null").attr("r","3")
