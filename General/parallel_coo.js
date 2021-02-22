@@ -363,12 +363,12 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             
             if(!MDS_PC_LOCK){
                 d3.select(this).raise().classed("active", true);
-                d3.select(this).style("stroke", "#FF0000")
+                d3.select(this).style("stroke", "#d7191c")
             }
             else{
                 overed = d3.select(this).attr("name").trim()
             }
-            d3.select(this).style("stroke", "#FF0000")
+            d3.select(this).style("stroke", "#d7191c")
             //drawTooltip
             var text = d["territorio"]
             if(YEAR.length>1) text += " " + d["anno"] //Change the content of all tooltip elements:
@@ -467,7 +467,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 }
             })
             d3.select(this).raise().classed("active", true);
-            d3.select(this).style("stroke", "#FF0000")
+            d3.select(this).style("stroke", "#d7191c")
         })
 
      // Add a group element for each dimension.

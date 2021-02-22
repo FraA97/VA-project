@@ -213,7 +213,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
             d3.select("#my_dataviz").selectAll('path').each(function(t){
                 if (d3.select(this).attr("name") != null){
                     if(d.trim() == d3.select(this).attr("name").trim()){
-                    d3.select(this).style("stroke", "#FF0000")
+                    d3.select(this).style("stroke", "#d7191c")
                     d3.select(this).raise().classed("active", true);
                     }
                 }
@@ -342,7 +342,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
             d3.select("#my_dataviz").selectAll('path').each(function(t){
                 if (d3.select(this).attr("name") != null){
                 if(d.trim() == d3.select(this).attr("name").trim()){
-                    d3.select(this).style("stroke", "#FF0000")
+                    d3.select(this).style("stroke", "#d7191c")
                     d3.select(this).raise().classed("active", true);
                     //console.log(d)
                 }

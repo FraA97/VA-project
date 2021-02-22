@@ -159,7 +159,7 @@ function showTooltipReg(d,flag) {
         if (d3.select(this).attr("name") != null){
           if(region.attr("name").trim() == d3.select(this).attr("name").trim()){
             d3.select(this).raise().classed("active", true);
-            if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#FF0000")
+            if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#d7191c")
           }
           else{
             if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#2c7bb6")
@@ -220,7 +220,7 @@ function showTooltipProv(d,flag) {
         if (d3.select(this).attr("name") != null){
           if(province.attr("name").trim() == d3.select(this).attr("name").trim()){
             d3.select(this).raise().classed("active", true);
-            if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#FF0000")
+            if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#d7191c")
           }
           else{
             if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#2c7bb6")
@@ -972,7 +972,7 @@ function highlightTer(){ //mouseover on legend rectangles
       if (d3.select(this).attr("name") != null){
         if(d.trim() == d3.select(this).attr("name").trim()){
           d3.select(this).raise().classed("active", true);
-          d3.select(this).style("stroke", "#FF0000")
+          d3.select(this).style("stroke", "#d7191c")
         }
       }
     })
