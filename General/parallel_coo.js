@@ -252,7 +252,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 d3.selectAll(".brushed_text").attr("class", "non_brushed");
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                     if (d3.select(this).attr("name") != null){
-                    d3.select(this).style("stroke", "#0000CD")
+                    d3.select(this).style("stroke", "#2c7bb6")
                     }
                 })
                 if(visualization==1){//INTERACTIONS WITH MAP
@@ -352,7 +352,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         .data(data)
         .enter().append("path")
         .attr("d", path)
-        .style("stroke", "#0000CD")
+        .style("stroke", "#2c7bb6")
         .style("stroke-width", "1.5")
         .style("opacity", 0.9);
     //each
@@ -446,7 +446,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             d3.select("#my_dataviz").selectAll('path').each(function(t){
                 if( d3.select(this).attr("name") != null){
                     if ( (MDS_PC_LOCK && !brushed_p.includes(overed) && d3.select(this).attr("name").trim() == overed)|| (!MDS_PC_LOCK )){
-                        d3.select(this).style("stroke", "#0000CD")
+                        d3.select(this).style("stroke", "#2c7bb6")
                     }
                 }
             })
@@ -463,7 +463,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             MDS_PC_LOCK = false
             d3.select("#my_dataviz").selectAll('path').each(function(t){
                 if (d3.select(this).attr("name") != null){
-                  d3.select(this).style("stroke", "#0000CD")
+                  d3.select(this).style("stroke", "#2c7bb6")
                 }
             })
             d3.select(this).raise().classed("active", true);

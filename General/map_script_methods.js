@@ -162,7 +162,7 @@ function showTooltipReg(d,flag) {
             if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#FF0000")
           }
           else{
-            if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#0000CD")
+            if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#2c7bb6")
           }
         }
       })
@@ -223,7 +223,7 @@ function showTooltipProv(d,flag) {
             if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#FF0000")
           }
           else{
-            if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#0000CD")
+            if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#2c7bb6")
           }
         }
       })
@@ -324,7 +324,7 @@ function loadMap(newData){
                     //DE-HIGHLIGTH PC PATH
                     if(!MDS_PC_LOCK){d3.select("#my_dataviz").selectAll('path').each(function(t){
                         if (d3.select(this).attr("name") != null){
-                            d3.select(this).style("stroke", "#0000CD")
+                            d3.select(this).style("stroke", "#2c7bb6")
                         }
                       })}
                     //DE-HIGHLIGTH MDS POINTS
@@ -366,7 +366,7 @@ function loadMap(newData){
                     //DE-HIGHLIGTH PC PATH
                   d3.select("#my_dataviz").selectAll('path').each(function(t){
                     if (d3.select(this).attr("name") != null){
-                        d3.select(this).style("stroke", "#0000CD")
+                        d3.select(this).style("stroke", "#2c7bb6")
                     }
                   })
                   //DE-HIGHLIGTH MDS POINTS
@@ -1008,7 +1008,7 @@ function unlightTer(){ //mouseout on legend rectangles
     d3.select("#my_dataviz").selectAll('path').each(function(t){
       if (d3.select(this).attr("name") != null){
         if(d.trim() == d3.select(this).attr("name").trim()){
-          d3.select(this).style("stroke", "#0000CD")
+          d3.select(this).style("stroke", "#2c7bb6")
         }
       }
     })

@@ -120,6 +120,8 @@ d3.select('#mdsComputation')
     mdsComputationType = newData;
     loadMdsComputationValue(newData);
     createMDS(visualization, computationType, mdsComputationType, selectedYears, false, visibleLabel);
+    //draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+
 });
 
 //compute for number of crimes or num.crimes/population 
