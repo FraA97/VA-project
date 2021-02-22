@@ -356,6 +356,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         .style("stroke-width", "1.5")
         .style("opacity", 0.9);
     //each
+    var overed
     foreground.attr("name",function(d){
             return d["territorio"]})
         .on("mouseover", function(d) {
@@ -364,7 +365,12 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 d3.select(this).raise().classed("active", true);
                 d3.select(this).style("stroke", "#FF0000")
             }
-            //drawTooltip 
+            else{
+                overed = d3.select(this).attr("name").trim()
+                console.log(overed.trim())
+            }
+            d3.select(this).style("stroke", "#FF0000")
+            //drawTooltip
             var text = d["territorio"]
             if(YEAR.length>1) text += " " + d["anno"] //Change the content of all tooltip elements:
             var mtooltip = d3.selectAll('#par-coord').append("div")
@@ -411,13 +417,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         })                
         .on("mouseout", function(d) {
             
-            if(!MDS_PC_LOCK){
-                d3.select("#my_dataviz").selectAll('path').each(function(t){
-                    if (d3.select(this).attr("name") != null){
-                    d3.select(this).style("stroke", "#0000CD")
-                    }
-                })
-            }
+            
             //removeTooltip
             d3.selectAll('.PCtooltip').style('display', 'none')
             name =d['territorio'].trim()
@@ -435,19 +435,31 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             }            
             var brushed_p=[];
             d3.selectAll('.brushed').each(function(d){
-                brushed_p.push(d)
+                brushed_p.push(d.trim())
             })
             if(brushed_p.length==0) id.style('stroke-width','0.5');
-            if(brushed_p.includes(id.attr('name') ) ){
+            if(brushed_p.includes(id.attr('name').trim() ) ){
                 id.style('stroke','black');
             }
             else{
                 id.style('stroke-width','0.5');
             }
+            d3.select("#my_dataviz").selectAll('path').each(function(t){
+                if( d3.select(this).attr("name") != null){
+                    if ( (MDS_PC_LOCK && !brushed_p.includes(overed) && d3.select(this).attr("name").trim() == overed)|| (!MDS_PC_LOCK )){
+                        d3.select(this).style("stroke", "#0000CD")
+                    }
+                }
+            })
+            console.log(brushed_p.includes("Trentino Alto Adige"))
+            console.log(brushed_p)
             //DE-HIGHLIGTH MDS POINTS
             d3.select("#regions").selectAll("svg").selectAll("#coordination").each(function(d){
                 d3.select(this).attr("id", "null").attr("r","3")
             })
+            
+           
+            
         })
         .on("click", function(d) {
             MDS_PC_LOCK = false

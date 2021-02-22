@@ -130,3 +130,27 @@
         id.attr('class','greyOnlyReg')
     }
 }); */
+
+/* 
+//?PCtooltip management
+function drawTooltip(regione,anno) {
+    if(YEAR.length>1) PCtooltip.html(regione + " " + anno) //Change the content of all tooltip elements:
+     else PCtooltip.html(regione)
+     var d = document.getElementById('PCtooltip');
+     PCtooltip.style('display', 'block');
+     d.style.position = "absolute"; 
+     var xPercent = event.clientX/window.innerWidth;
+     var yPercent = event.clientY/window.innerHeight;
+     
+     d3.selectAll('#PCtooltip').raise().classed("active", true);
+ }
+ function drawTooltip(regione,anno) {
+     var mtooltip = d3.selectAll('#my_dataviz').append("div")
+         .attr("class", "pc_Tooltip")
+         .style('display', 'block')
+         .style("left", (d3.mouse(this)[0]) + "px")
+         .style("top", (d3.mouse(this)[1]-25) + "px");
+ }
+ function removeTooltip() {
+     if (PCtooltip) PCtooltip.style('display', 'none');
+ }  */
