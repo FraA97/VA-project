@@ -259,7 +259,7 @@ div.mdsTooltip {
   width: 100%;
   position: relative;
 }
-#PCtooltip {
+.PCtooltip {
   border-radius: 25px;
   background: lightgray; 
   display:none;

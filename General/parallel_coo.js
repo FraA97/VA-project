@@ -331,20 +331,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         }));
         /////per ogni riga del csv (d), per ogni feature assegno la sua x e le sue y
     }
-    //PCtooltip management
-    function drawTooltip(regione,anno) {
-       if(YEAR.length>1) PCtooltip.html(regione + " " + anno) //Change the content of all tooltip elements:
-        else PCtooltip.html(regione)
-        var d = document.getElementById('PCtooltip');
-        PCtooltip.style('display', 'block');
-        d.style.position = "absolute"; 
-        d.style.top = event.pageY-450+"px"
-        d.style.left = event.pageX+"px"
-        d3.selectAll('#PCtooltip').raise().classed("active", true);
-    }
-    function removeTooltip() {
-        if (PCtooltip) PCtooltip.style('display', 'none');
-    } 
+    
     // Draw the lines
     //BRUSH
     // Add grey background lines for context.
@@ -377,7 +364,16 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 d3.select(this).raise().classed("active", true);
                 d3.select(this).style("stroke", "#FF0000")
             }
-            drawTooltip(d["territorio"],d["anno"])
+            //drawTooltip 
+            var text = d["territorio"]
+            if(YEAR.length>1) text += " " + d["anno"] //Change the content of all tooltip elements:
+            var mtooltip = d3.selectAll('#par-coord').append("div")
+                .html(text)
+                .attr("class", "PCtooltip")
+                .style('display', 'block')
+                .style("position","absolute")
+                .style("left", (d3.mouse(this)[0]) + "px")
+                .style("top", (d3.mouse(this)[1]+5) + "px");
             name =d['territorio'].trim();
             if(visualization==0){
                 var id =d3.select('#mapProv').selectAll('path').filter(function(d){
@@ -422,8 +418,8 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                     }
                 })
             }
-            //d3.select(this).style("stroke", "#0000CD")
-            removeTooltip()
+            //removeTooltip
+            d3.selectAll('.PCtooltip').style('display', 'none')
             name =d['territorio'].trim()
             if(visualization==0){
                 var id =d3.select('#mapProv').selectAll('path').filter(function(d){
