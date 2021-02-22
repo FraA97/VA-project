@@ -20,7 +20,9 @@ body {
   
   #map {
     background: lightblue;
-    border:3px solid black;
+    /*border:3px solid black;*/
+    border-right-style: outset;
+    border-radius: 5px;
     position: absolute;
     height: 100%;
     width: 28%;
@@ -109,7 +111,6 @@ body {
   .multiselect {
     margin-left:auto;
     margin-right:auto;
-
   }
 
   #central_view{
@@ -125,6 +126,7 @@ body {
     padding-right: 10px;
     table-layout: fixed; /*Optional*/
     border:1px solid black;
+    border-radius: 5px;
 
   }
   label[for='tot'],label[for='2012'],label[for='2013'],label[for='2014'],label[for='2015'],label[for='2016'],label[for='2017'],label[for='2018'],label[for='2019']{
@@ -244,7 +246,9 @@ div.mdsTooltip {
 
 /*PARALLEL COORDINATES*/
 #par-coord{
-  border:3px solid black;
+  /*border:3px solid black;*/
+  border-style: inset;
+  border-radius: 5px;
   position: absolute;
   top:57%;
   height: 42%;

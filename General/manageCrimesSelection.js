@@ -183,6 +183,7 @@ function colorCr(crime){
       crime.style('font-size',function(){
        // console.log( parseFloat( d3.select('.select2-selection--multiple').style('height').slice(0,-2) ) )
       //  console.log(parseFloat( d3.select('#crimes').style('height').slice(0,-2)) )
+        if(selectedYears.length==0 ) return '60%';
         if(parseFloat( d3.select('.select2-selection--multiple').style('height').slice(0,-2) )< (parseFloat( d3.select('#crimes').style('height').slice(0,-2))/1.3) ||oldCrime=='big' ){
           oldcrime='big';
           if(crime.style('border')== '3.5px solid rgb(255, 255, 178)'){ return '70%';}

@@ -1095,9 +1095,6 @@ function updateLegCr(minMax){ //update the legend of map
     .range(['#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026']);
   }
   
-
-  var colorStroke=['#000000','#007F5F']
-
   var size = 14
   var heightLegendCr = d3.select('#svgLegCr').style('height').slice(0, -2);
   var widthLegendCr = d3.select('#svgLegCr').style('width').slice(0, -2);
@@ -1157,7 +1154,6 @@ function updateLegCr(minMax){ //update the legend of map
       .on('mouseout',unlightCr)
       .on('click',clickCr);
 
-      
   legendCr.selectAll("mylabels") // Add one dot in the legend for each name
       .data(keys)
       .enter()
@@ -1198,8 +1194,6 @@ function unlightCr(){ //mouseout on legend crimes
   var crimes = d3.selectAll('.select2-selection__choice');
   crimes.each(function(d,i){
       var crimeStr = d3.select(this).style('-webkit-text-stroke-width').slice(0,-2);
-
-      //console.log(crimeStr)
       if(crimeStr.includes('0.8')){
         d3.select(this).style('-webkit-text-stroke-width',null);
         d3.select(this).style('border','3.5px solid '+color);
