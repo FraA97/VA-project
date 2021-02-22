@@ -15,7 +15,8 @@ d3.text("datasets/coefficienti.csv", function(raw) {
                   .append('label')
                   .attr('for','selCrime')
                   .append('b')
-                  .text('Select Crimes:   ');
+                  .text('Select Crimes: ')
+                  .style('margin-left','5px');
    // label.append('br')
     //label.style("padding","100px")
 
@@ -122,8 +123,8 @@ d3.text("datasets/coefficienti.csv", function(raw) {
   $('.selectCrimes').on('select2:unselect', function (e) {
     selected_crimes = selected_crimes.filter(el => el !=e.params.data.id);//update list of selected crimes removing 
     computeColourScales();
-    CRIMES = selected_crimes
-    draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+    CRIMES = selected_crimes;
+    draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE);
   });
 });
 colorCr()

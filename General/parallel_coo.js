@@ -393,9 +393,18 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 });
                 showTooltipReg(id,150);
             }
-        
-            //currentColour= id.style('stroke-width')
-            if(!MDS_PC_LOCK) id.style('stroke-width','2');
+            var brushed_p=[];
+            d3.selectAll('.brushed').each(function(d){
+                brushed_p.push(d)
+            })
+            if(brushed_p.length==0) id.style('stroke-width','2');
+            else if(brushed_p.includes(id.attr('name') ) ){
+                id.style('stroke','blue');
+            }
+            else{
+                id.style('stroke-width','1.5');
+            }
+    
             //HIGHLIGTH MDS POINTS
             d3.select("#regions").selectAll("circle").each(function(d){
                 if(name == d){
@@ -403,8 +412,6 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                     d3.select(this).attr("id", "coordination").attr("r","4")
                 }
             })
-            
-            
         })                
         .on("mouseout", function(d) {
             
@@ -429,11 +436,18 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                     var terName = d3.select('#'+this['id']).attr('name');
                     return terName == name;  
                 });
+            }            
+            var brushed_p=[];
+            d3.selectAll('.brushed').each(function(d){
+                brushed_p.push(d)
+            })
+            if(brushed_p.length==0) id.style('stroke-width','0.5');
+            if(brushed_p.includes(id.attr('name') ) ){
+                id.style('stroke','black');
             }
-         /*   d3.select('g .foreground').selectAll('path').each(function(d){
-                if(d3.select(this).style('stroke')=='rgb(255, 0, 0)') brushedForMap='true'
-            })*/
-            if(!MDS_PC_LOCK) id.style('stroke-width','0.5');
+            else{
+                id.style('stroke-width','0.5');
+            }
             //DE-HIGHLIGTH MDS POINTS
             d3.select("#regions").selectAll("svg").selectAll("#coordination").each(function(d){
                 d3.select(this).attr("id", "null").attr("r","3")
