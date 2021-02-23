@@ -111,7 +111,7 @@ var visibleLabel = false
 d3.select('#legendCrimes').append('svg').attr('id','svgLegCr')
  function changeLabelMode (){
     visibleLabel = !visibleLabel
-    createMDS(visualization, computationType, mdsComputationType, selectedYears, true,  visibleLabel);
+    createMDS(visualization, computationType, mdsComputationType, selectedYears, true,  visibleLabel, false);
   }
 
 d3.select('#mdsComputation')
@@ -119,7 +119,7 @@ d3.select('#mdsComputation')
     var newData = eval(d3.select(this).property('value'));
     mdsComputationType = newData;
     loadMdsComputationValue(newData);
-    createMDS(visualization, computationType, mdsComputationType, selectedYears, false, visibleLabel);
+    createMDS(visualization, computationType, mdsComputationType, selectedYears, false, visibleLabel, false);
     //draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
 
 });
@@ -130,7 +130,7 @@ d3.select('#computationCrimes')
     var newData = eval(d3.select(this).property('value'));//0 if choose only number of crimes or 1 if choose num_crimes/pop
     computationType=newData
     loadComputationMap(newData);
-    createMDS(visualization, computationType, mdsComputationType, selectedYears, false, visibleLabel);
+    createMDS(visualization, computationType, mdsComputationType, selectedYears, false, visibleLabel, false);
     //loadComputationParallelCoordinates(newData); (valerio [menu]) DONE
     if(newData == 0) changeAbsolute(false)
     else changeAbsolute(true)
@@ -152,16 +152,16 @@ d3.select('#visualization')
     } 
     REGIONS = changeKindOfTerritory(newData)
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-    createMDS(visualization, computationType, mdsComputationType, selectedYears, false, visibleLabel);
+    createMDS(visualization, computationType, mdsComputationType, selectedYears, false, visibleLabel, false);
     //loadParallelCoordinates(newData); (valerio [menu]) (must load par. coord. with prov or reg) DONE
 });
 
-/*var running = false;
+var running = false;
 var timer;
 
 d3.select('#play').on("click", function() {
 		
-  var duration = 1000,
+  var duration = 2000,
     maxstep = 2019,
     minstep = 2012;
   
@@ -175,6 +175,7 @@ d3.select('#play').on("click", function() {
     $("#play").html("Pause");
     
     sliderValue = $("#slider").val();
+    createMDS(visualization, computationType,mdsComputationType, [sliderValue], false, visibleLabel, true);
     
     timer = setInterval( function(){
         if (sliderValue < maxstep){
@@ -183,8 +184,7 @@ d3.select('#play').on("click", function() {
           $('#range').html(sliderValue);
         }
         $("#slider").val(sliderValue);
-        createMDS(visualization, computationType,mdsComputationType, [sliderValue], false, visibleLabel);
-      
+        createMDS(visualization, computationType,mdsComputationType, [sliderValue], false, visibleLabel, true);
     }, duration);
     running = true;    
   }
@@ -192,18 +192,19 @@ d3.select('#play').on("click", function() {
 
 $("#slider").on("change", function(){
   sliderValue = $("#slider").val()
-  createMDS(visualization, computationType,mdsComputationType, [sliderValue], false, visibleLabel);
+  createMDS(visualization, computationType,mdsComputationType, [sliderValue], false, visibleLabel, true);
   $("#range").html($("#slider").val());
   clearInterval(timer);
-  $("button").html("Play MDS evolution");
-});*/
+  running = false;
+  $("#play").html("Play MDS evolution");
+});
 
 //console.log(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
 REGIONS = changeKindOfTerritory(visualization)
 draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
 loadMap(visualization);//Region map
 //loadParallelCoordinates(newData); (valerio [start function]) DONE
-createMDS(visualization, computationType,mdsComputationType, selectedYears, false, visibleLabel);
+createMDS(visualization, computationType,mdsComputationType, selectedYears, false, visibleLabel, false);
 //Years (valerio=>function to implement is on 'updateSelectedYears' function) DONE
 d3.selectAll(".yearCheckbox").on("change",updateSelectedYears); //update list of selected years ('selectedYears') + map
 

@@ -37,8 +37,8 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
         h = params.h || w,
         xDomain = [Math.min.apply(null, xPos),
                     Math.max.apply(null, xPos)],
-        yDomain = [Math.min.apply(null, yPos),
-                    Math.max.apply(null, yPos)],
+        yDomain = [Math.max.apply(null, yPos),
+                    Math.min.apply(null, yPos)],
         pointRadius = params.pointRadius || 3;
 
     if (params.reverseX) {
@@ -54,7 +54,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
 
         yScale = d3.scaleLinear().
             domain(yDomain)
-            .range([h-padding, padding]),
+            .range([padding, h-padding]),
 
         xAxis = d3.axisBottom(xScale)
             .ticks(params.xTicks || 7),
@@ -88,212 +88,218 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                 .attr("height", h);
     }
     else{
-        element.select("svg").selectAll("*").remove()
+        if(!params.evolutionMode){
+            element.select("svg").selectAll("*").remove()
+        }        
+    }    
+    var t = svg.transition().duration(1500);
+    if(!params.evolutionMode){
+        element.selectAll(".mdsTooltip").remove()
+
+        var clip = svg.append("defs").append("svg:clipPath")        //out of this region the points will be cancelled (for zoom)
+            .attr("id", "clip")
+            .append("svg:rect")
+            .attr("width", w - (padding*0.8))       //asse di destra
+            .attr("height", h - (padding*1.1))   //asse di sotto
+            .attr("x", (padding*0.2))         //asse di sinistra
+            .attr("y", (padding*0.7));         //asse di sopra
         
-        
-    }
-    element.selectAll(".mdsTooltip").remove()
+        svg.append("g")
+            .attr("class", "axis")
+            .attr("id", "xaxis")
+            .attr("transform", "translate(0," + (h - padding + 2*pointRadius) + ")")
+            .call(xAxis);
 
-    var clip = svg.append("defs").append("svg:clipPath")        //out of this region the points will be cancelled (for zoom)
-        .attr("id", "clip")
-        .append("svg:rect")
-        .attr("width", w - (padding*0.8))       //asse di destra
-        .attr("height", h - (padding*1.1))   //asse di sotto
-        .attr("x", (padding*0.45))         //asse di sinistra
-        .attr("y", (padding*0.7));         //asse di sopra
-    
-    svg.append("g")
-        .attr("class", "axis")
-        .attr("id", "xaxis")
-        .attr("transform", "translate(0," + (h - padding + 2*pointRadius) + ")")
-        .call(xAxis);
+        svg.append("g")
+            .attr("class", "axis")
+            .attr("id", "yaxis")
+            .attr("transform", "translate(" + (padding - 2*pointRadius) + ",0)")
+            .call(yAxis);
 
-    svg.append("g")
-        .attr("class", "axis")
-        .attr("id", "yaxis")
-        .attr("transform", "translate(" + (padding - 2*pointRadius) + ",0)")
-        .call(yAxis);
+        var brush = d3.brush()
+            .on("brush", highlightBrushedCircles)
+            .on("end", displayLocation)
 
-    var brush = d3.brush()
-        .on("brush", highlightBrushedCircles)
-        .on("end", displayLocation)
-
-    svg.append("g")
-        .on("mousedown", function(){                                           //eliminate brush
-        brushing = false;
-        d3.selectAll(".brushed").attr("class", "non_brushed");
-        d3.selectAll("#text").style("opacity", "0.5");
-        if(visualization==1){//INTERACTIONS WITH MAP
-            var id =d3.select('#mapReg').selectAll('path').filter(function(d){
-                var terName = d3.select('#'+this['id']).attr('name');
-                return brushed_points.includes(terName);  
-            });
-            id.style('stroke-width','0.5');
-        }
-        else{//INTERACTIONS WITH MAP
-            var id =d3.select('#mapProv').selectAll('path').filter(function(d){
-                var terName =d3.select('#'+this['id']).attr('name');
-                return brushed_points.includes(terName);  
-            });
-            id.style('stroke-width','0.5');
-        }
-        brushed_points.forEach(function(d){
-            d3.select("#my_dataviz").selectAll('path').each(function(t){
-                if (d3.select(this).attr("name") != null){
-                if(d.trim() == d3.select(this).attr("name").trim()){
-                    d3.select(this).style("stroke", "#2c7bb6")
-                    //console.log(d)
-                }
-                }
-            })
-            })
-        brushed_points =[]
-        //brush zoom
-        /*xScale.domain(xDomain);
-        yScale.domain(yDomain);
-        zooming();*/
-        })
-    .call(brush);
-
-    var zoom = d3.zoom()
-        .scaleExtent([.5, 25])
-        .extent([[-padding, -padding], [w+padding, h+padding]])
-        .on("zoom", zoomed);
-
-    //zoom over x axis
-    svg.append("rect")
-        .attr("width", w)
-        .attr("height", h/2)
-        .attr("y", h/1.3)            
-        .style("fill", "none")
-        .style("pointer-events", "all")
-        .call(zoom);
-
-    //zoom over y axis
-    /*svg.append("rect")
-        .attr("width", h/3)
-        .attr("height", h)
-        .attr("x", 0)            
-        .style("fill", "none")
-        .style("pointer-events", "all")
-        .call(zoom);*/
-
-    var mtooltip = element.append("div")
-        .attr("class", "mdsTooltip")
-        .style("opacity", 0);
-
-    var nodes = svg.attr("clip-path", "url(#clip)")
-        .selectAll("circle")
-        .data(labels)
-        .enter()
-        .append("g");
-    
-    nodes.append("circle")
-        .attr("r", pointRadius)
-        .attr("cx", function(d, i) { return xScale(xPos[i]); })
-        .attr("cy", function(d, i) { return yScale(yPos[i]); })
-        .on("mouseover", function(d) {
-            mtooltip.transition()
-                .duration(200)
-                .style("opacity", .9);
-            mtooltip.html(d)
-                .style("left", (d3.mouse(this)[0]) + "px")
-                .style("top", (d3.mouse(this)[1]-25) + "px");
+        svg.append("g")
+            .on("mousedown", function(){                                           //eliminate brush
+            brushing = false;
+            d3.selectAll(".brushed").attr("class", "non_brushed");
+            d3.selectAll("#text").style("opacity", "0.5");
             if(visualization==1){//INTERACTIONS WITH MAP
-                var id =d3.select('#mapReg').selectAll('path').filter(function(t){
+                var id =d3.select('#mapReg').selectAll('path').filter(function(d){
                     var terName = d3.select('#'+this['id']).attr('name');
-                    return terName==d;  
+                    return brushed_points.includes(terName);  
                 });
-                id.style('stroke-width','2');
+                id.style('stroke-width','0.5');
             }
             else{//INTERACTIONS WITH MAP
-                var id =d3.select('#mapProv').selectAll('path').filter(function(t){
-                    var terName = d3.select('#'+this['id']).attr('name');
-                    return terName==d;  
+                var id =d3.select('#mapProv').selectAll('path').filter(function(d){
+                    var terName =d3.select('#'+this['id']).attr('name');
+                    return brushed_points.includes(terName);  
                 });
-                id.style('stroke-width','1.5');
+                id.style('stroke-width','0.5');
             }
-            d3.select("#my_dataviz").selectAll('path').each(function(t){
-                if (d3.select(this).attr("name") != null){
+            brushed_points.forEach(function(d){
+                d3.select("#my_dataviz").selectAll('path').each(function(t){
+                    if (d3.select(this).attr("name") != null){
                     if(d.trim() == d3.select(this).attr("name").trim()){
-                    d3.select(this).style("stroke", "#d7191c")
-                    d3.select(this).raise().classed("active", true);
+                        d3.select(this).style("stroke", "#2c7bb6")
+                        //console.log(d)
                     }
-                }
+                    }
+                })
+                })
+            brushed_points =[]
+            //brush zoom
+            /*xScale.domain(xDomain);
+            yScale.domain(yDomain);
+            zooming();*/
             })
-                    
-        })
-        .on("mouseout", function(d) {
-            mtooltip.transition()
-                .duration(500)
-                .style("opacity", 0);
-            if(d3.select(this).attr("class")!= "brushed"){
+        .call(brush);
+
+        var zoom = d3.zoom()
+            .scaleExtent([.5, 25])
+            .extent([[-padding, -padding], [w+padding, h+padding]])
+            .on("zoom", zoomed);
+
+        //zoom over x axis
+        svg.append("rect")
+            .attr("width", w)
+            .attr("height", h/2)
+            .attr("y", h/1.3)            
+            .style("fill", "none")
+            .style("pointer-events", "all")
+            .call(zoom);
+
+        //zoom over y axis
+        /*svg.append("rect")
+            .attr("width", h/3)
+            .attr("height", h)
+            .attr("x", 0)            
+            .style("fill", "none")
+            .style("pointer-events", "all")
+            .call(zoom);*/
+
+        var mtooltip = element.append("div")
+            .attr("class", "mdsTooltip")
+            .style("opacity", 0);
+
+        var nodes = svg.attr("clip-path", "url(#clip)")
+            .selectAll("circle")
+            .data(labels)
+            .enter()
+            .append("g");
+        
+        nodes.append("circle")
+            .attr("r", pointRadius)
+            .attr("cx", function(d, i) { return xScale(xPos[i]); })
+            .attr("cy", function(d, i) { return yScale(yPos[i]); })
+            .on("mouseover", function(d) {
+                mtooltip.transition()
+                    .duration(200)
+                    .style("opacity", .9);
+                mtooltip.html(d)
+                    .style("left", (d3.mouse(this)[0]) + "px")
+                    .style("top", (d3.mouse(this)[1]-25) + "px");
                 if(visualization==1){//INTERACTIONS WITH MAP
                     var id =d3.select('#mapReg').selectAll('path').filter(function(t){
                         var terName = d3.select('#'+this['id']).attr('name');
-                        return terName==d  
+                        return terName==d;  
                     });
-                    id.style('stroke-width','0.5');
+                    id.style('stroke-width','2');
                 }
                 else{//INTERACTIONS WITH MAP
                     var id =d3.select('#mapProv').selectAll('path').filter(function(t){
                         var terName = d3.select('#'+this['id']).attr('name');
                         return terName==d;  
                     });
-                    //console.log(id)
-                    id.style('stroke-width','0.5');
+                    id.style('stroke-width','1.5');
                 }
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                     if (d3.select(this).attr("name") != null){
-                    if(d.trim() == d3.select(this).attr("name").trim()){
-                        d3.select(this).style("stroke", "#2c7bb6")
-                    }
+                        if(d.trim() == d3.select(this).attr("name").trim()){
+                        d3.select(this).style("stroke", "#d7191c")
+                        d3.select(this).raise().classed("active", true);
+                        }
                     }
                 })
-            }                    
-        });
+                        
+            })
+            .on("mouseout", function(d) {
+                mtooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+                if(d3.select(this).attr("class")!= "brushed"){
+                    if(visualization==1){//INTERACTIONS WITH MAP
+                        var id =d3.select('#mapReg').selectAll('path').filter(function(t){
+                            var terName = d3.select('#'+this['id']).attr('name');
+                            return terName==d  
+                        });
+                        id.style('stroke-width','0.5');
+                    }
+                    else{//INTERACTIONS WITH MAP
+                        var id =d3.select('#mapProv').selectAll('path').filter(function(t){
+                            var terName = d3.select('#'+this['id']).attr('name');
+                            return terName==d;  
+                        });
+                        //console.log(id)
+                        id.style('stroke-width','0.5');
+                    }
+                    d3.select("#my_dataviz").selectAll('path').each(function(t){
+                        if (d3.select(this).attr("name") != null){
+                        if(d.trim() == d3.select(this).attr("name").trim()){
+                            d3.select(this).style("stroke", "#2c7bb6")
+                        }
+                        }
+                    })
+                }                    
+            });
 
-    
+        
 
-    nodes.append("text")
-        .attr("id", "text")
-        .attr("text-anchor", "middle")
-        .text(function(d) { return d; })
-        .attr("x", function(d, i) { return xScale(xPos[i]); })
-        .attr("y", function(d, i) { return yScale(yPos[i]) - 2 *pointRadius; })
-        .attr("fill", "black")   // Font color
-        .style("font", "14px times")  // Font size
-        .style("visibility", "hidden")
+        nodes.append("text")
+            .attr("id", "text")
+            .attr("text-anchor", "middle")
+            .text(function(d) { return d; })
+            .attr("x", function(d, i) { return xScale(xPos[i]); })
+            .attr("y", function(d, i) { return yScale(yPos[i]) - 2 *pointRadius; })
+            .attr("fill", "black")   // Font color
+            .style("font", "14px times")  // Font size
+            .style("visibility", "hidden")
 
-    if(!brushing){
-        d3.selectAll("circle").attr("class", "non_brushed")
+        if(!brushing){
+            d3.selectAll("circle").attr("class", "non_brushed")
+        }
+        else{
+            d3.selectAll("circle").each(function(d){
+                if(brushed_points.includes(d3.select(this).data()[0])){
+                    d3.select(this).attr("class", "brushed")
+                }
+                else{
+                    d3.select(this).attr("class", "non_brushed")
+                }
+            })
+            d3.selectAll("#text").each(function(d){
+                if(brushed_points.includes(d3.select(this).data()[0])){
+                    d3.select(this).style("opacity", "1");
+                }
+                else{
+                    d3.select(this).style("opacity", "0.5");
+                }
+            })
+        }
+
+        if(params.visibleLabel){                                            //remeber last label mode asked 
+            var t = d3.selectAll("#text")
+            t.style("visibility", "visible")
+            element.selectAll(".mdsTooltip").style("display", "none");
+        }
+
     }
     else{
-        d3.selectAll("circle").each(function(d){
-            if(brushed_points.includes(d3.select(this).data()[0])){
-                d3.select(this).attr("class", "brushed")
-            }
-            else{
-                d3.select(this).attr("class", "non_brushed")
-            }
-        })
-        d3.selectAll("#text").each(function(d){
-            if(brushed_points.includes(d3.select(this).data()[0])){
-                d3.select(this).style("opacity", "1");
-            }
-            else{
-                d3.select(this).style("opacity", "0.5");
-            }
-        })
+        zooming();
     }
-
-    if(params.visibleLabel){                                            //remeber last label mode asked 
-        var t = d3.selectAll("#text")
-        t.style("visibility", "visible")
-        element.selectAll(".mdsTooltip").style("display", "none");
-    }
-
-    
+        
     function highlightBrushedCircles() {
 
         if (d3.event.selection != null) {
@@ -391,8 +397,6 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
     //zoom with brush
 
     function zooming() {
-
-        var t = svg.transition().duration(750);
         svg.select("#xaxis").transition(t).call(xAxis);
         svg.select("#yaxis").transition(t).call(yAxis);
         svg.selectAll("circle").transition(t)
