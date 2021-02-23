@@ -25,6 +25,9 @@ function classic(distances, dimensions) {
     });
 };
 
+var brushing = false;
+var brushed_points=[]
+
 /// draws a scatter plot of points, useful for displaying the output
 /// from mds.classic etc
 function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
@@ -117,8 +120,9 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
 
     svg.append("g")
         .on("mousedown", function(){                                           //eliminate brush
+        brushing = false;
         d3.selectAll(".brushed").attr("class", "non_brushed");
-        d3.selectAll(".brushed_text").attr("class", "non_brushed");
+        d3.selectAll("#text").style("opacity", "0.5");
         if(visualization==1){//INTERACTIONS WITH MAP
             var id =d3.select('#mapReg').selectAll('path').filter(function(d){
                 var terName = d3.select('#'+this['id']).attr('name');
@@ -188,7 +192,6 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
         .attr("r", pointRadius)
         .attr("cx", function(d, i) { return xScale(xPos[i]); })
         .attr("cy", function(d, i) { return yScale(yPos[i]); })
-        .attr("class", "non_brushed")
         .on("mouseover", function(d) {
             mtooltip.transition()
                 .duration(200)
@@ -219,8 +222,8 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                 }
             })
                     
-            })
-            .on("mouseout", function(d) {
+        })
+        .on("mouseout", function(d) {
             mtooltip.transition()
                 .duration(500)
                 .style("opacity", 0);
@@ -248,7 +251,9 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                     }
                 })
             }                    
-            });
+        });
+
+    
 
     nodes.append("text")
         .attr("id", "text")
@@ -259,7 +264,28 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
         .attr("fill", "black")   // Font color
         .style("font", "14px times")  // Font size
         .style("visibility", "hidden")
-        .attr("class", "non_brushed");
+
+    if(!brushing){
+        d3.selectAll("circle").attr("class", "non_brushed")
+    }
+    else{
+        d3.selectAll("circle").each(function(d){
+            if(brushed_points.includes(d3.select(this).data()[0])){
+                d3.select(this).attr("class", "brushed")
+            }
+            else{
+                d3.select(this).attr("class", "non_brushed")
+            }
+        })
+        d3.selectAll("#text").each(function(d){
+            if(brushed_points.includes(d3.select(this).data()[0])){
+                d3.select(this).style("opacity", "1");
+            }
+            else{
+                d3.select(this).style("opacity", "0.5");
+            }
+        })
+    }
 
     if(params.visibleLabel){                                            //remeber last label mode asked 
         var t = d3.selectAll("#text")
@@ -267,14 +293,14 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
         element.selectAll(".mdsTooltip").style("display", "none");
     }
 
-    var brushed_points=[]
+    
     function highlightBrushedCircles() {
 
         if (d3.event.selection != null) {
 
             // revert circles to initial style
             nodes.selectAll("circle").attr("class", "non_brushed");
-            nodes.selectAll("#text").attr("class", "non_brushed");
+            nodes.selectAll("#text").style("opacity", "0.5");
 
             var brush_coords = d3.brushSelection(this);
 
@@ -293,7 +319,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
 
                         return isBrushed(brush_coords, cx, cy);
                     })
-                    .attr("class", "brushed_text");
+                    .style("opacity", "1.0");
         }
     }
     function displayLocation() {
@@ -309,6 +335,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
         //clearing brush
         d3.select(this).call(brush.move, null);
         brushed_points=[]
+        brushing = true;
 
         var d_brushed =  d3.selectAll(".brushed").data();
         
