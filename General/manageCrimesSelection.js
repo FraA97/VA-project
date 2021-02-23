@@ -110,13 +110,11 @@ d3.text("datasets/coefficienti.csv", function(raw) {
   
   ////Selected a crime
   $('.selectCrimes').on('select2:select', function (e) {
-    selected_crimes.push(e.params.data.id); //update list of selected crimes adding 
+    selected_crimes.push(e.params.data.id); //update list of selected crimes adding crime delected
     selected_crimes = removeDuplicates(selected_crimes);//remove eventual duplicates
     computeColourScales(); //update computation of colours
-    CRIMES = selected_crimes
-    draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-    //updateCrimeParCoord(e); (valerio [menu])
-    
+    CRIMES = selected_crimes;
+    draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE);    
   });
 
   //Unselected a crime
@@ -127,13 +125,13 @@ d3.text("datasets/coefficienti.csv", function(raw) {
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE);
   });
 });
-colorCr()
 
 function crimeSize(){
   var crimes = d3.selectAll('.select2-selection__choice');
-  crimes.each(function(d,i){
-    colorCr(d3.select(this));
-  }).call(fu);
+    crimes.each(function(d,i){
+      colorCr(d3.select(this));
+    }).call(fu);
+  
 }
 function fu(){
    oldCrime='small';

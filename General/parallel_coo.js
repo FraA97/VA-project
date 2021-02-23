@@ -398,8 +398,12 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             d3.selectAll('.brushed').each(function(d){
                 brushed_p.push(d)
             })
-            if(brushed_p.length==0) id.style('stroke-width','2');
+            if(brushed_p.length==0){
+                if(visualization==0) id.style('stroke-width','1.5');
+                else id.style('stroke-width','2');
+            } 
             else if(brushed_p.includes(id.attr('name') ) ){
+                oldSt=id.style('stroke');
                 id.style('stroke','blue');
             }
             else{
@@ -438,7 +442,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             })
             if(brushed_p.length==0) id.style('stroke-width','0.5');
             if(brushed_p.includes(id.attr('name').trim() ) ){
-                id.style('stroke','black');
+                id.style('stroke',oldSt);
             }
             else{
                 id.style('stroke-width','0.5');

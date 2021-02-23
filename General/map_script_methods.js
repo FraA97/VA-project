@@ -186,7 +186,7 @@ function showTooltipReg(d,flag) {
       else{
         label="<center><b>"+region.attr('name')+"</b></center>"
                 +"Num. Crimes: "+ Number(region.attr('sumDel')).toLocaleString() +"<br>"
-                +"Num. Crimes each 10k citizen: "+ Number(Math.ceil(region.attr('sumDelPop')) ).toLocaleString() +"<br>"
+                +"Num. Crimes each 10k citizen: "+ Number(parseFloat(region.attr('sumDelPop')).toFixed(3) ).toLocaleString() +"<br>"
                 +"Region Area: "+ Number(region.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup> "+"<br>"
                 +"Region Population: "+ Number(region.attr('population')).toLocaleString() 
         tooltip.classed("hidden", false)
@@ -251,7 +251,7 @@ function showTooltipProv(d,flag) {
   else{    
     label="<center><b>"+province.attr('name')+"</b> ("+nameReg+")</center>"
                 +"Num. Crimes: "+ Number(province.attr('sumDel')).toLocaleString() +"<br>"
-                +"Num. Crimes each 10k citizen: "+ Number(Math.ceil(province.attr('sumDelPop')) ).toLocaleString() +"<br>"
+                +"Num. Crimes each 10k citizen: "+ Number(parseFloat(province.attr('sumDelPop')).toFixed(3) ).toLocaleString() +"<br>"
                 +"Province Area: "+ Number(province.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup> " + "<br>"
                 +"Province Population: "+ Number(province.attr('population')).toLocaleString();
 
@@ -815,8 +815,11 @@ function updateLegend(minMax){ //update the legend of map
   for(i=0; i<5;i++){
     var minvalue= minMax[0]+ (i*rangeLeg);
     var maxvalue= minvalue+rangeLeg;
-    if(computationType==0 || maxvalue>5)var str = '<'+Number(Math.ceil(minvalue.toFixed(3)) ).toLocaleString()+'-'+Number(Math.ceil(maxvalue.toFixed(3)) ).toLocaleString()+'>'
-    else var str = '<'+Number(minvalue.toFixed(3) ).toLocaleString()+'-'+Number(maxvalue.toFixed(3) ).toLocaleString()+'>'
+    if(computationType==0 || minMax[1]>5){
+      if(minMax[1]<=5) var str = Number(minvalue.toFixed(3) ).toLocaleString()+' to '+Number(maxvalue.toFixed(3) ).toLocaleString();
+      else var str = Number(Math.ceil(minvalue.toFixed(3)) ).toLocaleString()+' to '+Number(Math.ceil(maxvalue.toFixed(3)) -1).toLocaleString()
+    }
+    else var str = Number(minvalue.toFixed(3) ).toLocaleString()+' to '+Number(maxvalue.toFixed(3) -0.001).toLocaleString()
     keys.push(str);
   }
   
@@ -900,10 +903,10 @@ function updateLegend(minMax){ //update the legend of map
   legend.append('text')
     .attr("stroke","#000000")
     .attr("stroke-width",'0.5')
-    .attr("x", 10)
+    .attr("x", 5)
     .attr("y", startYlegend+110)
     .style("fill", '#000000')
-    .text("TERRITORY STROKES")
+    .text("TERRITORIES BORDERS")
     .style('font-size','12px');
 
   legend.selectAll('mylines')
@@ -1084,7 +1087,7 @@ function updateLegCr(minMax){ //update the legend of map
   legendCr.selectAll('text').remove();
   legendCr.selectAll('rect').remove();
   legendCr.selectAll('line').remove();
-  if(minMax[1]==0){
+  if(minMax[1]==0 || minMax[0]==minMax[1]){
     var color = d3.scaleOrdinal()
     .domain(keys)
     .range(['#bd0026','#bd0026','#bd0026','#bd0026','#bd0026']);
