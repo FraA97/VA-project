@@ -122,7 +122,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
         .on("mousedown", function(){                                           //eliminate brush
         brushing = false;
         d3.selectAll(".brushed").attr("class", "non_brushed");
-        d3.selectAll(".brushed_text").attr("class", "non_brushed");
+        d3.selectAll("#text").style("opacity", "0.5");
         if(visualization==1){//INTERACTIONS WITH MAP
             var id =d3.select('#mapReg').selectAll('path').filter(function(d){
                 var terName = d3.select('#'+this['id']).attr('name');
@@ -269,14 +269,20 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
         d3.selectAll("circle").attr("class", "non_brushed")
     }
     else{
-        console.log(brushed_points)
         d3.selectAll("circle").each(function(d){
-            console.log(d3.select(this).data()[0])
             if(brushed_points.includes(d3.select(this).data()[0])){
                 d3.select(this).attr("class", "brushed")
             }
             else{
                 d3.select(this).attr("class", "non_brushed")
+            }
+        })
+        d3.selectAll("#text").each(function(d){
+            if(brushed_points.includes(d3.select(this).data()[0])){
+                d3.select(this).style("opacity", "1");
+            }
+            else{
+                d3.select(this).style("opacity", "0.5");
             }
         })
     }
@@ -294,7 +300,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
 
             // revert circles to initial style
             nodes.selectAll("circle").attr("class", "non_brushed");
-            nodes.selectAll("#text").attr("class", "non_brushed");
+            nodes.selectAll("#text").style("opacity", "0.5");
 
             var brush_coords = d3.brushSelection(this);
 
@@ -313,7 +319,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
 
                         return isBrushed(brush_coords, cx, cy);
                     })
-                    .attr("class", "brushed_text");
+                    .style("opacity", "1.0");
         }
     }
     function displayLocation() {

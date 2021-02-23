@@ -249,7 +249,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                     brushed_points = []
                 }
                 d3.selectAll(".brushed").attr("class", "non_brushed");
-                d3.selectAll(".brushed_text").attr("class", "non_brushed");
+                d3.selectAll("#text").style("opacity", "0.5");
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                     if (d3.select(this).attr("name") != null){
                     d3.select(this).style("stroke", "#2c7bb6")

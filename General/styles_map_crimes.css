@@ -214,6 +214,9 @@ circle {
     fill : #2c7bb6;
     opacity : 0.5;
 }
+#text{
+  opacity: 0.5;
+}
 .brushed {
   fill: red;
   stroke: red;
