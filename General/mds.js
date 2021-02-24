@@ -267,8 +267,19 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
             .style("font", "14px times")  // Font size
             .style("visibility", "hidden")
 
-        if(!brushing){
+        console.log(changedVisualization)
+
+        if(!brushing || changedVisualization){
             d3.selectAll("circle").attr("class", "non_brushed")
+            MDS_PC_LOCK = false;
+            brushed_points = []
+            d3.select("#my_dataviz").selectAll('path').each(function(t){
+                if (d3.select(this).attr("name") != null){
+                    d3.select(this).style("stroke", "#2c7bb6")
+                }
+            })
+            
+            changedVisualization = false;
         }
         else{
             d3.selectAll("circle").each(function(d){

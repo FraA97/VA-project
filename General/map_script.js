@@ -139,6 +139,7 @@ computeColourScales();//compute colour scales considering only num crimes
 //compute parCoord(); //(valerio [start function]) compute par. coord. considering only num crimes DONE
 
 //visualize for region or province map
+var changedVisualization = false;
 d3.select('#visualization')
   .on('change', function() {
     var newData = eval(d3.select(this).property('value'));//0 if choose to vis. for province or 1 if choose to vis for regions
@@ -152,6 +153,7 @@ d3.select('#visualization')
     } 
     REGIONS = changeKindOfTerritory(newData)
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+    changedVisualization = true;
     createMDS(visualization, computationType, mdsComputationType, selectedYears, false, visibleLabel, false);
     //loadParallelCoordinates(newData); (valerio [menu]) (must load par. coord. with prov or reg) DONE
 });
