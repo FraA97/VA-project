@@ -142,13 +142,13 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
             brushed_points.forEach(function(d){
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                     if (d3.select(this).attr("name") != null){
-                    if(d.trim() == d3.select(this).attr("name").trim()){
-                        d3.select(this).style("stroke", "#2c7bb6")
-                        //console.log(d)
-                    }
+                        if(d.trim() == d3.select(this).attr("name").trim()){
+                            d3.select(this).style("stroke", "#2c7bb6")
+                            //console.log(d)
+                        }
                     }
                 })
-                })
+            })
             brushed_points =[]
             //brush zoom
             /*xScale.domain(xDomain);
@@ -218,8 +218,8 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                     if (d3.select(this).attr("name") != null){
                         if(d.trim() == d3.select(this).attr("name").trim()){
-                        d3.select(this).style("stroke", "#d7191c")
-                        d3.select(this).raise().classed("active", true);
+                            d3.select(this).style("stroke", "#d7191c")
+                            d3.select(this).raise().classed("active", true);
                         }
                     }
                 })

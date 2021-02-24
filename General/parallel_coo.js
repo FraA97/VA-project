@@ -4,6 +4,7 @@ var lastScrolledLeft = 0;
 var lastScrolledTop = 0;
 var foreground;
 var background;
+var brushed_points = [];
 
 //  -------------------------------------------parametri globali che l'utente puo cambiare
 YEAR = [2019]
@@ -30,7 +31,7 @@ for (let i = 2012; i < 2020; i++) {
 
 // set the dimensions and margins of the graph
 var margin = {top: 50, right: 15, bottom: 15, left: 0},
-    width = document.getElementById("my_dataviz").clientWidth+ margin.left + margin.right
+    width = document.getElementById("my_dataviz").clientWidth+ margin.left + margin.right 
     height = document.getElementById("my_dataviz").clientHeight - margin.top - margin.bottom;
     //console.log(width)
 // append the svg_PC object to the body of the page
@@ -252,7 +253,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 d3.selectAll("#text").style("opacity", "0.5");
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                     if (d3.select(this).attr("name") != null){
-                    d3.select(this).style("stroke", "#2c7bb6")
+                        d3.select(this).style("stroke", "#2c7bb6")
                     }
                 })
                 if(visualization==1){//INTERACTIONS WITH MAP
@@ -310,9 +311,12 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     }
     
     //asse x -> it find the best position for each Y axis
+    right_pad = 0
+    last_crime = Object.keys(y)[Object.keys(y).length-1]
+    if(last_crime != null && last_crime.length > 17) right_pad = 2.5*last_crime.length
     x = d3.scalePoint() //Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
         .domain(dimensions)  ///.domain(["territorio", "anno", "popolazione",..])
-        .range([0, document.getElementById("my_dataviz").clientWidth-margin.right])
+        .range([0, document.getElementById("my_dataviz").clientWidth-margin.right-right_pad])
         //.range([0, Math.min(document.getElementById("my_dataviz").clientWidth-margin.right,99*dimensions.length)])///general width of the graph, varia a seconda di quanti crimini metti
         .padding(0.5);
         //.range([0, (350-11*dimensions.length)*dimensions.length])///general width of the graph, varia a seconda di quanti crimini metti
@@ -352,23 +356,31 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         .data(data)
         .enter().append("path")
         .attr("d", path)
-        .style("stroke", "#2c7bb6")
+        .style("stroke", function(d){
+            d3.select(this).raise().classed("active", true);
+            if (brushed_points.includes(d["territorio"].trim()) ) return "#d7191c"
+            return "#2c7bb6"
+        })
         .style("stroke-width", "1.5")
         .style("opacity", 0.9);
     //each
     var overed
-    foreground.attr("name",function(d){
-            return d["territorio"]})
+    foreground.attr("name",function(d){return d["territorio"]})
         .on("mouseover", function(d) {
             
-            if(!MDS_PC_LOCK){
-                d3.select(this).raise().classed("active", true);
-                d3.select(this).style("stroke", "#d7191c")
-            }
-            else{
+            if(MDS_PC_LOCK){
                 overed = d3.select(this).attr("name").trim()
             }
-            d3.select(this).style("stroke", "#d7191c")
+            d3.select(this).raise().classed("active", true);
+            d3.select("#my_dataviz").selectAll('path').each(function(t){
+                if (d3.select(this).attr("name") != null){
+                    if(d["territorio"].trim() == d3.select(this).attr("name").trim()){
+                        d3.select(this).raise().classed("active", true);
+                        d3.select(this).style("stroke", "#d7191c")
+                    }
+                }
+            })
+            //d3.select(this).style("stroke", "#d7191c")
             //drawTooltip
             var text = d["territorio"]
             if(YEAR.length>1) text += " " + d["anno"] //Change the content of all tooltip elements:
@@ -383,6 +395,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             if(visualization==0){
                 var id =d3.select('#mapProv').selectAll('path').filter(function(d){
                     var terName = d3.select('#'+this['id']).attr('name');
+                    
                     return terName == name;  
                 });
                 showTooltipProv(id,150);
@@ -394,7 +407,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 });
                 showTooltipReg(id,150);
             }
-            var brushed_p=[];
+            brushed_p=[];
             d3.selectAll('.brushed').each(function(d){
                 brushed_p.push(d)
             })
@@ -436,7 +449,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                     return terName == name;  
                 });
             }            
-            var brushed_p=[];
+            brushed_p=[];
             d3.selectAll('.brushed').each(function(d){
                 brushed_p.push(d.trim())
             })
