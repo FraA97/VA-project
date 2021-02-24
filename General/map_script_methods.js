@@ -310,7 +310,7 @@ function loadMap(newData){
       d3.select("#mapProv").attr('style',"visibility:hidden"); 
   }
   else{ //load province map
-    d3.select('#mapReg').selectAll('circle').style('opacity','0.0');
+    d3.select('#mapReg').selectAll('circle').attr('style',"visibility:hidden");//.style('opacity','0.0');
     if(count==1){
       //url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
       //url_province = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
@@ -703,7 +703,7 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
               .selectAll('path');
               gReg.attr('class','greyReg')
                 .style('fill',null);
-              d3.select('#mapReg').selectAll('circle').style('opacity','0.0');
+              d3.select('#mapReg').selectAll('circle').attr('style',"visibility:hidden");//.style('opacity','0.0');
             }
   });
 }
@@ -1331,13 +1331,15 @@ function loadPopCircles(){
 
 function showTooltiPopDens(){
   var circle=d3.select(this);
-  var mouse = d3.mouse(d3.select('#map').node())
-                    .map( function(d) { return parseInt(d); } );
-  label = "<b>"+"Density Region: "+"</b>"+parseInt(circle.attr('densReg'));
-        tooltip.classed("hidden", false)
-              .html(label)
-              .attr("style", function(d){
-                if(mouse[0]>= widthMap/2){ return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";}
-                else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";
-              })
+  if(circle.style('opacity')!='0.4'){
+    var mouse = d3.mouse(d3.select('#map').node())
+    .map( function(d) { return parseInt(d); } );
+    label = "<b>"+"Density Region: "+"</b>"+parseInt(circle.attr('densReg'));
+    tooltip.classed("hidden", false)
+    .html(label)
+    .attr("style", function(d){
+    if(mouse[0]>= widthMap/2){ return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";}
+    else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";
+    })
+  }
 }
