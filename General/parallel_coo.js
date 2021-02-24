@@ -4,6 +4,7 @@ var lastScrolledLeft = 0;
 var lastScrolledTop = 0;
 var foreground;
 var background;
+var brushed_points = [];
 
 //  -------------------------------------------parametri globali che l'utente puo cambiare
 YEAR = [2019]
@@ -312,8 +313,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     //asse x -> it find the best position for each Y axis
     right_pad = 0
     last_crime = Object.keys(y)[Object.keys(y).length-1]
-    if(last_crime.length > 17) right_pad = 2.5*last_crime.length
-    console.log(last_crime)
+    if(last_crime != null && last_crime.length > 17) right_pad = 2.5*last_crime.length
     x = d3.scalePoint() //Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
         .domain(dimensions)  ///.domain(["territorio", "anno", "popolazione",..])
         .range([0, document.getElementById("my_dataviz").clientWidth-margin.right-right_pad])
@@ -356,22 +356,22 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         .data(data)
         .enter().append("path")
         .attr("d", path)
-        .style("stroke", "#2c7bb6")
+        .style("stroke", function(d){
+            d3.select(this).raise().classed("active", true);
+            if (brushed_points.includes(d["territorio"].trim()) ) return "#d7191c"
+            return "#2c7bb6"
+        })
         .style("stroke-width", "1.5")
         .style("opacity", 0.9);
     //each
     var overed
-    foreground.attr("name",function(d){
-            return d["territorio"]})
+    foreground.attr("name",function(d){return d["territorio"]})
         .on("mouseover", function(d) {
             
-            if(!MDS_PC_LOCK){
-                d3.select(this).raise().classed("active", true);
-                d3.select(this).style("stroke", "#d7191c")
-            }
-            else{
+            if(MDS_PC_LOCK){
                 overed = d3.select(this).attr("name").trim()
             }
+            d3.select(this).raise().classed("active", true);
             d3.select(this).style("stroke", "#d7191c")
             //drawTooltip
             var text = d["territorio"]
@@ -387,6 +387,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             if(visualization==0){
                 var id =d3.select('#mapProv').selectAll('path').filter(function(d){
                     var terName = d3.select('#'+this['id']).attr('name');
+                    
                     return terName == name;  
                 });
                 showTooltipProv(id,150);
@@ -398,7 +399,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 });
                 showTooltipReg(id,150);
             }
-            var brushed_p=[];
+            brushed_p=[];
             d3.selectAll('.brushed').each(function(d){
                 brushed_p.push(d)
             })
@@ -440,7 +441,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                     return terName == name;  
                 });
             }            
-            var brushed_p=[];
+            brushed_p=[];
             d3.selectAll('.brushed').each(function(d){
                 brushed_p.push(d.trim())
             })
