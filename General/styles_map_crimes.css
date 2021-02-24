@@ -142,8 +142,7 @@ body {
    
 
   
-  #menu
-  {
+  #menu{
       position: absolute;
       height: 100%;
       width: 29%;
@@ -156,14 +155,16 @@ body {
       border-radius: 15px;
       border-width: 2px;
   }
-  .select2-selection{
-    border: none;
-  }
+  
   #crimes {
     width: 100%;
     text-align: left;
     height:80%;
-  /*  overflow:auto;*/
+    /*overflow:auto;*/
+  }
+  .select2-selection{
+    border: none;
+    border-radius: none;
   }
   #legendCrimes{
     width: 100%;
