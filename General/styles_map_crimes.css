@@ -79,7 +79,7 @@ body {
     margin-bottom:0;
   }
 
-  #recLegendMap, #recLegendCr{
+  #recLegendMap, #recLegendCr, #recLegendPopMap{
     fill: #e9edc9;
     opacity: 0.8;
   }

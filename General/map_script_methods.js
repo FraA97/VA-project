@@ -3,8 +3,10 @@
 url_regioni = "./datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
 url_province = "./datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
 var countStroke=false;
+
+
+
 function createMapReg(geojson) {
- // widthMap=s3.select('#map').style('width')
     var projection = d3.geoEquirectangular().fitSize([widthMap-100,heightMap*1.85],geojson).scale(0.01);
     
     var geoGenerator = d3.geoPath()
@@ -33,7 +35,6 @@ function createMapReg(geojson) {
       .attr("onclick",function(d,i){
         return 'updateMapReg("regione",'+d.properties.COD_REG+');' +'add_delete_territory("'+d3.select(this).attr('name')+'");' //DONE (valerio)[on '' add function for manage click of a region---possible parameter = 'd3.select(this).attr('name') = nome della regione]]
       });
-      
       if(count==0){
         zoom.scaleTo(d3.select("#map").transition().duration(600), 1.8);
         count+=1;
@@ -41,27 +42,10 @@ function createMapReg(geojson) {
 }
 
 function createMapProv(geojson) {
-/*
-  var mapboxAccessToken = "pk.eyJ1IjoiZnJhbmNlc2NvYXJ0IiwiYSI6ImNrazViMDFsNTAzcmoyb240b251b3V5Y3cifQ.bsA1I-KVGUcofP0B3a7dvg";
- const container = document.getElementById('map')
-if(container) {
-  var map = L.map('map').setView([37.8, -96], 4);
-   L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=' + mapboxAccessToken, {
-     id: 'mapbox/light-v9',
-     tileSize: 512,
-     zoomOffset: -1
-   }).addTo(map);
-   L.geoJson(geojson).addTo(map);
-}
-*/
   var projection = d3.geoEquirectangular().fitSize([widthMap-100,heightMap*1.85],geojson)
                                           .scale(0.01);
-  
   var geoGenerator = d3.geoPath().projection(projection);
 
-  d3.select('#map')
-     // .attr('width', width)
-      //.attr('height',height)
   var u = d3.select('#mapProv')
     .selectAll('path')
     .data(geojson.features);
@@ -80,20 +64,17 @@ if(container) {
         }
         else{
           return d.properties.DEN_PROV;
-        }
-      
+        } 
     })
     .attr('cod_reg',function(d){return d.properties.COD_REG;})
     .attr('cod_prov',function(d){return d.properties.COD_PROV;})
     .attr('shape_area',function(d){return d.properties.SHAPE_AREA;})
     .attr('shape_leng',function(d){return d.properties.SHAPE_LENG;})
-  // .attr('population',0)
     .attr('clicked',"0")
     .attr("onclick",function(d,i){
       return 'updateMapProv("'+d3.select(this).attr('id')+'");'+'add_delete_territory("'+d3.select(this).attr('name')+'");'
     })
     .on("mousemove", showTooltipProv);
-    
 }
 
 function updateMapReg(r,i){  //apply transition + interaction
@@ -110,8 +91,7 @@ function updateMapReg(r,i){  //apply transition + interaction
             .attr('sumDelPop',null)
             .attr('population',null)
             .attr('clicked','0');
-        d3.select("#selectAll").property('checked',false);//remove check when a territory is deselected
-        
+        d3.select("#selectAll").property('checked',false);//remove check when a territory is deselected 
     }			
 }	
 
@@ -154,6 +134,7 @@ function showTooltipReg(d,flag) {
         var mouse = d3.mouse(d3.select('#map').node())
                     .map( function(d) { return parseInt(d); } );
       }
+
       //HIGHLIGTH PC PATH
       d3.select("#my_dataviz").selectAll('path').each(function(t){
         if (d3.select(this).attr("name") != null){
@@ -291,12 +272,36 @@ function loadMap(newData){
       var mapReg = d3.json(url_regioni, function(data) {
         if(count==0){
           createMapReg(data);
+          
+         /* .append('circle')
+      .attr('cx',function(d){
+        var bbox = this.getBBox();
+        return Math.floor(bbox.x + bbox.width/2.0); 
+      })
+      .attr('cy',function(d){
+        var bbox = this.getBBox(); 
+        return Math.floor(bbox.y + bbox.height/2.0);
+      })
+      .attr('r','5px');*/
+    
+    /*
+      .on('mousemove',function(d){
+        var pos = d3.mouse(this),
+          px = pos[0],
+          py = pos[1];
+        console.log(projection.invert(d3.mouse(this)));
+        //-145.57201381050615    3556.44401089497
+        
+        console.log(d3.geoContains(feature_utah, projection.invert([px, py]) ) );
+      })*/
+
           d3.select("#selectAll").property('checked',true);//check checkbox for select all regions       
         } 
         else count+=1;
         d3.select("#selectAll").property('checked',true);//check checkbox for select all territory
-        selectAllTer(); 
-      
+        selectAllTer();
+
+        
         var gReg = d3.select('#mapReg')
                      .selectAll('path')
 
@@ -338,6 +343,7 @@ function loadMap(newData){
       d3.select("#mapProv").attr('style',"visibility:hidden"); 
   }
   else{ //load province map
+    d3.select('#mapReg').selectAll('circle').style('opacity','0.0');
     if(count==1){
       //url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
       //url_province = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
@@ -699,7 +705,6 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
           })   
         })
           var oldFill= d3.select(id).style('fill');
-          //console.log(oldFill)
           d3.select(id)
             //interaction with dataset:
             .style("fill", function(){
@@ -725,13 +730,13 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
                 else return '#000000';
               } 
             });
-         
-          
-            if(visualization=="0" ) {
+          loadPopCircles()
+          if(visualization=="0" ) {
               var gReg = d3.select('#mapReg')
               .selectAll('path');
               gReg.attr('class','greyReg')
                 .style('fill',null);
+              d3.select('#mapReg').selectAll('circle').style('opacity','0.0');
             }
   });
 }
@@ -827,6 +832,8 @@ function updateLegend(minMax){ //update the legend of map
   legend.selectAll('g text').remove();
   legend.selectAll('g rect').remove();
   legend.selectAll('g line').remove();
+  legend.selectAll('g circle').remove();
+  legend.selectAll('g polygon').remove();
   if(minMax[1]==0){
     var color = d3.scaleOrdinal()
     .domain(keys)
@@ -837,8 +844,6 @@ function updateLegend(minMax){ //update the legend of map
     .domain(keys)
     .range(['#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026']);
   }
-  
-
   var colorStroke=['#000000','#007F5F']
 
   var size = 14
@@ -938,7 +943,61 @@ function updateLegend(minMax){ //update the legend of map
         .style('font-size','12px');
     
 /////////////////////////////////
-
+ if(visualization==1){
+  legend.selectAll('rec').data(["a"]).enter().append('rect')
+    .attr('id',"recLegendPopMap")
+    .attr("x",0)
+    .attr("y",startYlegend-130) 
+    .attr("width", widthMap/7 )
+    .attr("height",heightLegend-20)
+    .attr("rx","12")
+    .style('stroke','');
+    legend.selectAll('mylines').data(["a"]).enter().append('line')
+      .attr("x1", 40)
+      .attr("y1", startYlegend-95)
+      .attr("x2", 40 )
+      .attr("y2",  startYlegend-35)
+      .style('stroke','#0077b6')
+      .style('stroke-width',3)
+      var points =[startYlegend-35, startYlegend-35, startYlegend-25];
+      legend.selectAll('mytriangle').data(["a"]).enter().append('polygon')
+      .attr("points", "35,"+points[0].toString()+" 45,"+points[1].toString()+" 40,"+points[2].toString() )
+      .style('stroke','#0077b6')
+      .style('fill','#0077b6')
+      .style('stroke-width',3);
+    
+  legend.append('text')
+    .attr("stroke","#000000")
+    .attr("stroke-width",'0.5')
+    .attr("x", 2)
+    .attr("y",startYlegend-130+size) 
+    .style("fill", '#000000')
+    .text("POP. DENS.")
+    .style('font-size','12px')
+  legend.selectAll("mycircles")
+    .data([1,2,3,4,5])
+    .enter()
+    .append("circle")
+      .attr("cx", 10)
+      .attr("cy", function(d,i){ return startYlegend-130+30 + i*(20)}) // 100 is where the first dot appears. 25 is the distance between dots
+      .attr("r", function(d,i){ return ''+ d*1.8+'px';})
+      .style("fill", '#2c7bb6')
+      .style('stroke','#000000')
+      .on('mouseover',highlightTer)
+      .on('mouseout',unlightTer)
+      .on('click',clickTer)
+  
+    legend.selectAll('myDensityLabels')
+      .data([1,2,3,4,5])
+      .enter()
+      .append('text')
+        .attr("x", 25)
+        .attr("y", function(d,i){return  startYlegend-130+30 + i*(21); })
+        .text(function(d){if(d==1)return 'minor';else if(d==5) return 'major'})
+        .style("alignment-baseline", "middle")
+        .style('stroke-width',0.3)
+        .style('font-size','13px');
+ }
 }
 
 function split(string){ //from a list of string to a list of Float
@@ -1120,7 +1179,7 @@ function updateLegCr(minMax){ //update the legend of map
         .text(label)
         .style('font-size','12px')
  
-  legendCr.selectAll("myliness")
+  legendCr.selectAll("mylines")
         .data(keys)
         .enter()
         .append("line")
@@ -1220,3 +1279,43 @@ function clickCr(){ //click on legend crimes
           draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
           $('.selectCrimes').val(selected_crimes).trigger('change');
  }
+
+function loadPopCircles(){
+  
+  d3.select('#mapReg').selectAll('circle').remove();
+  var dict={};
+  var r=[];
+  d3.select('#mapReg').selectAll('path').each(function(d){
+    r.push(d3.select(this).attr('population')/d3.select(this).attr('shape_area') );
+    if(d3.select(this).attr('name') == 'Liguria') dict[d3.select(this).attr('name')] = [0,-8];
+    else if(d3.select(this).attr('name') == "Valle d'Aosta") dict[d3.select(this).attr('name')] = [7,-7];
+    else if(d3.select(this).attr('name') == 'Lombardia') dict[d3.select(this).attr('name')] = [-12,+7];
+    else if(d3.select(this).attr('name') == 'Lazio') dict[d3.select(this).attr('name')] = [-8,+5];
+    else if(d3.select(this).attr('name') == 'Molise') dict[d3.select(this).attr('name')] = [+5,-5];
+    else if(d3.select(this).attr('name') == 'Puglia') dict[d3.select(this).attr('name')] = [-5,+15];
+    else if(d3.select(this).attr('name') == 'Sicilia') dict[d3.select(this).attr('name')] = [0,+15];
+    else if(d3.select(this).attr('name') == 'Veneto') dict[d3.select(this).attr('name')] = [-5,+10];
+    else if(d3.select(this).attr('name') == 'Sardegna') dict[d3.select(this).attr('name')] = [+4,+10];
+    else if(d3.select(this).attr('name') == 'Piemonte') dict[d3.select(this).attr('name')] = [-5,+15];
+    else if(d3.select(this).attr('name') == 'Toscana') dict[d3.select(this).attr('name')] = [-5,+10];
+    else dict[d3.select(this).attr('name')] = [0,0];
+
+  });
+  var popMinMax= d3.extent(r);
+  var popScale = d3.scaleQuantile()
+      .domain([popMinMax[0], popMinMax[1]]) 
+      .range(['1px','2px','3px','4px','5px']);
+  d3.select('#mapReg').selectAll('path').each(function(d){
+    var bbox = this.getBBox();
+    var x = Math.floor(bbox.x + bbox.width- 13 + dict[d3.select(this).attr('name')][0]); 
+    var y = Math.floor(bbox.y + 13 +dict[d3.select(this).attr('name')][1]);
+    var r=  d3.select(this).attr('population')/d3.select(this).attr('shape_area');
+    d3.select('#mapReg').append('circle')
+      .attr('cx',x)
+      .attr('cy',y)
+      .attr('r',function(d){
+        return popScale(r);
+      })
+      .attr('dens',popMinMax);
+  });
+}
