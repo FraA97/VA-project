@@ -161,20 +161,27 @@ d3.select('#visualization')
 var running = false;
 var timer;
 
+d3.select("#range").style("opacity", "0");
+
 d3.select('#play').on("click", function() {
 		
   var duration = 2000,
-    maxstep = 2019,
-    minstep = 2012;
+    maxstep = 2019;
   
   if (running == true) {
     $("#play").html("Play MDS evolution");
-				running = false;
-				clearInterval(timer);
+    d3.select("#range").style("opacity", "0");
+		running = false;
+		clearInterval(timer);
+    if($("#slider").val() == 2019){
+      $("#slider").val(2012)
+      $('#range').html(2012);
+    }
   }
   else if (running == false) {
 			
     $("#play").html("Pause");
+    d3.select("#range").style("opacity", "1.0");
     
     sliderValue = $("#slider").val();
     createMDS(visualization, computationType,mdsComputationType, [sliderValue], false, visibleLabel, true);
@@ -185,21 +192,11 @@ d3.select('#play').on("click", function() {
           $("#slider").val(sliderValue);
           $('#range').html(sliderValue);
         }
-        $("#slider").val(sliderValue);
         createMDS(visualization, computationType,mdsComputationType, [sliderValue], false, visibleLabel, true);
     }, duration);
     running = true;    
   }
 })
-
-$("#slider").on("change", function(){
-  sliderValue = $("#slider").val()
-  createMDS(visualization, computationType,mdsComputationType, [sliderValue], false, visibleLabel, true);
-  $("#range").html($("#slider").val());
-  clearInterval(timer);
-  running = false;
-  $("#play").html("Play MDS evolution");
-});
 
 //console.log(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
 REGIONS = changeKindOfTerritory(visualization)
