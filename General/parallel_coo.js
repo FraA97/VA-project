@@ -253,7 +253,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 d3.selectAll("#text").style("opacity", "0.5");
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                     if (d3.select(this).attr("name") != null){
-                    d3.select(this).style("stroke", "#2c7bb6")
+                        d3.select(this).style("stroke", "#2c7bb6")
                     }
                 })
                 if(visualization==1){//INTERACTIONS WITH MAP
@@ -372,7 +372,15 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 overed = d3.select(this).attr("name").trim()
             }
             d3.select(this).raise().classed("active", true);
-            d3.select(this).style("stroke", "#d7191c")
+            d3.select("#my_dataviz").selectAll('path').each(function(t){
+                if (d3.select(this).attr("name") != null){
+                    if(d["territorio"].trim() == d3.select(this).attr("name").trim()){
+                        d3.select(this).raise().classed("active", true);
+                        d3.select(this).style("stroke", "#d7191c")
+                    }
+                }
+            })
+            //d3.select(this).style("stroke", "#d7191c")
             //drawTooltip
             var text = d["territorio"]
             if(YEAR.length>1) text += " " + d["anno"] //Change the content of all tooltip elements:
