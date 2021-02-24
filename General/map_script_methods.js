@@ -974,119 +974,157 @@ function split(string){ //from a list of string to a list of Float
 }
 
 function highlightTer(){ //mouseover on legend rectangles
-  var rect = d3.select(this);
-  var color = rect.style('fill');
-  if(visualization=='0'){
-    if(color =="rgb(0, 0, 0)") color="rgb(116, 110, 110)";
-    var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
-      if(rect.style('stroke-width')!=7) var terFill = d3.select('#'+this['id']).style('fill');
-      else var terFill = d3.select('#'+this['id']).style('stroke');
-      return terFill == color;  
-    });
-    mapTer.style('stroke-width','1.5')
+  
+  if(d3.select(this).attr('cx')!=null){
+    var circle=d3.select(this);
+    var terDens = d3.select('#mapReg').selectAll('circle').filter(function(d){
+      return parseFloat(circle.attr('r'))/1.8 == d3.select(this).attr('r').slice(0,-2);
+    })
+    terDens.style('stroke','black').style('stroke-width',2);
   } 
   else{
-    var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
-      if(rect.style('stroke-width')!=7) var terFill = d3.select('#'+this['id']).style('fill');
-      else var terFill = d3.select('#'+this['id']).style('stroke');
-      return terFill == color;  
-    });
-    mapTer.style('stroke-width','2')
-  }
+    var rect = d3.select(this);
+    var color = rect.style('fill');
+    if(visualization=='0'){
+      if(color =="rgb(0, 0, 0)") color="rgb(116, 110, 110)";
+      var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
+        if(rect.style('stroke-width')!=7) var terFill = d3.select('#'+this['id']).style('fill');
+        else var terFill = d3.select('#'+this['id']).style('stroke');
+        return terFill == color;  
+      });
+      mapTer.style('stroke-width','1.5')
+    } 
+    else{
+      var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
+        if(rect.style('stroke-width')!=7) var terFill = d3.select('#'+this['id']).style('fill');
+        else var terFill = d3.select('#'+this['id']).style('stroke');
+        return terFill == color;  
+      });
+      mapTer.style('stroke-width','2')
+    }
 
-  var names=[]
-  mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;});
-  names.forEach(function(d){
-    d3.select("#my_dataviz").selectAll('path').each(function(t){
-      if (d3.select(this).attr("name") != null){
-        if(d.trim() == d3.select(this).attr("name").trim()){
-          d3.select(this).raise().classed("active", true);
-          d3.select(this).style("stroke", "#d7191c")
+    var names=[]
+    mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;});
+    names.forEach(function(d){
+      d3.select("#my_dataviz").selectAll('path').each(function(t){
+        if (d3.select(this).attr("name") != null){
+          if(d.trim() == d3.select(this).attr("name").trim()){
+            d3.select(this).raise().classed("active", true);
+            d3.select(this).style("stroke", "#d7191c")
+          }
         }
-      }
+      })
     })
-  })
-  //HIGHLIGTH MDS POINTS
-  names.forEach(function(d){
-    d3.select("#regions").selectAll("circle").each(function(t){
-      if(d.trim() == t){
-          d3.select(this).raise().classed("active", true);
-          d3.select(this).attr("id", "coordination").attr("r","4")
-      }
+    //HIGHLIGTH MDS POINTS
+    names.forEach(function(d){
+      d3.select("#regions").selectAll("circle").each(function(t){
+        if(d.trim() == t){
+            d3.select(this).raise().classed("active", true);
+            d3.select(this).attr("id", "coordination").attr("r","4")
+        }
+      })
     })
-  })
+  }
 }
 
 function unlightTer(){ //mouseout on legend rectangles
-  if(visualization=='0'){
-    var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('stroke-width');
-      return terFill == '1.5';  
-    });
+  if(d3.select(this).attr('cx')!=null){
+    var circle=d3.select(this);
+    var terDens = d3.select('#mapReg').selectAll('circle').filter(function(d){
+      return parseFloat(circle.attr('r'))/1.8 == d3.select(this).attr('r').slice(0,-2);
+    })
+    terDens.style('stroke',null).style('stroke-width',null)
   } 
   else{
-    var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('stroke-width');
-      return terFill == '2';  
-    });
-  } 
-  mapTer.style('stroke-width','0.5');
-  var names=[]
-  mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;})
-  names.forEach(function(d){
-    d3.select("#my_dataviz").selectAll('path').each(function(t){
-      if (d3.select(this).attr("name") != null){
-        if(d.trim() == d3.select(this).attr("name").trim()){
-          d3.select(this).style("stroke", "#2c7bb6")
+    if(visualization=='0'){
+      var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
+        var terFill = d3.select('#'+this['id']).style('stroke-width');
+        return terFill == '1.5';  
+      });
+    } 
+    else{
+      var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
+        var terFill = d3.select('#'+this['id']).style('stroke-width');
+        return terFill == '2';  
+      });
+    } 
+    mapTer.style('stroke-width','0.5');
+    var names=[]
+    mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;})
+    names.forEach(function(d){
+      d3.select("#my_dataviz").selectAll('path').each(function(t){
+        if (d3.select(this).attr("name") != null){
+          if(d.trim() == d3.select(this).attr("name").trim()){
+            d3.select(this).style("stroke", "#2c7bb6")
+          }
         }
-      }
+      })
     })
-  })
-  //DE-HIGHLIGTH MDS POINTS
-  d3.select("#regions").selectAll("svg").selectAll("#coordination").each(function(t){
-    d3.select(this).attr("id", "null").attr("r","3")
-  })
+    //DE-HIGHLIGTH MDS POINTS
+    d3.select("#regions").selectAll("svg").selectAll("#coordination").each(function(t){
+      d3.select(this).attr("id", "null").attr("r","3")
+    })
+  }
 }
 
 function clickTer(){ //click on legend rectangles
-  if(visualization=='0'){
-    var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('stroke-width');
-      return terFill == '1.5';  
-    });
-    var mapBadTer=d3.select('#mapProv').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('stroke-width');
-      return terFill != '1.5';  
-    });
-  }
+  if(d3.select(this).attr('cx')!=null){
+    var circle=d3.select(this);
+    var terDens = d3.select('#mapReg').selectAll('circle').filter(function(d){
+      return parseFloat(circle.attr('r'))/1.8 == d3.select(this).attr('r').slice(0,-2);
+    })
+    var terNotDens = d3.select('#mapReg').selectAll('circle').filter(function(d){
+      return parseFloat(circle.attr('r'))/1.8 != d3.select(this).attr('r').slice(0,-2);
+    })
+    if(terDens.style('opacity')!='1'){
+      terNotDens.style('opacity','0.4')
+      terDens.style('stroke',null).style('stroke-width',null).style('opacity','1.0');
+    } 
+    else {
+      terDens.style('stroke','black').style('stroke-width',2).style('opacity','0.7');
+      terNotDens.style('opacity','0.7');
+    }
+  } 
   else{
-    var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('stroke-width');
-      return terFill == '2';  
-    });
-    var mapBadTer=d3.select('#mapReg').selectAll('path').filter(function(d){
-      var terFill = d3.select('#'+this['id']).style('stroke-width');
-      return terFill != '2';  
-    });
+    if(visualization=='0'){
+      var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
+        var terFill = d3.select('#'+this['id']).style('stroke-width');
+        return terFill == '1.5';  
+      });
+      var mapBadTer=d3.select('#mapProv').selectAll('path').filter(function(d){
+        var terFill = d3.select('#'+this['id']).style('stroke-width');
+        return terFill != '1.5';  
+      });
+    }
+    else{
+      var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
+        var terFill = d3.select('#'+this['id']).style('stroke-width');
+        return terFill == '2';  
+      });
+      var mapBadTer=d3.select('#mapReg').selectAll('path').filter(function(d){
+        var terFill = d3.select('#'+this['id']).style('stroke-width');
+        return terFill != '2';  
+      });
+    }
+    
+    mapTer.attr('clicked','1');
+    mapBadTer.attr('clicked','0')
+            .style('fill',null)
+            .attr('class',function(d){
+              if(visualization=='0')  return 'greyProv';
+              else return 'greyOnlyReg';
+            });
+    //valerio (mapTer contiene tutti i territori che devono rimanere selezionati)
+    var names=[]
+    mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;})
+    REGIONS = names
+    draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+
+    d3.select("#selectAll").property('checked',false);
+
+    if(visualization=='0')  updateClickedProv();
+    else  updateClickedReg();
   }
-  
-  mapTer.attr('clicked','1');
-  mapBadTer.attr('clicked','0')
-          .style('fill',null)
-          .attr('class',function(d){
-            if(visualization=='0')  return 'greyProv';
-            else return 'greyOnlyReg';
-          });
-   //valerio (mapTer contiene tutti i territori che devono rimanere selezionati)
-  var names=[]
-  mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;})
-  REGIONS = names
-  draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-
-  d3.select("#selectAll").property('checked',false);
-
-  if(visualization=='0')  updateClickedProv();
-  else  updateClickedReg();
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1253,7 +1291,7 @@ function loadPopCircles(){
   var dict={};
   var r=[];
   d3.select('#mapReg').selectAll('path').each(function(d){
-    r.push(d3.select(this).attr('population')/d3.select(this).attr('shape_area') );
+    r.push(d3.select(this).attr('population')/(d3.select(this).attr('shape_area')/1000000) );
     if(d3.select(this).attr('name') == 'Liguria') dict[d3.select(this).attr('name')] = [0,-8];
     else if(d3.select(this).attr('name') == "Valle d'Aosta") dict[d3.select(this).attr('name')] = [7,-7];
     else if(d3.select(this).attr('name') == 'Lombardia') dict[d3.select(this).attr('name')] = [-12,+7];
@@ -1276,13 +1314,30 @@ function loadPopCircles(){
     var bbox = this.getBBox();
     var x = Math.floor(bbox.x + bbox.width- 13 + dict[d3.select(this).attr('name')][0]); 
     var y = Math.floor(bbox.y + 13 +dict[d3.select(this).attr('name')][1]);
-    var r=  d3.select(this).attr('population')/d3.select(this).attr('shape_area');
+    var r=  d3.select(this).attr('population')/(d3.select(this).attr('shape_area')/1000000)
+    //Number(region.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup>;
     d3.select('#mapReg').append('circle')
       .attr('cx',x)
       .attr('cy',y)
       .attr('r',function(d){
         return popScale(r);
       })
-      .attr('dens',popMinMax);
+      .style('opacity','0.7')
+      .attr('dens',popMinMax)
+      .attr('densReg',r)
+      .on('mousemove',showTooltiPopDens);
   });
+}
+
+function showTooltiPopDens(){
+  var circle=d3.select(this);
+  var mouse = d3.mouse(d3.select('#map').node())
+                    .map( function(d) { return parseInt(d); } );
+  label = "<b>"+"Density Region: "+"</b>"+parseInt(circle.attr('densReg'));
+        tooltip.classed("hidden", false)
+              .html(label)
+              .attr("style", function(d){
+                if(mouse[0]>= widthMap/2){ return "left:"+(mouse[0]-parseInt(tooltip.style('width').slice(0, -2))-20)+"px;top:"+(mouse[1]-10)+"px";}
+                else return "left:"+(mouse[0]+20)+"px;top:"+(mouse[1]-10)+"px";
+              })
 }

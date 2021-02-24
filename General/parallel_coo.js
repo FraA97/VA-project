@@ -404,7 +404,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             } 
             else if(brushed_p.includes(id.attr('name') ) ){
                 oldSt=id.style('stroke');
-                id.style('stroke','blue');
+                id.style('stroke','#2c7bb6');
             }
             else{
                 id.style('stroke-width','1.5');
