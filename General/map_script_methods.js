@@ -4,17 +4,12 @@ url_regioni = "./datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
 url_province = "./datasets/dataset_mappa_italiana/mappa_italiana_provincie.json"
 var countStroke=false;
 
-
-
 function createMapReg(geojson) {
     var projection = d3.geoEquirectangular().fitSize([widthMap-100,heightMap*1.85],geojson).scale(0.01);
     
     var geoGenerator = d3.geoPath()
       .projection(projection);
   
-    d3.select('#map')
-        //.attr('width', widthMap)
-        //.attr('height',heightMap)
     var u = d3.select('#mapReg')
       .selectAll('path')
       .data(geojson.features);
@@ -252,19 +247,16 @@ function showTooltipProv(d,flag) {
 function removeDuplicates(array) {
   return array.filter((a, b) => array.indexOf(a) === b);
 }
-
 function removeRegions(array) {
   x=[];
   x = array.filter(el => el.includes("      "));
   return x;
 }
-
 function removeProvinces(array) {
   x=[];
   x = array.filter(el => (el.startsWith("    ") && !el.startsWith("      ")));
   return x;
 }
-
 //load region map(newData=1) or province map (newData=0) 
 function loadMap(newData){
   if(newData=="1"){ //load region map
@@ -272,29 +264,6 @@ function loadMap(newData){
       var mapReg = d3.json(url_regioni, function(data) {
         if(count==0){
           createMapReg(data);
-          
-         /* .append('circle')
-      .attr('cx',function(d){
-        var bbox = this.getBBox();
-        return Math.floor(bbox.x + bbox.width/2.0); 
-      })
-      .attr('cy',function(d){
-        var bbox = this.getBBox(); 
-        return Math.floor(bbox.y + bbox.height/2.0);
-      })
-      .attr('r','5px');*/
-    
-    /*
-      .on('mousemove',function(d){
-        var pos = d3.mouse(this),
-          px = pos[0],
-          py = pos[1];
-        console.log(projection.invert(d3.mouse(this)));
-        //-145.57201381050615    3556.44401089497
-        
-        console.log(d3.geoContains(feature_utah, projection.invert([px, py]) ) );
-      })*/
-
           d3.select("#selectAll").property('checked',true);//check checkbox for select all regions       
         } 
         else count+=1;
@@ -313,8 +282,6 @@ function loadMap(newData){
                 d3.select(this)
                   .attr('class','white');
               }
-              
-              
             }
           )
           .on('mouseout',

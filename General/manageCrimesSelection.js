@@ -179,8 +179,6 @@ function colorCr(crime){
     updateLegCr(minMax);
 
       crime.style('font-size',function(){
-       // console.log( parseFloat( d3.select('.select2-selection--multiple').style('height').slice(0,-2) ) )
-      //  console.log(parseFloat( d3.select('#crimes').style('height').slice(0,-2)) )
         if(selectedYears.length==0 ) return '60%';
         if(parseFloat( d3.select('.select2-selection--multiple').style('height').slice(0,-2) )< (parseFloat( d3.select('#crimes').style('height').slice(0,-2))/1.3) ||oldCrime=='big' ){
           oldcrime='big';
@@ -191,22 +189,12 @@ function colorCr(crime){
           else return '110%';
         }
         else{
-         // console.log(oldCrime);
-          /*if(oldCrime=='big'){
-            if(crime.style('border')== '3.5px solid rgb(255, 255, 178)') return '70%';
-            else if(crime.style('border')== '3.5px solid rgb(254, 204, 92)') return '75%';
-            else if(crime.style('border')== '3.5px solid rgb(253, 141, 60)') return '80%';
-            else if(crime.style('border')== '3.5px solid rgb(240, 59, 32)') return '85%';
-            else return '90%';
-          }
-          else{*/
             oldcrime='small';
             if(crime.style('border')== '3.5px solid rgb(255, 255, 178)'){   return '60%';}
             else if(crime.style('border')== '3.5px solid rgb(254, 204, 92)'){ return '70%';}
             else if(crime.style('border')== '3.5px solid rgb(253, 141, 60)'){  return '80%';}
             else if(crime.style('border')== '3.5px solid rgb(240, 59, 32)'){  return '90%';}
             else return '100%';
-          //}
         }
       })
   })  
