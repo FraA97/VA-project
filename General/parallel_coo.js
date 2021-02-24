@@ -30,7 +30,7 @@ for (let i = 2012; i < 2020; i++) {
 
 // set the dimensions and margins of the graph
 var margin = {top: 50, right: 15, bottom: 15, left: 0},
-    width = document.getElementById("my_dataviz").clientWidth+ margin.left + margin.right
+    width = document.getElementById("my_dataviz").clientWidth+ margin.left + margin.right 
     height = document.getElementById("my_dataviz").clientHeight - margin.top - margin.bottom;
     //console.log(width)
 // append the svg_PC object to the body of the page
@@ -310,9 +310,13 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     }
     
     //asse x -> it find the best position for each Y axis
+    right_pad = 0
+    last_crime = Object.keys(y)[Object.keys(y).length-1]
+    if(last_crime.length > 17) right_pad = 2.5*last_crime.length
+    console.log(last_crime)
     x = d3.scalePoint() //Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
         .domain(dimensions)  ///.domain(["territorio", "anno", "popolazione",..])
-        .range([0, document.getElementById("my_dataviz").clientWidth-margin.right])
+        .range([0, document.getElementById("my_dataviz").clientWidth-margin.right-right_pad])
         //.range([0, Math.min(document.getElementById("my_dataviz").clientWidth-margin.right,99*dimensions.length)])///general width of the graph, varia a seconda di quanti crimini metti
         .padding(0.5);
         //.range([0, (350-11*dimensions.length)*dimensions.length])///general width of the graph, varia a seconda di quanti crimini metti
