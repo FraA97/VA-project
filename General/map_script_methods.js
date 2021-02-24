@@ -606,7 +606,7 @@ function updateSelectedYears(){ //change value of list of selected years
   computeColourScales(); //for map 
   YEAR = selectedYears
   draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-  createMDS(visualization, computationType, mdsComputationType, selectedYears, false, visibleLabel, false)
+  createMDS(visualization, computationType, mdsComputationType, selectedYears, visibleLabel, true)
 }
 
 function loadMdsComputationValue(value){
