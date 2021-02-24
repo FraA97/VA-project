@@ -215,11 +215,9 @@ draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
 loadMap(visualization);//Region map
 //loadParallelCoordinates(newData); (valerio [start function]) DONE
 createMDS(visualization, computationType,mdsComputationType, selectedYears, visibleLabel, true);
-if(!d3.select("#regions").select("svg").empty()){
-  var t = d3.selectAll("#text")
+var t = d3.selectAll("#text")
   t.style("visibility", "hidden")
-  element.selectAll(".mdsTooltip").style("display", "block");
-}
+  d3.select("#regions").selectAll(".mdsTooltip").style("display", "block");
 //Years (valerio=>function to implement is on 'updateSelectedYears' function) DONE
 d3.selectAll(".yearCheckbox").on("change",updateSelectedYears); //update list of selected years ('selectedYears') + map
 
