@@ -119,7 +119,7 @@ d3.select('#mdsComputation')
     var newData = eval(d3.select(this).property('value'));
     mdsComputationType = newData;
     loadMdsComputationValue(newData);
-    createMDS(visualization, computationType, mdsComputationType, selectedYears, false, visibleLabel, false);
+    createMDS(visualization, computationType, mdsComputationType, selectedYears, false, visibleLabel, true);
     //draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
 
 });
@@ -130,7 +130,7 @@ d3.select('#computationCrimes')
     var newData = eval(d3.select(this).property('value'));//0 if choose only number of crimes or 1 if choose num_crimes/pop
     computationType=newData
     loadComputationMap(newData);
-    createMDS(visualization, computationType, mdsComputationType, selectedYears, false, visibleLabel, false);
+    createMDS(visualization, computationType, mdsComputationType, selectedYears, false, visibleLabel, true);
     //loadComputationParallelCoordinates(newData); (valerio [menu]) DONE
     if(newData == 0) changeAbsolute(false)
     else changeAbsolute(true)
@@ -203,7 +203,7 @@ REGIONS = changeKindOfTerritory(visualization)
 draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
 loadMap(visualization);//Region map
 //loadParallelCoordinates(newData); (valerio [start function]) DONE
-createMDS(visualization, computationType,mdsComputationType, selectedYears, false, visibleLabel, false);
+createMDS(visualization, computationType,mdsComputationType, selectedYears, false, visibleLabel, true);
 //Years (valerio=>function to implement is on 'updateSelectedYears' function) DONE
 d3.selectAll(".yearCheckbox").on("change",updateSelectedYears); //update list of selected years ('selectedYears') + map
 

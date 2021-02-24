@@ -153,7 +153,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
             //brush zoom
             /*xScale.domain(xDomain);
             yScale.domain(yDomain);
-            zooming();*/
+            redraw();*/
             })
         .call(brush);
 
@@ -308,7 +308,20 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
 
     }
     else{
-        zooming();
+        redraw();
+        var zoom = d3.zoom()
+            .scaleExtent([.5, 25])
+            .extent([[-padding, -padding], [w+padding, h+padding]])
+            .on("zoom", zoomed);
+
+        //zoom over x axis
+        svg.append("rect")
+            .attr("width", w)
+            .attr("height", h/2)
+            .attr("y", h/1.3)            
+            .style("fill", "none")
+            .style("pointer-events", "all")
+            .call(zoom);
     }
         
     function highlightBrushedCircles() {
@@ -348,7 +361,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
         //brush zoom
         /*xScale.domain([s[0][0], s[1][0]].map(xScale.invert, xScale));
         yScale.domain([s[1][1], s[0][1]].map(yScale.invert, yScale));
-        zooming();*/
+        redraw();*/
         //clearing brush
         d3.select(this).call(brush.move, null);
         brushed_points=[]
@@ -407,7 +420,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
 
     //zoom with brush
 
-    function zooming() {
+    function redraw() {
         svg.select("#xaxis").transition(t).call(xAxis);
         svg.select("#yaxis").transition(t).call(yAxis);
         svg.selectAll("circle").transition(t)
