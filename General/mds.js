@@ -63,24 +63,6 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
             .ticks(5);
 
 
-    if(params.labelmode){
-        if(params.visibleLabel){
-            var t = d3.selectAll("#text")
-            t.style("visibility", "visible")
-            element.selectAll(".mdsTooltip").style("display", "none");
-            return;
-        }
-        else{
-            var s = element.select("svg");
-            if(!s.empty()){
-                var t = d3.selectAll("#text")
-                t.style("visibility", "hidden")
-                element.selectAll(".mdsTooltip").style("display", "block");
-                return;
-            }
-        }
-    }
-
     var svg = element.select("svg");
     if(svg.empty()){
         var svg = element.append("svg")                 //append svg only if there isn't

@@ -1,6 +1,6 @@
 //var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
 var dataset_path = "datasets/dataset_crimes/dataset1219.csv"
-function createMDS(vis, pop, coeff, year, labelmode, visibleLabel, evolutionMode){
+function createMDS(vis, pop, coeff, year, visibleLabel, evolutionMode){
 
   d3.text(dataset_path, function(raw) {
     var dsv = d3.dsvFormat(';');
@@ -30,14 +30,14 @@ function createMDS(vis, pop, coeff, year, labelmode, visibleLabel, evolutionMode
       var m = chooseCharacteristic(pop, dataCoeff, regions, coeff, year)
 
       //---------------------------------------------Visualization------------------------------------------------
-      plotMds(m, labelmode, visibleLabel, evolutionMode)
+      plotMds(m, visibleLabel, evolutionMode)
       
     });
 
   })
 }
 
-function plotMds(matrix, labelmode, visibleLabel, evolutionMode){
+function plotMds(matrix, visibleLabel, evolutionMode){
   var locationCoordinates = numeric.transpose(classic(matrix));               //mds computation
 
     drawD3ScatterPlot(d3.select("#regions"),                                  //mds plot
@@ -51,7 +51,6 @@ function plotMds(matrix, labelmode, visibleLabel, evolutionMode){
         reverseX : false,
         reverseY : false,
         visibleLabel : visibleLabel,
-        labelmode : labelmode,
         evolutionMode: evolutionMode
     });
 }
@@ -146,7 +145,7 @@ function euclidean_distance(ar1,ar2){
     if (lastWidth == widthNow) return;
     lastWidth = widthNow;
     d3.select("#regions").selectAll("*").remove()
-    createMDS(visualization, computationType, mdsComputationType, selectedYears, false, visibleLabel, false)
+    createMDS(visualization, computationType, mdsComputationType, selectedYears, visibleLabel, false)
   }
   setInterval(pollZoomFireEvent, 100);
 })();
