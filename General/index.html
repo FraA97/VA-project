@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <head>
-  <title>Italy Crimes</title>
+  <title>VICrime: a visualization tool for italian crimes</title>
   <link rel="stylesheet" href="styles_map_crimes.css">  
 </head>
 
@@ -37,35 +37,6 @@
         <!--html for MDS-->
         
           <div id ="central_view">
-            <div id = "years">
-              <form>
-                <div class="multiselect">
-                  <div id="yearCheckboxes">
-                      <label for="tot">
-                        <input class ="yearCheckbox" type="checkbox" id="tot" />Select All Years</label>
-                      <label for="2012">
-                        <input class ="yearCheckbox" type="checkbox" id="2012" />2012</label>
-                      <label for="2013">
-                        <input class ="yearCheckbox" type="checkbox" id="2013" />2013</label>
-                      <label for="2014">
-                        <input class ="yearCheckbox" type="checkbox" id="2014" />2014</label>
-                      <label for="2015">
-                        <input class ="yearCheckbox" type="checkbox" id="2015" />2015</label>
-                      <label for="2016">
-                        <input class ="yearCheckbox" type="checkbox" id="2016" />2016</label>
-                      <label for="2017">
-                        <input class ="yearCheckbox" type="checkbox" id="2017" />2017</label>
-                      <label for="2018">
-                        <input class ="yearCheckbox" type="checkbox" id="2018" />2018</label>
-                      <label for="2019">
-                        <input class ="yearCheckbox" type="checkbox" id="2019" />2019</label>
-                    
-                  </div>
-                </div>
-              </form>
-            
-            </div>
-    
             <div id="menu_tendina">
               <div id ="computation" class="custom-select" style="width:200px;">
                 <label for="computationCrimes"><b>Computation type:</b></label>
@@ -92,10 +63,41 @@
                 </select>
               </div>
             </div>
-            <input name="updateButton" id="btn_label" type="button" value="Labels" onclick="changeLabelMode()" style="float: right; margin-right:4%; font-weight: bold;" />
-	          <button name="play" id="play" style="margin-left:4%; float: left; font-weight: bold;">Play MDS evolution</button>
-            <span id="range" style="margin-left:2%; float: left" >2012 </span>
-            <input id="slider" type="range" min="2012" max="2019" value="2012" step="1" style="visibility:hidden" />
+            <div id = "years">
+              <form>
+                <div class="multiselect">
+                  <div id="yearCheckboxes" >
+                      <label for="tot">
+                        <input class ="yearCheckbox" type="checkbox" id="tot" /><b>Select All Years</b></label>
+                      <label for="2012">
+                        <input class ="yearCheckbox" type="checkbox" id="2012" />2012</label>
+                      <label for="2013">
+                        <input class ="yearCheckbox" type="checkbox" id="2013" />2013</label>
+                      <label for="2014">
+                        <input class ="yearCheckbox" type="checkbox" id="2014" />2014</label>
+                      <label for="2015">
+                        <input class ="yearCheckbox" type="checkbox" id="2015" />2015</label>
+                      <label for="2016">
+                        <input class ="yearCheckbox" type="checkbox" id="2016" />2016</label>
+                      <label for="2017">
+                        <input class ="yearCheckbox" type="checkbox" id="2017" />2017</label>
+                      <label for="2018">
+                        <input class ="yearCheckbox" type="checkbox" id="2018" />2018</label>
+                      <label for="2019">
+                        <input class ="yearCheckbox" type="checkbox" id="2019" />2019</label>
+                  </div>
+                </div>
+              </form>
+              <input name="updateButton" id="btn_label" type="button" value="Labels" onclick="changeLabelMode()" style="float: right; margin-right:4%; font-weight: bold; margin-top: 2px;" />
+              <button name="play" id="play" style="margin-left:4%; margin-top: 2px;float: left; font-weight: bold;">Play MDS evolution</button>
+              <button id="arrow_left" class="arrow left" onclick="yearMM()"></button>
+              <button id="arrow_right" class="arrow right" onclick="yearPP()"></button>
+              <span id="range" style="margin-left:2%; float: left" >2012 </span>
+              <input id="slider" type="range" min="2012" max="2019" value="2012" step="1" style="visibility:hidden" />
+              
+            </div>
+            
+            
             
             <div id="regions"></div>
     

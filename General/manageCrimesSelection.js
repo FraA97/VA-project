@@ -19,12 +19,15 @@ d3.text("datasets/dataset_crimes/dataset1219.csv", function(raw) {
                   .append('b')
                   .text('Select Crimes: ')
                   .style('margin-left','5px');
+                  
    // label.append('br')
     //label.style("padding","100px")
 
     var clearButton = d3.select('#crimes')
     .append('button')
     .attr('class','clearCrime button')
+    .style("border-radius","2px")
+    .style("border-width","1px")
     .append('b')
     .text('Clear')
     .on('click',function(d){
@@ -42,6 +45,8 @@ d3.text("datasets/dataset_crimes/dataset1219.csv", function(raw) {
     var selAllButton = d3.select('#crimes')
     .append('button')
     .attr('class','selAllCrimes button')
+    .style("border-radius","2px")
+    .style("border-width","1px")
     .append('b')
     .text('Select All')
     .on('click',function(d){
@@ -55,6 +60,8 @@ d3.text("datasets/dataset_crimes/dataset1219.csv", function(raw) {
     var mainCrButton = d3.select('#crimes')
     .append('button')
     .attr('class','mainCrimes button')
+    .style("border-radius","2px")
+    .style("border-width","1px")
     .append('b')
     .text('Main Crimes')
     .on('click',function(d){
@@ -184,6 +191,8 @@ function colorCr(crime){
 
       crime//.style('font-size',30).transition().duration(1000)
       .style('font-size',function(){
+        d3.select('.select2-selection--multiple').style('background-color',"lightgrey")
+        d3.select('.select2-selection--multiple').style('border-width',"0px")
         if(selectedYears.length==0 ) return '60%';
         if(parseFloat( d3.select('.select2-selection--multiple').style('height').slice(0,-2) )< (parseFloat( d3.select('#crimes').style('height').slice(0,-2))/1.3) ||oldCrime=='big' ){
           oldcrime='big';
