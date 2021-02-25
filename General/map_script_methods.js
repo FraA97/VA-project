@@ -392,8 +392,8 @@ function computeColourScales(){
     var data =dsv.parse(raw);
     regions = d3.nest() //create dictionary on regions name
             .key(function(d) {
-                list_provinces.push(d.territorio); //retrive all teritory from dataset 
-                return d.territorio; })
+                list_provinces.push(d.territory); //retrive all teritory from dataset 
+                return d.territory; })
             .entries(stocks = data);    
     
     list_provinces = removeRegions(removeDuplicates(list_provinces)); //remove duplicates and regions and macro-areas
@@ -404,7 +404,7 @@ function computeColourScales(){
           
             s.values.forEach(function(d) { 
               sumDel = d3.sum(s.values, function(d){ //filter per year and crime types
-                if(selectedYears.includes(d.anno)){//FILTER YEARS
+                if(selectedYears.includes(d.year)){//FILTER YEARS
                   tot_selected_crimes_per_year=0;
 
                   if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
@@ -422,7 +422,7 @@ function computeColourScales(){
               })
 
               sumDelPop = d3.sum(s.values, function(d){ //filter per year and crime types
-                if(selectedYears.includes(d.anno)){//FILTER YEARS
+                if(selectedYears.includes(d.year)){//FILTER YEARS
                   tot_selected_crimes_per_year=0;
 
                   if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
@@ -434,7 +434,7 @@ function computeColourScales(){
                         tot_selected_crimes_per_year+=parseFloat(value);
                       }
                     }
-                    return (tot_selected_crimes_per_year/d.popolazione)*10000;
+                    return (tot_selected_crimes_per_year/d.population)*10000;
                   }
                 }
               })
@@ -479,8 +479,8 @@ function computeColourScales(){
       
     regions = d3.nest() //create dictionary on regions name
             .key(function(d) {
-                list_regions.push(d.territorio); //retrive all territory from dataset 
-                return d.territorio; })
+                list_regions.push(d.territory); //retrive all territory from dataset 
+                return d.territory; })
             .entries(stocks = data);    
     
     list_regions = removeProvinces(removeDuplicates(list_regions)); //remove duplicates and regions and macro-areas
@@ -490,7 +490,7 @@ function computeColourScales(){
         
             s.values.forEach(function(d) { 
                  sumDel = d3.sum(s.values, function(d){ //filter per year and crime types
-                    if(selectedYears.includes(d.anno)){//FILTER YEARS
+                    if(selectedYears.includes(d.year)){//FILTER YEARS
                       tot_selected_crimes_per_year=0;
                       if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
                         return 0;
@@ -506,7 +506,7 @@ function computeColourScales(){
                     }
                   })
                   sumDelPop = d3.sum(s.values, function(d){ //filter per year and crime types
-                    if(selectedYears.includes(d.anno)){//FILTER YEARS
+                    if(selectedYears.includes(d.year)){//FILTER YEARS
                       tot_selected_crimes_per_year=0;
                       if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
                         return 0;
@@ -517,7 +517,7 @@ function computeColourScales(){
                                 tot_selected_crimes_per_year+=parseFloat(value);
                             }
                         }
-                        return (tot_selected_crimes_per_year/d.popolazione)*10000; //num crimes each 10000 inhabitants
+                        return (tot_selected_crimes_per_year/d.population)*10000; //num crimes each 10000 inhabitants
                       }
                     }
                   })
@@ -623,14 +623,14 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
         var data =dsv.parse(raw);
         regions = d3.nest() //create dictionary on regions name
                 .key(function(d) { 
-                    if(d.territorio.trim().startsWith(territory)) return d.territorio; })
+                    if(d.territory.trim().startsWith(territory)) return d.territory; })
                 .entries(stocks = data);      
         sumDel=0;
         sumDelPop=0;
 
         regions[1].values.forEach(function(d) { 
           sumDel = d3.sum(regions[1].values, function(d){ //filter per year and crime types
-            if(selectedYears.includes(d.anno)){//FILTER YEARS
+            if(selectedYears.includes(d.year)){//FILTER YEARS
               tot_selected_crimes_per_year=0;
 
               if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
@@ -648,7 +648,7 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
           })
 
           sumDelPop = d3.sum(regions[1].values, function(d){ //filter per year and crime types
-            if(selectedYears.includes(d.anno)){//FILTER YEARS
+            if(selectedYears.includes(d.year)){//FILTER YEARS
               tot_selected_crimes_per_year=0;
               if(selected_crimes.length==0){ //if array of crimes is empty then select all crimes
                 return 0;
@@ -659,7 +659,7 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
                       tot_selected_crimes_per_year+=parseInt(value);
                   }
                 }
-                return (tot_selected_crimes_per_year/d.popolazione)*10000;
+                return (tot_selected_crimes_per_year/d.population)*10000;
               }
             }
           })
@@ -667,8 +667,8 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
           population=0;
           i=0;
           population = d3.sum(regions[1].values, function(d){ //filter per year and crime types
-            if(selectedYears.includes(d.anno)){//FILTER YEARS
-              return d.popolazione
+            if(selectedYears.includes(d.year)){//FILTER YEARS
+              return d.population
             }
           })   
         })

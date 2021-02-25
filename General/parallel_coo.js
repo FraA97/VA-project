@@ -44,7 +44,7 @@ var svg_PC = svg_pc.append("g")
                     "translate(" + margin.left + "," + margin.top + ")");
 
 
-//quando cambio anno ridisegno l'intera parallel coord.
+//quando cambio year ridisegno l'intera parallel coord.
 function changeYear(year){
     svg_PC.selectAll("*").remove();
     if(!YEAR.includes(year)) YEAR.push(year)
@@ -68,13 +68,13 @@ function changeKindOfTerritory(newData){
         var dsv = d3.dsvFormat(';');
         var data =dsv.parse(raw);
         for (let i = 0; i < data.length; i++) {
-            length_name=  (data[i].territorio.substring(0,7).match(/\s/g) || []).length //conta i white spaces: 6 provincie,4regioni, 2macroregioni,0 Italia
-            if(newData == 0 && length_name == 6 && !REGIONS.includes(data[i].territorio.trim())){//provinces
-                REGIONS.push(data[i].territorio.trim())
+            length_name=  (data[i].territory.substring(0,7).match(/\s/g) || []).length //conta i white spaces: 6 provincie,4regioni, 2macroregioni,0 Italia
+            if(newData == 0 && length_name == 6 && !REGIONS.includes(data[i].territory.trim())){//provinces
+                REGIONS.push(data[i].territory.trim())
                 KIND_OF_TERRITORY = "prov"
             }
-            if(newData == 1 && length_name == 4 && !REGIONS.includes(data[i].territorio.trim())){//regions
-                REGIONS.push(data[i].territorio.trim())
+            if(newData == 1 && length_name == 4 && !REGIONS.includes(data[i].territory.trim())){//regions
+                REGIONS.push(data[i].territory.trim())
                 KIND_OF_TERRITORY = "region"
             }
         }
@@ -113,23 +113,23 @@ function changeCrimes(crime){
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
     console.log(REGIONS)
 }
-//filtra il le P.c. con l'anno scelto dall'utente
+//filtra il le P.c. con l'year scelto dall'utente
 function filterByYear(year,data){
     const data_filtered = []
     for (let i = 0; i < data.length; i++) {
         year.forEach(function(y){
-            if(data[i].anno == ""+y) data_filtered.push(data[i])
+            if(data[i].year == ""+y) data_filtered.push(data[i])
         })
     }
     //console.log(data_filtered)
     return data_filtered
 } 
-//filtra in base al territorio, only fa solo le regioni passate, except fa tutte tranne quelle passate
+//filtra in base al territory, only fa solo le regioni passate, except fa tutte tranne quelle passate
 function filterByRegion(command,regions,data,kindOfTerr){
     //console.log(regions)    
     list_all_territories = []
     for (let i = 0; i < data.length; i++) {
-        length_name =  (data[i].territorio.substring(0,7).match(/\s/g) || []).length
+        length_name =  (data[i].territory.substring(0,7).match(/\s/g) || []).length
         if(kindOfTerr == "prov" && length_name == 6){
             list_all_territories.push(data[i])
         }
@@ -142,7 +142,7 @@ function filterByRegion(command,regions,data,kindOfTerr){
     for (let i = 0; i < list_all_territories.length; i++) {
         const terr = list_all_territories[i];
         for (let r = 0; r < regions.length; r++) {
-            if(terr.territorio.trim() == regions[r].trim()){
+            if(terr.territory.trim() == regions[r].trim()){
                 data_filtered.push(terr)
             }
         }
@@ -156,7 +156,7 @@ function filterByRegion(command,regions,data,kindOfTerr){
 //filtra in base al crimie, only fa solo i crimini passati, except fa tutti tranni quelli passati
 function filterByCrime(command,crimes,data){
     
-    ////////d3.keys(data[0]) sono le classi ["territorio", "anno", "popolazione",..] della prima riga
+    ////////d3.keys(data[0]) sono le classi ["territory", "year", "population",..] della prima riga
     ///////d3.values(data[0]) sono i valori delle classi ["Italia", "2012", "59394207",..] della prima riga
     function filterCrimes(crime){
     if(command == "except"){
@@ -184,7 +184,7 @@ function fillRegionSelect(dataset_path){
         var data =dsv.parse(raw);
         var regioni=[]
         for (let i = 0; i < data.length; i++) {
-            const region = data[i].territorio.trim();
+            const region = data[i].territory.trim();
             if(! regioni.includes(region)) {
             regioni.push(region)
             }
@@ -285,7 +285,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         
     data = filterByYear(year, data)
     if(regions.length>0) data = filterByRegion(command_regions, regions, data,KIND_OF_TERRITORY)
-    dimensions = d3.keys(data[0]).filter(function(d) { return d != "territorio" && d!= "totale" && d!="anno" && d!= "popolazione"})
+    dimensions = d3.keys(data[0]).filter(function(d) { return d != "territory" && d!= "total" && d!="year" && d!= "population"})
     //fillCrimeSelect(dimensions)
     dimensions = filterByCrime(command_crimes,crimes,data)
     //console.log(dimensions)
@@ -303,7 +303,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 return +d[name];
                 }
                 else{
-                r = (d[name]/d["popolazione"])*10000
+                r = (d[name]/d["population"])*10000
                 return +r;
                 }
             }))
@@ -315,7 +315,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     last_crime = Object.keys(y)[Object.keys(y).length-1]
     if(last_crime != null && last_crime.length > 17) right_pad = 2.5*last_crime.length
     x = d3.scalePoint() //Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
-        .domain(dimensions)  ///.domain(["territorio", "anno", "popolazione",..])
+        .domain(dimensions)  ///.domain(["territory", "year", "population",..])
         .range([0, document.getElementById("my_dataviz").clientWidth-margin.right-right_pad])
         //.range([0, Math.min(document.getElementById("my_dataviz").clientWidth-margin.right,99*dimensions.length)])///general width of the graph, varia a seconda di quanti crimini metti
         .padding(0.5);
@@ -330,7 +330,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         //d[p] è il valore del crimine nella riga d, tipo d = data[i] e p = omicidio, d[p] = 30
         if(!isAbsolute) return [x(p), y[p](d[p])]; 
         else{
-            return [x(p), y[p](  (d[p]/d["popolazione"]) *10000)]
+            return [x(p), y[p](  (d[p]/d["population"]) *10000)]
         }
         }));
         /////per ogni riga del csv (d), per ogni feature assegno la sua x e le sue y
@@ -358,14 +358,14 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         .attr("d", path)
         .style("stroke", function(d){
             d3.select(this).raise().classed("active", true);
-            if (brushed_points.includes(d["territorio"].trim()) ) return "#d7191c"
+            if (brushed_points.includes(d["territory"].trim()) ) return "#d7191c"
             return "#2c7bb6"
         })
         .style("stroke-width", "1.5")
         .style("opacity", 0.9);
     //each
     var overed
-    foreground.attr("name",function(d){return d["territorio"]})
+    foreground.attr("name",function(d){return d["territory"]})
         .on("mouseover", function(d) {
             
             if(MDS_PC_LOCK){
@@ -374,7 +374,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             d3.select(this).raise().classed("active", true);
             d3.select("#my_dataviz").selectAll('path').each(function(t){
                 if (d3.select(this).attr("name") != null){
-                    if(d["territorio"].trim() == d3.select(this).attr("name").trim()){
+                    if(d["territory"].trim() == d3.select(this).attr("name").trim()){
                         d3.select(this).raise().classed("active", true);
                         d3.select(this).style("stroke", "#d7191c")
                     }
@@ -382,8 +382,8 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             })
             //d3.select(this).style("stroke", "#d7191c")
             //drawTooltip
-            var text = d["territorio"]
-            if(YEAR.length>1) text += " " + d["anno"] //Change the content of all tooltip elements:
+            var text = d["territory"]
+            if(YEAR.length>1) text += " " + d["year"] //Change the content of all tooltip elements:
             var mtooltip = d3.selectAll('#par-coord').append("div")
                 .html(text)
                 .attr("class", "PCtooltip")
@@ -391,7 +391,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 .style("position","absolute")
                 .style("left", (d3.mouse(this)[0]) + "px")
                 .style("top", (d3.mouse(this)[1]+5) + "px");
-            name =d['territorio'].trim();
+            name =d['territory'].trim();
             if(visualization==0){
                 var id =d3.select('#mapProv').selectAll('path').filter(function(d){
                     var terName = d3.select('#'+this['id']).attr('name');
@@ -436,7 +436,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             
             //removeTooltip
             d3.selectAll('.PCtooltip').style('display', 'none')
-            name =d['territorio'].trim()
+            name =d['territory'].trim()
             if(visualization==0){
                 var id =d3.select('#mapProv').selectAll('path').filter(function(d){
                     var terName = d3.select('#'+this['id']).attr('name');
@@ -542,7 +542,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         .attr("width", 16);
         function brush_end(){
             var brushedTerr= brush()
-            //francesco brushedTerr.forEach( n => console.log(n.territorio))
+            //francesco brushedTerr.forEach( n => console.log(n.territory))
         }
         function brush() {  
             var actives = [];
@@ -568,7 +568,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                         result = active.extent[1] <= d[active.dimension] && d[active.dimension] <= active.extent[0];
                     }
                     else{
-                        result = active.extent[1] <= (d[active.dimension]/d["popolazione"])*10000 && (d[active.dimension]/d["popolazione"])*10000 <= active.extent[0];
+                        result = active.extent[1] <= (d[active.dimension]/d["population"])*10000 && (d[active.dimension]/d["population"])*10000 <= active.extent[0];
                     }
                     return result;
                 });

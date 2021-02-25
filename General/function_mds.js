@@ -6,20 +6,20 @@ function createMDS(vis, pop, coeff, year, visibleLabel, evolutionMode){
     var dsv = d3.dsvFormat(';');
     var data =dsv.parse(raw);
 
-    var filteredData = data.filter(function(d,i){ return d.territorio.match(/    /) })      //eliminate macro regions
+    var filteredData = data.filter(function(d,i){ return d.territory.match(/    /) })      //eliminate macro regions
     var regions = filteredData.filter(function(d,i){
       if(vis==0){
-        return d.territorio.match(/      /)                                                //eliminate regions
+        return d.territory.match(/      /)                                                //eliminate regions
       }
       else{
-        if(d.territorio.match(/      /)){return false}                                     //eliminate provinces
+        if(d.territory.match(/      /)){return false}                                     //eliminate provinces
         return true;
       }
     });
     if(pop==0){
-      regions.forEach( d => delete d.popolazione);                                        //eliminate column popolazione
+      regions.forEach( d => delete d.population);                                        //eliminate column population
     }
-    regions.forEach( d => delete d.totale);                                               //eliminate column totale
+    regions.forEach( d => delete d.total);                                               //eliminate column total
     //var coeff_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/coefficienti.csv"
     var coeff_path = "datasets/coefficienti.csv"
     d3.text(coeff_path, function(raw) {//retrive sum of delicts
@@ -57,7 +57,7 @@ function plotMds(matrix, visibleLabel, evolutionMode){
 
 
 
-function chooseCharacteristic(pop, dataCoeff, regions, c, year){
+function chooseCharacteristic(pop, dataCoeff, regions, c, years){
   if(c == 0){
       coeff = dataCoeff.map(function(d) { return d.Coeff_reato });            //select only this specific column
   }
@@ -69,7 +69,7 @@ function chooseCharacteristic(pop, dataCoeff, regions, c, year){
   }
 
   var dissM= [];
-  size = regions.filter(function(d){ return d.anno == "2019"});             //establish size of dissimilarity matrix
+  size = regions.filter(function(d){ return d.year == "2019"});             //establish size of dissimilarity matrix
   for(var i=0; i< size.length; i++) {
     dissM[i] = [];
     for(var j=0; j< size.length; j++) {
@@ -77,49 +77,49 @@ function chooseCharacteristic(pop, dataCoeff, regions, c, year){
     }
   }
 
-  year.forEach(function(y){
-    var anno = regions.filter(function(d){ return d.anno == y });
+  years.forEach(function(y){
+    var year = regions.filter(function(d){ return d.year == y });
 
     if(pop==1){
-      var popolazione = anno.map(function(d){ return d.popolazione});     //take population values and eliminate them from dataset
-      anno.forEach( d => delete d.popolazione);
+      var population = year.map(function(d){ return d.population});     //take population values and eliminate them from dataset
+      year.forEach( d => delete d.population);
     }
 
-    labels = anno.map(function(d){ return d.territorio});
+    labels = year.map(function(d){ return d.territory});
     for (var i = 0; i < labels.length; i++){                    //manipulating labels
         labels[i]=labels[i].trim();
     }
 
-    anno.forEach( d => delete d.territorio);
-    anno.forEach( d => delete d.anno);
+    year.forEach( d => delete d.territory);
+    year.forEach( d => delete d.year);
 
-    var annoC = []                                //year matrix with coefficient
+    var yearC = []                                //year matrix with coefficient
 
-    for (var i = 0; i < anno.length; i++){
-      annoC[i] = []
-      for(var cr in anno[i]){
-        annoC[i].push(anno[i][cr])
+    for (var i = 0; i < year.length; i++){
+      yearC[i] = []
+      for(var cr in year[i]){
+        yearC[i].push(year[i][cr])
       }
     }
     if(pop==1){
-      for (var i = 0; i < anno.length; i++){
+      for (var i = 0; i < year.length; i++){
         for(var j=0; j < coeff.length; j++){
-          value = annoC[i][j] / popolazione[i] *10000                //weigthing over population
-          annoC[i][j] = value
+          value = yearC[i][j] / population[i] *10000                //weigthing over population
+          yearC[i][j] = value
         }
       }
     }
-    for (var i = 0; i < anno.length; i++){
+    for (var i = 0; i < year.length; i++){
       for(var j=0; j < coeff.length; j++){
-        value = annoC[i][j] * coeff[j]                //applying coefficient
-        annoC[i][j] = value
+        value = yearC[i][j] * coeff[j]                //applying coefficient
+        yearC[i][j] = value
       }
     }
     var dissMy = [];                                 //dissimilarity matrix for that year y
-    for (var i = 0; i < anno.length; i++){
+    for (var i = 0; i < year.length; i++){
       dissMy[i] = [];
-      for(var j=0; j < anno.length; j++){          
-        dissMy[i][j] = ~~(euclidean_distance(annoC[i],annoC[j]));
+      for(var j=0; j < year.length; j++){          
+        dissMy[i][j] = ~~(euclidean_distance(yearC[i],yearC[j]));
         value =  dissM[i][j]
         value = value + dissMy[i][j]
         dissM[i][j] = value                           //total dissimilarity matrix

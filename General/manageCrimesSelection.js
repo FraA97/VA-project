@@ -6,11 +6,13 @@
 var dataset_path = "datasets/dataset_crimes/dataset1219.csv"
 diz_selected_crimes={}
 colorCrime= null;
-d3.text("datasets/coefficienti.csv", function(raw) {
+d3.text("datasets/dataset_crimes/dataset1219.csv", function(raw) {
     var dsv = d3.dsvFormat(';');
     var data =dsv.parse(raw);
     //data = data.sort(function(a,b){return b.Coeff_reato - a.Coeff_reato})   //sort according to coeff of danger
-    list_crimes = data.map(function(d) { return d.Reati });
+    
+    list_crimes = d3.keys(data[0]).filter(function(d) { console.log(d) ;return d != "territory" && d!= "total" && d!="year" && d!= "population"})
+    //list_crimes = data.map(function(d) { return d.Reati });
     var label = d3.select('#crimes')
                   .append('label')
                   .attr('for','selCrime')
@@ -144,7 +146,7 @@ function colorCr(crime){
 
   var italia = d3.nest() //create dictionary on regions name
               .key(function(d) { 
-                  if(d.territorio=='Italia') return d.territorio; })
+                  if(d.territory=='Italia') return d.territory; })
               .entries(stocks = data);      
 
     diz_selected_crimes={}
@@ -153,7 +155,7 @@ function colorCr(crime){
     }
 
     italia[0].values.forEach(function(d) { 
-      if(selectedYears.includes(d.anno)){
+      if(selectedYears.includes(d.year)){
         for (const [key, value] of Object.entries(d)) {
           if(selected_crimes.includes(key)){ //"selected_crimes" is the array that contain all crimes slected by user (by default it start with all crimes)
             diz_selected_crimes[key]+=parseInt(value);
