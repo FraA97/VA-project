@@ -221,19 +221,15 @@ body {
 circle {
     stroke: #2c7bb6;
     fill : #2c7bb6;
-    opacity : 0.5;
+    opacity : 0.8;
 }
 #text{
-  opacity: 0.5;
+  opacity: 0.6;
 }
 .brushed {
   fill: red;
   stroke: red;
   opacity: 1.0;
-}
-
-.non_brushed {
-  opacity: 0.5;
 }
 
 .brushed_text{
@@ -244,6 +240,12 @@ circle {
 #coordination{
   stroke: black;
   stroke-width: 2;
+  opacity: 1.0;
+}
+
+.pc_brushed{
+  fill: lightgray;
+  stroke: darkgray;
   opacity: 1.0;
 }
 

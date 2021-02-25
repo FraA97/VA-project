@@ -249,7 +249,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 else{
                     brushed_points = []
                 }
-                d3.selectAll(".brushed").attr("class", "non_brushed");
+                d3.selectAll(".brushed").classed("brushed", false);
                 d3.selectAll("#text").style("opacity", "0.5");
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                     if (d3.select(this).attr("name") != null){
@@ -562,7 +562,16 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                });
            }      
            idNotBrush.style('opacity','0.5');
-           idBrush.style('opacity','1');    
+           idBrush.style('opacity','1');
+
+           d3.select("#regions").selectAll("circle").each(function(d){
+            if(!ter.includes(d)){
+                d3.select(this).classed("pc_brushed", true)
+            }
+            if(ter.includes(d)){
+                d3.select(this).classed("pc_brushed", false);
+            }
+        })    
         }
         function brush() {  
             var actives = [];

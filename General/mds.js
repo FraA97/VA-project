@@ -105,7 +105,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
         svg.append("g")
             .on("mousedown", function(){                                           //eliminate brush
             brushing = false;
-            d3.selectAll(".brushed").attr("class", "non_brushed");
+            d3.selectAll(".brushed").classed("brushed", false);
             d3.selectAll("#text").style("opacity", "0.5");
             if(visualization==1){//INTERACTIONS WITH MAP
                 var id =d3.select('#mapReg').selectAll('path').filter(function(d){
@@ -211,7 +211,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                 mtooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
-                if(d3.select(this).attr("class")!= "brushed"){
+                if(d3.select(this).classed("brushed")!= true){
                     if(visualization==1){//INTERACTIONS WITH MAP
                         var id =d3.select('#mapReg').selectAll('path').filter(function(t){
                             var terName = d3.select('#'+this['id']).attr('name');
@@ -252,7 +252,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
         console.log(changedVisualization)
 
         if(!brushing || changedVisualization){
-            d3.selectAll("circle").attr("class", "non_brushed")
+            d3.selectAll("circle").classed("brushed", false)
             MDS_PC_LOCK = false;
             brushed_points = []
             d3.select("#my_dataviz").selectAll('path').each(function(t){
@@ -266,10 +266,10 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
         else{
             d3.selectAll("circle").each(function(d){
                 if(brushed_points.includes(d3.select(this).data()[0])){
-                    d3.select(this).attr("class", "brushed")
+                    d3.select(this).classed("brushed", true)
                 }
                 else{
-                    d3.select(this).attr("class", "non_brushed")
+                    d3.select(this).classed("brushed", false)
                 }
             })
             d3.selectAll("#text").each(function(d){
@@ -311,7 +311,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
         if (d3.event.selection != null) {
 
             // revert circles to initial style
-            nodes.selectAll("circle").attr("class", "non_brushed");
+            nodes.selectAll("circle").classed("brushed", false);
             nodes.selectAll("#text").style("opacity", "0.5");
 
             var brush_coords = d3.brushSelection(this);
@@ -324,7 +324,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
 
                         return isBrushed(brush_coords, cx, cy);
                     })
-                    .attr("class", "brushed");
+                    .classed("brushed", true);
             nodes.selectAll("#text").filter(function (){
                             var cx = d3.select(this).attr("x"),
                             cy = d3.select(this).attr("y");
