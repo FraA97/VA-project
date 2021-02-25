@@ -98,9 +98,9 @@ var showDensity = d3.select('.leaflet-top')
                     .append('div').attr('id','showDensity').attr('class', 'leaflet-bar leaflet-control')
                     .text('P.D.')
                     .append('input')
-                    .attr('type','checkbox').attr( 'id','popDensity')
+                    .attr('type','checkbox').attr( 'id','popDensity');
 
-d3.select("#popDensity").on("change", loadPopCircles)//show/hide density map
+d3.select("#popDensity").on("change", loadPopCircles);//show/hide density map
 //---------------------------------------------------------------
 //---------------------------------------------------------------
 

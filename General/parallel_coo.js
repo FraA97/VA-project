@@ -541,8 +541,27 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         .attr("x", -8)
         .attr("width", 16);
         function brush_end(){
-            var brushedTerr= brush()
-            //francesco brushedTerr.forEach( n => console.log(n.territory))
+            var brushedTerr= brush();
+            var ter =[]
+            brushedTerr.forEach( n => ter.push(n.territory.trim()) )
+            if(visualization==0){
+                var idNotBrush =d3.select('#mapProv').selectAll('path').filter(function(d){
+                    return !ter.includes( d3.select('#'+this['id']).attr('name') );
+                });
+                var idBrush =d3.select('#mapProv').selectAll('path').filter(function(d){
+                     return ter.includes( d3.select('#'+this['id']).attr('name') );
+                });
+           }
+           else{
+               var idNotBrush =d3.select('#mapReg').selectAll('path').filter(function(d){
+                   return !ter.includes( d3.select('#'+this['id']).attr('name') );
+               });
+               var idBrush =d3.select('#mapReg').selectAll('path').filter(function(d){
+                    return ter.includes( d3.select('#'+this['id']).attr('name') );
+               });
+           }      
+           idNotBrush.style('opacity','0.5');
+           idBrush.style('opacity','1');    
         }
         function brush() {  
             var actives = [];

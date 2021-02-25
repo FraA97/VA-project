@@ -11,7 +11,7 @@ d3.text("datasets/dataset_crimes/dataset1219.csv", function(raw) {
     var data =dsv.parse(raw);
     //data = data.sort(function(a,b){return b.Coeff_reato - a.Coeff_reato})   //sort according to coeff of danger
     
-    list_crimes = d3.keys(data[0]).filter(function(d) { console.log(d) ;return d != "territory" && d!= "total" && d!="year" && d!= "population"})
+    list_crimes = d3.keys(data[0]).filter(function(d) { return d != "territory" && d!= "total" && d!="year" && d!= "population"})
     //list_crimes = data.map(function(d) { return d.Reati });
     var label = d3.select('#crimes')
                   .append('label')
