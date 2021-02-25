@@ -173,12 +173,15 @@ function colorCr(crime){
             '#fd8d3c',
             '#f03b20',
             '#bd0026']);
-    
-    var crimeName = crime.attr('title');//name of the crime
-    crime/*.transition()*/.style('border','3.5px solid '+colorCrime(diz_selected_crimes[crimeName]))/*.duration(1000)*/;
-    updateLegCr(minMax);
 
-      crime.style('font-size',function(){
+      
+          var crimeName = crime.attr('title');//name of the crime
+      crime./*style('border','0px solid black')/*.transition().duration(500).*/style('border','3.5px solid '+colorCrime(diz_selected_crimes[crimeName]));
+      updateLegCr(minMax);
+
+
+      crime//.style('font-size',30).transition().duration(1000)
+      .style('font-size',function(){
         if(selectedYears.length==0 ) return '60%';
         if(parseFloat( d3.select('.select2-selection--multiple').style('height').slice(0,-2) )< (parseFloat( d3.select('#crimes').style('height').slice(0,-2))/1.3) ||oldCrime=='big' ){
           oldcrime='big';
@@ -197,6 +200,8 @@ function colorCr(crime){
             else return '100%';
         }
       })
+  
+
   })  
 }
 
@@ -264,15 +269,16 @@ function updateLegCr(minMax){ //update the legend of map
             if(i==0) return 20 +(i*((widthLegendCr-30)/5 ))
             else return 20 +(i*((widthLegendCr-30)/5 ) )
           })
-          .attr("y1", size*3)
-          .attr("x2", function(d,i){ return (widthLegendCr-30)/5 +10 +(i* ((widthLegendCr-30)/5))})
           .attr("y2", size*3)
           .style('stroke','black')
           .style('stroke-width',function(d,i){
             if(i<5) return 7.5 +i;
             else return 0;
-          } ) ;
-
+          } ) 
+          .attr("y1", size*3)
+          .attr("x2", function(d){return d3.select(this).attr('x1');}).transition().duration(500)
+          .attr("x2", function(d,i){ return (widthLegendCr-30)/5 +10 +(i* ((widthLegendCr-30)/5))})
+          
   legendCr.selectAll("mylines")
     .data(keys)
     .enter()
@@ -282,7 +288,6 @@ function updateLegCr(minMax){ //update the legend of map
         else return 20 +(i*((widthLegendCr-30)/5 ) )
       })
       .attr("y1", size*3)
-      .attr("x2", function(d,i){ return (widthLegendCr-30)/5 +10 +(i* ((widthLegendCr-30)/5))})
       .attr("y2", size*3)
       .style('stroke',function(d){ return color(d)})
       .style('stroke-width',function(d,i){
@@ -291,7 +296,9 @@ function updateLegCr(minMax){ //update the legend of map
       } )    
       .on('mouseover',highlightCr)
       .on('mouseout',unlightCr)
-      .on('click',clickCr);
+      .on('click',clickCr)
+      .attr("x2", function(d){return d3.select(this).attr('x1');}).transition().duration(500)
+      .attr("x2", function(d,i){ return (widthLegendCr-30)/5 +10 +(i* ((widthLegendCr-30)/5))});
 
   legendCr.selectAll("mylabels") // Add one dot in the legend for each name
       .data(keys)
@@ -310,6 +317,7 @@ function updateLegCr(minMax){ //update the legend of map
         .text(function(d){ return d})
         .attr("text-anchor", "left")
         .style("alignment-baseline", "middle")
+        .style('font-size','0px').transition().duration(500)
         .style('font-size','12px');
 }
 

@@ -228,7 +228,7 @@ function showTooltipProv(d,flag) {
     label="<center><b>"+province.attr('name')+"</b> ("+nameReg+")</center>"
                 +"Num. Crimes: "+ Number(province.attr('sumDel')).toLocaleString() +"<br>"
                 +"Num. Crimes each 10k citizen: "+ Number(parseFloat(province.attr('sumDelPop')).toFixed(3) ).toLocaleString() +"<br>"
-                +"Province Area: "+ Number(province.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup> " + "<br>"
+                +"Population Density: "+( Number( (province.attr('population')/(province.attr('shape_area')/1000000)).toFixed(1)) ).toLocaleString() +" citizen / km<sup>2</sup> " + "<br>"
                 +"Province Population: "+ Number(province.attr('population')).toLocaleString();
 
     tooltip.classed("hidden", false)
@@ -310,6 +310,7 @@ function loadMap(newData){
       d3.select("#mapProv").attr('style',"visibility:hidden"); 
   }
   else{ //load province map
+    d3.select('#popDensity').property('checked',false);
     d3.select('#mapReg').selectAll('circle').attr('style',"visibility:hidden");//.style('opacity','0.0');
     if(count==1){
       //url_regioni = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_mappa_italiana/mappa_italiana_regioni.json"
@@ -674,6 +675,7 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
           var oldFill= d3.select(id).style('fill');
           d3.select(id)
             //interaction with dataset:
+            /*.style('fill',function(d){return d3.select(this).attr('fill');}).transition().duration(500)*/
             .style("fill", function(){
               if (computationType==0){
                 if(typeOfTer==0) return colorProv(sumDel);
@@ -697,7 +699,7 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
                 else return '#000000';
               } 
             });
-          loadPopCircles()
+          //loadPopCircles()
           if(visualization=="0" ) {
               var gReg = d3.select('#mapReg')
               .selectAll('path');
@@ -749,13 +751,14 @@ function selectAllTer(){
         .each(function(d){
           var ter = d3.select(this)
           if(ter.attr('clicked')=='1'){
-            ter
-            .style('fill',null)
-            .attr('class', 'greyProv')
+            ter.attr('class', 'greyProv')
             .attr('sumDel',null)
             .attr('sumDelPop',null)
             .attr('population',null)
-            .attr('clicked','0');
+            .attr('clicked','0')
+            //.style('fill',function(d){return d3.select(this).attr('fill');}).transition().duration(1000)
+            .style('fill',null);
+              
           }
         })
     }
@@ -779,161 +782,175 @@ function selectAllTer(){
 
 function updateLegend(minMax){ //update the legend of map
   //CRIME SELECTION 
-  crimeSize();
-  var rangeLeg=(minMax[1]-minMax[0])/5;
-  var keys =[];
-  if(computationType==0) var label =['NUMBER OF CRIMES'];
-  else var label =['N. CRIMES by 10k citizen'];
-  for(i=0; i<5;i++){
-    var minvalue= minMax[0]+ (i*rangeLeg);
-    var maxvalue= minvalue+rangeLeg;
-    if(computationType==0 || minMax[1]>5){
-      if(minMax[1]<=5) var str = Number(minvalue.toFixed(3) ).toLocaleString()+' to '+Number(maxvalue.toFixed(3) ).toLocaleString();
-      else var str = Number(Math.ceil(minvalue.toFixed(3)) ).toLocaleString()+' to '+Number(Math.ceil(maxvalue.toFixed(3)) -1).toLocaleString()
-    }
-    else var str = Number(minvalue.toFixed(3) ).toLocaleString()+' to '+Number(maxvalue.toFixed(3) -0.001).toLocaleString()
-    keys.push(str);
-  }
-  
-  var legend = d3.select("#legendMap")//.style('font-family','verdana')
-  legend.selectAll('g text').remove();
-  legend.selectAll('g rect').remove();
-  legend.selectAll('g line').remove();
+  var legend = d3.select("#legendMap");
   legend.selectAll('g circle').remove();
-  legend.selectAll('g polygon').remove();
-  if(minMax[1]==0){
-    var color = d3.scaleOrdinal()
-    .domain(keys)
-    .range(['#bd0026','#bd0026','#bd0026','#bd0026','#bd0026']);
-  }
-  else{
-    var color = d3.scaleOrdinal()
-    .domain(keys)
-    .range(['#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026']);
-  }
-  var colorStroke=['#000000','#007F5F']
-
+  legend.select('#recLegendPopMap').remove();
+  legend.selectAll('.legDens').remove();
+  
   var size = 14
   var height = d3.select('#map').style('height').slice(0, -2);
   heightLegend=145;
-  startYlegend=height-heightLegend
-  legend.selectAll('rec').data(["a"]).enter().append('rect')
-        .attr('id',"recLegendMap")
-        .attr("x",0)
-        .attr("y",startYlegend) 
-        .attr("width", widthMap/3 -13 )
-        .attr("height",heightLegend)
-        .attr("rx","12")
-        .style('stroke','');
-         
-  legend.append('text')
-          .attr("stroke","#000000")
-        .attr("stroke-width",'0.5')
-        .attr("x", function(d){ if(label =="NUMBER OF CRIMES") return size +4;
-                                else return  5;})
-        .attr("y",startYlegend+size+5) 
-        .style("fill", '#000000')
-        .text(label)
-        .style('font-size','12px')
-  
-  legend.selectAll("mydots")
-    .data(keys)
-    .enter()
-    .append("rect")
-      .attr("x", 5)
-      .attr("y", function(d,i){ return startYlegend+25 + i*(size)}) // 100 is where the first dot appears. 25 is the distance between dots
-      .attr("width", size)
-      .attr("height", size)
-      .style("fill", function(d){ return color(d)})
-      .style('stroke','#000000')
-      .on('mouseover',highlightTer)
-      .on('mouseout',unlightTer)
-      .on('click',clickTer)
-  legend.selectAll("mylabels") // Add one dot in the legend for each name
+  startYlegend=height-heightLegend;
+
+  if(minMax!=false){
+    crimeSize();
+    var rangeLeg=(minMax[1]-minMax[0])/5;
+    var keys =[];
+    if(computationType==0) var label =['NUMBER OF CRIMES'];
+    else var label =['N. CRIMES by 10k citizen'];
+    for(i=0; i<5;i++){
+      var minvalue= minMax[0]+ (i*rangeLeg);
+      var maxvalue= minvalue+rangeLeg;
+      if(computationType==0 || minMax[1]>5){
+        if(minMax[1]<=5) var str = Number(minvalue.toFixed(3) ).toLocaleString()+' to '+Number(maxvalue.toFixed(3) ).toLocaleString();
+        else var str = Number(Math.ceil(minvalue.toFixed(3)) ).toLocaleString()+' to '+Number(Math.ceil(maxvalue.toFixed(3)) -1).toLocaleString()
+      }
+      else var str = Number(minvalue.toFixed(3) ).toLocaleString()+' to '+Number(maxvalue.toFixed(3) -0.001).toLocaleString()
+      keys.push(str);
+    }
+    
+    //.style('font-family','verdana')
+    legend.selectAll('g text').attr('font-size', '12px').transition().duration(500).attr('font-size', '0px').remove();
+    legend.selectAll('g rect').remove();
+    legend.selectAll('g line').remove();
+    //legend.selectAll('g circle').remove();
+    //legend.selectAll('g polygon').remove();
+    if(minMax[1]==0){
+      var color = d3.scaleOrdinal()
+      .domain(keys)
+      .range(['#bd0026','#bd0026','#bd0026','#bd0026','#bd0026']);
+    }
+    else{
+      var color = d3.scaleOrdinal()
+      .domain(keys)
+      .range(['#ffffb2','#fecc5c','#fd8d3c','#f03b20','#bd0026']);
+    }
+    var colorStroke=['#000000','#007F5F']
+
+    
+    legend.selectAll('rec').data(["a"]).enter().append('rect')
+          .attr('id',"recLegendMap")
+          .attr("x",0)
+          .attr("y",startYlegend) 
+          .attr("width", widthMap/3 -13 )
+          .attr("height",heightLegend)
+          .attr("rx","12")
+          .style('stroke','');
+          
+    legend.append('text')
+            .attr("stroke","#000000")
+          .attr("stroke-width",'0.5')
+          .attr("x", function(d){ if(label =="NUMBER OF CRIMES") return size +4;
+                                  else return  5;})
+          .attr("y",startYlegend+size+5) 
+          .style("fill", '#000000')
+          .text(label)
+          .style('font-size','12px')
+    
+    legend.selectAll("mydots")
       .data(keys)
       .enter()
-      .append("text")
-        .attr("stroke",function(d){ if(d.includes('NUM. CRIMES')) return "#000000";
-        else return color(d)})
-        .attr("stroke-width",'0.09')
-        .attr("x", 10 + size)
-        .attr("y", function(d,i){ return startYlegend+25 + i*(size) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
-        .style("fill", '#000000')
-        .text(function(d){ return d})
-        .attr("text-anchor", "left")
-        .style("alignment-baseline", "middle")
-        .style('font-size','12px');
-/////////////////////////////////////////////////
-  legend.append('line')
-    .attr("x1", 0)
-    .attr("y1", startYlegend+98)
-    .attr("x2", widthMap/3 -13)
-    .attr("y2", startYlegend+98)
-    .style('stroke','black')
-    .style('stroke-width',1)
-    //.style('fill',function(d){return d})
-  legend.append('text')
-    .attr("stroke","#000000")
-    .attr("stroke-width",'0.5')
-    .attr("x", 5)
-    .attr("y", startYlegend+110)
-    .style("fill", '#000000')
-    .text("TERRITORIES BORDERS")
-    .style('font-size','12px');
+      .append("rect")
+        .attr("width", size)
+        .attr("height", size)
+        .style("fill", function(d){ return color(d)})
+        .style('stroke','#000000')
+        .on('mouseover',highlightTer)
+        .on('mouseout',unlightTer)
+        .on('click',clickTer)
+        .attr("x", 5)
+        .attr("y", startYlegend+25 ).transition().duration(1000)
+        .attr("y", function(d,i){ return startYlegend+25 + i*(size)}); // 100 is where the first dot appears. 25 is the distance between dots
+        
+    legend.selectAll("mylabels") // Add one dot in the legend for each name
+        .data(keys)
+        .enter()
+        .append("text")
+          .attr("stroke",function(d){ if(d.includes('NUM. CRIMES')) return "#000000";
+          else return color(d)})
+          .attr("stroke-width",'0.09')
+          .attr("x", 10 + size)
+          .attr("y", function(d,i){ return startYlegend+25 + i*(size) + (size/2)}) // 100 is where the first dot appears. 25 is the distance between dots
+          .style("fill", '#000000')
+          .text(function(d){ return d})
+          .attr("text-anchor", "left")
+          .style("alignment-baseline", "middle")
+          .style('font-size','0px').transition().duration(1000)
+          .style('font-size','12px');
+  /////////////////////////////////////////////////
+    legend.append('line')
+      .attr("x1", 0)
+      .attr("y1", startYlegend+98)
+      .attr("x2", widthMap/3 -13)
+      .attr("y2", startYlegend+98)
+      .style('stroke','black')
+      .style('stroke-width',1)
+      //.style('fill',function(d){return d})
+    legend.append('text')
+      .attr("stroke","#000000")
+      .attr("stroke-width",'0.5')
+      .attr("x", 5)
+      .attr("y", startYlegend+110)
+      .style("fill", '#000000')
+      .text("TERRITORIES BORDERS")
+      .style('font-size','12px');
 
-  legend.selectAll('mylines')
-    .data(colorStroke)
-    .enter()
-    .append('line')
-      .attr("x1", 5)
-      .attr("y1", function(d,i){return startYlegend+120 +(i*15); })
-      .attr("x2", 25  )
-      .attr("y2", function(d,i){return startYlegend+120 +(i*15); })
-      .style('stroke',function(d){return d})
-      .style('stroke-width',7)
-      .style('fill',function(d){return d})
-      .on('mouseover',highlightTer)
-      .on('mouseout',unlightTer)
-      .on('click',clickTer);
-  
-      legend.selectAll('mylinesLabels')
+    legend.selectAll('mylines')
       .data(colorStroke)
       .enter()
-      .append('text')
-        .attr("x", 30)
-        .attr("y", function(d,i){return startYlegend+120 +(i*15); })
-        .text(function(d){if(d=="#000000")return 'color Terr unchanged';else return 'color Territory changed'})
-        .style("alignment-baseline", "middle")
-        .style("fill", function(d){return d})
+      .append('line')
+        .attr("x1", 5)
+        .attr("y1", function(d,i){return startYlegend+120 +(i*15); })
+        .attr("x2", 25  )
+        .attr("y2", function(d,i){return startYlegend+120 +(i*15); })
         .style('stroke',function(d){return d})
-        .style('stroke-width',0.3)
-        .style('font-size','12px');
+        .style('stroke-width',7)
+        .style('fill',function(d){return d})
+        .on('mouseover',highlightTer)
+        .on('mouseout',unlightTer)
+        .on('click',clickTer);
     
+        legend.selectAll('mylinesLabels')
+        .data(colorStroke)
+        .enter()
+        .append('text')
+          .attr("x", 30)
+          .attr("y", function(d,i){return startYlegend+120 +(i*15); })
+          .text(function(d){if(d=="#000000")return 'color Terr unchanged';else return 'color Territory changed'})
+          .style("alignment-baseline", "middle")
+          .style("fill", function(d){return d})
+          .style('stroke',function(d){return d})
+          .style('stroke-width',0.3)
+          .style('font-size','12px');
+  }    
 /////////////////////////////////
- if(visualization==1){
+ if(d3.select('#popDensity').property('checked')==true){
   legend.selectAll('rec').data(["a"]).enter().append('rect')
     .attr('id',"recLegendPopMap")
     .attr("x",0)
     .attr("y",startYlegend-130) 
     .attr("width", widthMap/7 )
+    .attr("height",0).transition().duration(1000)
     .attr("height",heightLegend-20)
     .attr("rx","12")
     .style('stroke','');
-    legend.selectAll('mylines').data(["a"]).enter().append('line')
+    legend.selectAll('mylines').data(["a"]).enter().append('line').attr('class','legDens')
       .attr("x1", 40)
       .attr("y1", startYlegend-95)
       .attr("x2", 40 )
+      .attr("y2", startYlegend-95).transition().duration(1000)
       .attr("y2",  startYlegend-35)
       .style('stroke','#0077b6')
       .style('stroke-width',3)
       var points =[startYlegend-35, startYlegend-35, startYlegend-25];
-      legend.selectAll('mytriangle').data(["a"]).enter().append('polygon')
+      legend.selectAll('mytriangle').data(["a"]).enter().append('polygon').attr('class','legDens')
+      .attr("points", "35,"+(points[0]-50).toString()+" 45,"+(points[1]-50).toString()+" 40,"+(points[2]-50).toString() ).transition().duration(1000)
       .attr("points", "35,"+points[0].toString()+" 45,"+points[1].toString()+" 40,"+points[2].toString() )
       .style('stroke','#0077b6')
       .style('fill','#0077b6')
       .style('stroke-width',3);
     
-  legend.append('text')
+  legend.append('text').attr('class','legDens')
     .attr("stroke","#000000")
     .attr("stroke-width",'0.5')
     .attr("x", 2)
@@ -945,19 +962,23 @@ function updateLegend(minMax){ //update the legend of map
     .data([1,2,3,4,5])
     .enter()
     .append("circle")
-      .attr("cx", 10)
-      .attr("cy", function(d,i){ return startYlegend-130+30 + i*(20)}) // 100 is where the first dot appears. 25 is the distance between dots
-      .attr("r", function(d,i){ return ''+ d*1.8+'px';})
       .style("fill", '#2c7bb6')
       .style('stroke','#000000')
       .on('mouseover',highlightTer)
       .on('mouseout',unlightTer)
       .on('click',clickTer)
+      .attr("cx", 10)
+      //.attr("cy",0).transition().duration(1000)
+      .attr("cy", function(d,i){ return startYlegend-130+30 + i*(20)}) // 100 is where the first dot appears. 25 is the distance between dots
+      .attr("r", 0).transition().duration(1000)
+      .attr("r", function(d,i){ return ''+ d*1.8+'px';})
+      
   
     legend.selectAll('myDensityLabels')
       .data([1,2,3,4,5])
       .enter()
       .append('text')
+        .attr('class','legDens')
         .attr("x", 25)
         .attr("y", function(d,i){return  startYlegend-130+30 + i*(21); })
         .text(function(d){if(d==1)return 'minor';else if(d==5) return 'major'})
@@ -1129,47 +1150,50 @@ function clickTer(){ //click on legend rectangles
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function loadPopCircles(){
-  
-  d3.select('#mapReg').selectAll('circle').remove();
-  var dict={};
-  var r=[];
-  d3.select('#mapReg').selectAll('path').each(function(d){
-    r.push(d3.select(this).attr('population')/(d3.select(this).attr('shape_area')/1000000) );
-    if(d3.select(this).attr('name') == 'Liguria') dict[d3.select(this).attr('name')] = [0,-8];
-    else if(d3.select(this).attr('name') == "Valle d'Aosta") dict[d3.select(this).attr('name')] = [7,-7];
-    else if(d3.select(this).attr('name') == 'Lombardia') dict[d3.select(this).attr('name')] = [-12,+7];
-    else if(d3.select(this).attr('name') == 'Lazio') dict[d3.select(this).attr('name')] = [-8,+5];
-    else if(d3.select(this).attr('name') == 'Molise') dict[d3.select(this).attr('name')] = [+5,-5];
-    else if(d3.select(this).attr('name') == 'Puglia') dict[d3.select(this).attr('name')] = [-5,+15];
-    else if(d3.select(this).attr('name') == 'Sicilia') dict[d3.select(this).attr('name')] = [0,+15];
-    else if(d3.select(this).attr('name') == 'Veneto') dict[d3.select(this).attr('name')] = [-5,+10];
-    else if(d3.select(this).attr('name') == 'Sardegna') dict[d3.select(this).attr('name')] = [+4,+10];
-    else if(d3.select(this).attr('name') == 'Piemonte') dict[d3.select(this).attr('name')] = [-5,+15];
-    else if(d3.select(this).attr('name') == 'Toscana') dict[d3.select(this).attr('name')] = [-5,+10];
-    else dict[d3.select(this).attr('name')] = [0,0];
+  updateLegend(false);
+  d3.select('#mapReg').selectAll('circle').transition().attr('r',0).duration(500).remove();
+  if(d3.select('#popDensity').property('checked')==true){
+    var dict={};
+    var r=[];
+    d3.select('#mapReg').selectAll('path').each(function(d){
+      r.push(d3.select(this).attr('population')/(d3.select(this).attr('shape_area')/1000000) );
+      if(d3.select(this).attr('name') == 'Liguria') dict[d3.select(this).attr('name')] = [0,-8];
+      else if(d3.select(this).attr('name') == "Valle d'Aosta") dict[d3.select(this).attr('name')] = [7,-7];
+      else if(d3.select(this).attr('name') == 'Lombardia') dict[d3.select(this).attr('name')] = [-12,+7];
+      else if(d3.select(this).attr('name') == 'Lazio') dict[d3.select(this).attr('name')] = [-8,+5];
+      else if(d3.select(this).attr('name') == 'Molise') dict[d3.select(this).attr('name')] = [+5,-5];
+      else if(d3.select(this).attr('name') == 'Puglia') dict[d3.select(this).attr('name')] = [-5,+15];
+      else if(d3.select(this).attr('name') == 'Sicilia') dict[d3.select(this).attr('name')] = [0,+15];
+      else if(d3.select(this).attr('name') == 'Veneto') dict[d3.select(this).attr('name')] = [-5,+10];
+      else if(d3.select(this).attr('name') == 'Sardegna') dict[d3.select(this).attr('name')] = [+4,+10];
+      else if(d3.select(this).attr('name') == 'Piemonte') dict[d3.select(this).attr('name')] = [-5,+15];
+      else if(d3.select(this).attr('name') == 'Toscana') dict[d3.select(this).attr('name')] = [-5,+10];
+      else dict[d3.select(this).attr('name')] = [0,0];
 
-  });
-  var popMinMax= d3.extent(r);
-  var popScale = d3.scaleQuantile()
-      .domain([popMinMax[0], popMinMax[1]]) 
-      .range(['1px','2px','3px','4px','5px']);
-  d3.select('#mapReg').selectAll('path').each(function(d){
-    var bbox = this.getBBox();
-    var x = Math.floor(bbox.x + bbox.width- 13 + dict[d3.select(this).attr('name')][0]); 
-    var y = Math.floor(bbox.y + 13 +dict[d3.select(this).attr('name')][1]);
-    var r=  d3.select(this).attr('population')/(d3.select(this).attr('shape_area')/1000000)
-    //Number(region.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup>;
-    d3.select('#mapReg').append('circle')
-      .attr('cx',x)
-      .attr('cy',y)
-      .attr('r',function(d){
-        return popScale(r);
-      })
-      .style('opacity','0.7')
-      .attr('dens',popMinMax)
-      .attr('densReg',r)
-      .on('mousemove',showTooltiPopDens);
-  });
+    });
+    var popMinMax= d3.extent(r);
+    var popScale = d3.scaleQuantile()
+        .domain([popMinMax[0], popMinMax[1]]) 
+        .range(['1px','2px','3px','4px','5px']);
+    d3.select('#mapReg').selectAll('path').each(function(d){
+      var bbox = this.getBBox();
+      var x = Math.floor(bbox.x + bbox.width- 13 + dict[d3.select(this).attr('name')][0]); 
+      var y = Math.floor(bbox.y + 13 +dict[d3.select(this).attr('name')][1]);
+      var r=  d3.select(this).attr('population')/(d3.select(this).attr('shape_area')/1000000)
+      //Number(region.attr('shape_area')/1000000).toLocaleString() +" km<sup>2</sup>;
+      d3.select('#mapReg').append('circle')
+        .attr('cx',x)
+        .attr('cy',y)
+        .style('opacity','0.7')
+        .attr('dens',popMinMax)
+        .attr('densReg',r)
+        .on('mousemove',showTooltiPopDens)
+        .attr('r',0).transition().duration(500)
+        .attr('r',function(d){
+          return popScale(r);
+        });
+    });
+  }
 }
 
 function showTooltiPopDens(){
@@ -1177,7 +1201,7 @@ function showTooltiPopDens(){
   if(circle.style('opacity')!='0.4'){
     var mouse = d3.mouse(d3.select('#map').node())
     .map( function(d) { return parseInt(d); } );
-    label = "<b>"+"Density Region: "+"</b>"+parseInt(circle.attr('densReg'));
+    label = "<b>"+"Density Region: "+"</b>"+parseInt(circle.attr('densReg'))+" citizen / km<sup>2</sup>";
     tooltip.classed("hidden", false)
     .html(label)
     .attr("style", function(d){

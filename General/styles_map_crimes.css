@@ -84,7 +84,7 @@ body {
     opacity: 0.8;
   }
 
-  #checkAll{
+  #checkAll, #showDensity{
     font-size: smaller;
     margin-left: 0%;
    }
@@ -140,8 +140,6 @@ body {
 
   }
    
-
-  
   #menu{
       position: absolute;
       height: 100%;
@@ -162,9 +160,13 @@ body {
     height:80%;
     /*overflow:auto;*/
   }
-  .select2-selection{
+  .select2-selection, .select2-selection--multiple{
     border: none;
     border-radius: none;
+  }
+  .select2-selection__choice{
+    /*border: 3.5px solid black;*/
+    font-size: 10px;
   }
   #legendCrimes{
     width: 100%;

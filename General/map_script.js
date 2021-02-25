@@ -94,6 +94,13 @@ var selectAllProv = d3.select('.leaflet-top')
 //manage events of selectAllProv
 d3.select("#selectAll").on("change", selectAllTer)//select or unselect all reg/prov
 
+var showDensity = d3.select('.leaflet-top')
+                    .append('div').attr('id','showDensity').attr('class', 'leaflet-bar leaflet-control')
+                    .text('P.D.')
+                    .append('input')
+                    .attr('type','checkbox').attr( 'id','popDensity')
+
+d3.select("#popDensity").on("change", loadPopCircles)//show/hide density map
 //---------------------------------------------------------------
 //---------------------------------------------------------------
 
