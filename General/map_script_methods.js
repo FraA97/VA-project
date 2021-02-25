@@ -705,7 +705,6 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
               .selectAll('path');
               gReg.attr('class','greyReg')
                 .style('fill',null);
-              d3.select('#mapReg').selectAll('circle').attr('style',"visibility:hidden");//.style('opacity','0.0');
             }
   });
 }
@@ -1151,7 +1150,7 @@ function clickTer(){ //click on legend rectangles
 
 function loadPopCircles(){
   updateLegend(false);
-  d3.select('#mapReg').selectAll('circle').transition().attr('r',0).duration(500).remove();
+  
   if(d3.select('#popDensity').property('checked')==true){
     var dict={};
     var r=[];
@@ -1194,6 +1193,7 @@ function loadPopCircles(){
         });
     });
   }
+  else d3.select('#mapReg').selectAll('circle').transition().attr('r',0).duration(500).remove();
 }
 
 function showTooltiPopDens(){
