@@ -313,7 +313,8 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     //asse x -> it find the best position for each Y axis
     right_pad = 0
     last_crime = Object.keys(y)[Object.keys(y).length-1]
-    if(last_crime != null && last_crime.length > 17) right_pad = 2.5*last_crime.length
+    console.log(last_crime)
+    if(last_crime != null && last_crime.length > 11) right_pad = 2.5*last_crime.length
     x = d3.scalePoint() //Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
         .domain(dimensions)  ///.domain(["territory", "year", "population",..])
         .range([0, document.getElementById("my_dataviz").clientWidth-margin.right-right_pad])

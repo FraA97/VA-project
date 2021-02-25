@@ -20,12 +20,13 @@ body {
   
   #map {
     background: lightblue;
-    /*border:3px solid black;*/
+    border:3px solid black;
     border-right-style: outset;
     border-radius: 5px;
     position: absolute;
     height: 100%;
     width: 28%;
+    
   }
 
   .greyOnlyReg{
@@ -141,17 +142,19 @@ body {
   }
    
   #menu{
-      position: absolute;
-      height: 100%;
-      width: 29%;
-      margin-left: 76%;
-      display:inline;
-      text-align:center;
-      vertical-align: middle;
-      border-left-style: inset;
-      border-bottom-style: inset;
-      border-radius: 15px;
-      border-width: 2px;
+    position: absolute;
+    height: 100%;
+    width: 29%;
+    margin-left: 76%;
+    display: inline;
+    text-align: center;
+    vertical-align: middle;
+    border-left-style: groove;
+    border-style: ridge;
+    border-color: black;
+    border-radius: 5px;
+    background-color: lightgrey;
+    border-width: 2px;
   }
   
   #crimes {
@@ -163,10 +166,12 @@ body {
   .select2-selection, .select2-selection--multiple{
     border: none;
     border-radius: none;
+    background-color: red;
   }
   .select2-selection__choice{
     /*border: 3.5px solid black;*/
     font-size: 10px;
+    background-color: lightgray
   }
   #legendCrimes{
     width: 100%;
@@ -293,14 +298,15 @@ div.mdsTooltip {
 /*---------*/
 #menu_tendina {
   display: table;
-  width: 99%; /*Optional*/
+  width: 99%;
   margin-left: 0.5%;
-  table-layout: fixed; /*Optional*/
-  border-spacing: 10px; /*Optional*/
-  /*border-right-style: inset;
-  border-left-style: inset;*/
-  border-bottom-style: outset ;
+  table-layout: fixed;
+  border-spacing: 10px;
+  border-style: outset;
   border-width: 2px;
+  background-color: lightgrey;
+  border-radius: 10px;
+  
 }
 #mcomputation,#computation,#visualizationType {
   display: table-cell;
