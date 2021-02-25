@@ -313,7 +313,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     //asse x -> it find the best position for each Y axis
     right_pad = 0
     last_crime = Object.keys(y)[Object.keys(y).length-1]
-    console.log(last_crime)
+    //console.log(last_crime)
     if(last_crime != null && last_crime.length > 11) right_pad = 2.5*last_crime.length
     x = d3.scalePoint() //Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
         .domain(dimensions)  ///.domain(["territory", "year", "population",..])
@@ -594,3 +594,95 @@ function updLeg(){if(legC==0) {legC+=1;console.log('iii'); return null;}
   }
   setInterval(pollZoomFireEvent, 100);
 })();
+
+//?!! ARROW
+function yearPP(){
+    checked = []
+    //console.log(d3.selectAll(".yearCheckbox").property('checked'))
+    d3.selectAll(".yearCheckbox").each(function(d){
+        //console.log(d3.select(this).attr("id"))
+        y = d3.select(this)
+        if(y.property("checked")) {
+            checked.push(y.attr("id"))
+            y.property("checked",false)
+            if(YEAR.includes(d3.select(this).attr("id")))YEAR.splice(YEAR.indexOf(d3.select(this).attr("id"),1))
+        }
+    })
+
+    l = checked.length
+    console.log(checked)
+    
+    d3.selectAll(".yearCheckbox").each(function(d){
+        if(l>0 && d3.select(this).attr("id") >checked[checked.length-1] && !checked.includes(d3.select(this).attr("id")) && d3.select(this).attr("id") != "tot"){
+            d3.select(this).property("checked",true)
+            console.log(d3.select(this).attr("id"))
+            l--
+            if(!YEAR.includes(d3.select(this).attr("id")))YEAR.push(d3.select(this).attr("id"))
+        }
+        
+    })
+    d3.selectAll(".yearCheckbox").each(function(d){
+        if(d3.select(this).attr("id") == 2019 && checked[checked.length-1]==2019){
+            d3.select(this).property("checked",false)
+            d3.selectAll(".yearCheckbox").each(function(d){
+                if(d3.select(this).attr("id") == 2012 ){
+                    d3.select(this).property("checked",true)
+                    if(!YEAR.includes(d3.select(this).attr("id")))YEAR.push(d3.select(this).attr("id"))
+                    //yearPP()
+
+                }
+            })
+        }
+    })
+    draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+    createMDS(visualization, computationType, mdsComputationType, YEAR, visibleLabel, true)
+    selectedYears = YEAR
+    computeColourScales()
+
+    
+}
+function yearMM(){
+    checked = []
+    reverse_items = []
+    //console.log(d3.selectAll(".yearCheckbox").property('checked'))
+    d3.selectAll(".yearCheckbox").each(function(d){
+        //console.log(d3.select(this).attr("id"))
+        y = d3.select(this)
+        if(y.property("checked")) {
+            checked.push(y.attr("id"))
+            y.property("checked",false)
+            if(YEAR.includes(d3.select(this).attr("id")))YEAR.splice(YEAR.indexOf(d3.select(this).attr("id"),1))
+        }
+        reverse_items.push(y)
+    })
+    reverse_items = reverse_items.reverse()
+    
+    l = checked.length
+    
+    reverse_items.forEach(function(n){
+        if(l>0 && n.attr("id") < checked[0] && !checked.includes(n.attr("id")) && n.attr("id") != "tot"){
+            n.property("checked",true)
+            console.log(n.attr("id"))
+            l--
+            if(!YEAR.includes(n.attr("id")))YEAR.push(n.attr("id"))
+
+        }
+    })
+    
+    reverse_items.forEach(function(n){
+        if(n.attr("id") == 2012 && checked[0]==2012){
+            n.property("checked",false)
+            d3.selectAll(".yearCheckbox").each(function(d){
+                if(d3.select(this).attr("id") == 2019 ){
+                    d3.select(this).property("checked",true)
+                    if(!YEAR.includes(d3.select(this).attr("id")))YEAR.push(d3.select(this).attr("id"))
+                }
+            })
+        }
+    })
+    draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+    createMDS(visualization, computationType, mdsComputationType, YEAR, visibleLabel, true)
+    selectedYears = YEAR
+    computeColourScales()
+
+}

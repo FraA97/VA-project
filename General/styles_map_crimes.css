@@ -128,6 +128,7 @@ body {
     table-layout: fixed; /*Optional*/
     border:1px solid black;
     border-radius: 5px;
+    margin-top: 2px;
 
   }
   label[for='tot'],label[for='2012'],label[for='2013'],label[for='2014'],label[for='2015'],label[for='2016'],label[for='2017'],label[for='2018'],label[for='2019']{
@@ -312,4 +313,25 @@ div.mdsTooltip {
   display: table-cell;
 }
 
+.button .arrow{
+  border-width: 2px;
+}
+.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+  background-color: white;
+}
+
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+  margin-left: 20%;
+}
 
