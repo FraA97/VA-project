@@ -204,6 +204,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                     if (d3.select(this).attr("name") != null){
                         if(d.trim() == d3.select(this).attr("name").trim()){
                             d3.select(this).style("stroke", "#d7191c")
+                            d3.select(this).style("stroke-width", "5")
                             d3.select(this).raise().classed("active", true);
                         }
                     }
