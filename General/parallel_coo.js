@@ -625,92 +625,73 @@ function updLeg(){if(legC==0) {legC+=1;console.log('iii'); return null;}
 
 //?!! ARROW
 function yearPP(){
-    checked = []
-    //console.log(d3.selectAll(".yearCheckbox").property('checked'))
-    d3.selectAll(".yearCheckbox").each(function(d){
-        //console.log(d3.select(this).attr("id"))
-        y = d3.select(this)
-        if(y.property("checked")) {
-            checked.push(y.attr("id"))
-            y.property("checked",false)
-            if(YEAR.includes(d3.select(this).attr("id")))YEAR.splice(YEAR.indexOf(d3.select(this).attr("id"),1))
-        }
-    })
-
-    l = checked.length
-    console.log(checked)
-    
-    d3.selectAll(".yearCheckbox").each(function(d){
-        if(l>0 && d3.select(this).attr("id") >checked[checked.length-1] && !checked.includes(d3.select(this).attr("id")) && d3.select(this).attr("id") != "tot"){
-            d3.select(this).property("checked",true)
-            console.log(d3.select(this).attr("id"))
-            l--
-            if(!YEAR.includes(d3.select(this).attr("id")))YEAR.push(d3.select(this).attr("id"))
-        }
-        
-    })
-    d3.selectAll(".yearCheckbox").each(function(d){
-        if(d3.select(this).attr("id") == 2019 && checked[checked.length-1]==2019){
+    to_b_ckd = []
+    i = 0
+    j = 1
+    d3.selectAll(".yearCheckbox").each(function(){
+        if(d3.select(this).property("checked") && d3.select(this).attr("id") != "tot"){
+            c_y = d3.select(this).attr("id")
+            while(d3.select('[id="'+c_y+'"]').property("checked")){
+                c_y++
+                if(to_b_ckd.includes(c_y)) {
+                    c_y+=j
+                    j++
+                }
+                if(c_y >= 2020) {
+                    c_y = 2012 +i
+                    i++
+                }
+            }
+            //console.log(c_y)
+            to_b_ckd.push(c_y)
             d3.select(this).property("checked",false)
-            d3.selectAll(".yearCheckbox").each(function(d){
-                if(d3.select(this).attr("id") == 2012 ){
-                    d3.select(this).property("checked",true)
-                    if(!YEAR.includes(d3.select(this).attr("id")))YEAR.push(d3.select(this).attr("id"))
-                    //yearPP()
-
-                }
-            })
-        }
+        } 
     })
+    to_b_ckd.forEach(function(y){
+        d3.select('[id="'+y+'"]').property("checked",true)
+    })
+    YEAR = to_b_ckd
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+    selectedYears = to_b_ckd.map(String)
     createMDS(visualization, computationType, mdsComputationType, YEAR, visibleLabel, true)
-    selectedYears = YEAR
     computeColourScales()
-
-    
 }
+
 function yearMM(){
-    checked = []
-    reverse_items = []
-    //console.log(d3.selectAll(".yearCheckbox").property('checked'))
-    d3.selectAll(".yearCheckbox").each(function(d){
-        //console.log(d3.select(this).attr("id"))
-        y = d3.select(this)
-        if(y.property("checked")) {
-            checked.push(y.attr("id"))
-            y.property("checked",false)
-            if(YEAR.includes(d3.select(this).attr("id")))YEAR.splice(YEAR.indexOf(d3.select(this).attr("id"),1))
-        }
-        reverse_items.push(y)
+    to_b_ckd = []
+    i = 0
+    j = 0
+    reversed_items=[]
+    d3.selectAll(".yearCheckbox").each(function(){
+        reversed_items.push(d3.select(this))
     })
-    reverse_items = reverse_items.reverse()
-    
-    l = checked.length
-    
-    reverse_items.forEach(function(n){
-        if(l>0 && n.attr("id") < checked[0] && !checked.includes(n.attr("id")) && n.attr("id") != "tot"){
-            n.property("checked",true)
-            console.log(n.attr("id"))
-            l--
-            if(!YEAR.includes(n.attr("id")))YEAR.push(n.attr("id"))
-
-        }
-    })
-    
-    reverse_items.forEach(function(n){
-        if(n.attr("id") == 2012 && checked[0]==2012){
-            n.property("checked",false)
-            d3.selectAll(".yearCheckbox").each(function(d){
-                if(d3.select(this).attr("id") == 2019 ){
-                    d3.select(this).property("checked",true)
-                    if(!YEAR.includes(d3.select(this).attr("id")))YEAR.push(d3.select(this).attr("id"))
+    reversed_items = reversed_items.reverse()
+    reversed_items.forEach(function(e){
+        if(e.property("checked") && e.attr("id") != "tot"){
+            c_y = e.attr("id")
+            while(d3.select('[id="'+c_y+'"]').property("checked")){
+                c_y--
+                if(to_b_ckd.includes(c_y)) {
+                    j++
+                    c_y-=j
                 }
-            })
-        }
+                if(c_y < 2012) {
+                    c_y = 2019 -i
+                    i++
+                }
+            }
+            //console.log(c_y)
+            to_b_ckd.push(c_y)
+            e.property("checked",false)
+        } 
     })
+    to_b_ckd.forEach(function(y){
+        d3.select('[id="'+y+'"]').property("checked",true)
+    })
+    YEAR = to_b_ckd
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+    selectedYears = to_b_ckd.map(String)
+    //console.log(selectedYears)
     createMDS(visualization, computationType, mdsComputationType, YEAR, visibleLabel, true)
-    selectedYears = YEAR
-    computeColourScales()
-
+    computeColourScales() 
 }
