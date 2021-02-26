@@ -198,7 +198,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                     });
                     id.style('stroke-width','1.5');
                 }
-                //if(d3.select(this).classed("brushed")==true) id.style('stroke','blue');
+                if(d3.select(this).classed("brushed")==true) id.style('stroke','blue');
 
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                     if (d3.select(this).attr("name") != null){
@@ -215,6 +215,22 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                 mtooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
+                if(d3.select(this).classed("brushed")== true){
+                    if(visualization==1){//INTERACTIONS WITH MAP
+                        var id =d3.select('#mapReg').selectAll('path').filter(function(t){
+                            var terName = d3.select('#'+this['id']).attr('name');
+                            return terName==d;
+                        });
+                        id.style('stroke','black');
+                    }
+                    else{//INTERACTIONS WITH MAP
+                        var id =d3.select('#mapProv').selectAll('path').filter(function(t){
+                            var terName = d3.select('#'+this['id']).attr('name');
+                            return terName==d;  
+                        });
+                        id.style('stroke','rgb(116, 110, 110)');
+                    }
+                }
                 if(d3.select(this).classed("brushed")!= true ||d3.select(this).style('fill')=='rgb(211, 211, 211)'){
                     if(visualization==1){//INTERACTIONS WITH MAP
                         var id =d3.select('#mapReg').selectAll('path').filter(function(t){
