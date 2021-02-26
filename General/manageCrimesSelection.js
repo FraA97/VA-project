@@ -211,6 +211,7 @@ function colorCr(crime){
             else return '100%';
         }
       })
+      .style('background-color', 'white')
   
 
   })  
