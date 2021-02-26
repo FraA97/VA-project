@@ -188,6 +188,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                         var terName = d3.select('#'+this['id']).attr('name');
                         return terName==d;  
                     });
+                    console.log(id)
                     id.style('stroke-width','2');
                 }
                 else{//INTERACTIONS WITH MAP
@@ -211,12 +212,13 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                 mtooltip.transition()
                     .duration(500)
                     .style("opacity", 0);
-                if(d3.select(this).classed("brushed")!= true){
+                if(d3.select(this).classed("brushed")!= true ||d3.select(this).style('fill')=='rgb(211, 211, 211)'){
                     if(visualization==1){//INTERACTIONS WITH MAP
                         var id =d3.select('#mapReg').selectAll('path').filter(function(t){
                             var terName = d3.select('#'+this['id']).attr('name');
-                            return terName==d  
+                            return terName==d;
                         });
+                        console.log(id)
                         id.style('stroke-width','0.5');
                     }
                     else{//INTERACTIONS WITH MAP
@@ -349,7 +351,10 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
         brushed_points=[]
         brushing = true;
 
-        var d_brushed =  d3.selectAll(".brushed").data();
+        var d_brushed =  d3.selectAll(".brushed").filter(function(d){
+            console.log(d3.select(this).style('fill'))
+            return d3.select(this).style('fill')!='rgb(211, 211, 211)';
+        }).data();
         
         // populate array if one or more elements is brushed
         if (d_brushed.length > 0) {

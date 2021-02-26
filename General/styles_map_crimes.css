@@ -164,10 +164,13 @@ body {
     height:80%;
     /*overflow:auto;*/
   }
+  .select2-container--default, .select2-selection--multiple, .select2-selection__choice{
+    background-color: #ffffff;
+  }
   .select2-selection, .select2-selection--multiple{
     border: none;
     border-radius: none;
-    background-color: red;
+   /* background-color: red;*/
   }
   .select2-selection__choice{
     /*border: 3.5px solid black;*/
