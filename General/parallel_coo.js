@@ -271,6 +271,11 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                     id.style('stroke-width','0.5');
                 }
             })
+
+    //eliminate pc brush on mds
+    d3.select("#regions").selectAll(".pc_brushed").each(function(d){        
+            d3.select(this).classed("pc_brushed", false);
+    })
     
     svg_PC = svg_pc.append("g")
                     .attr("transform",
