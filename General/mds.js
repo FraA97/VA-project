@@ -201,15 +201,27 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                 }
                 if(d3.select(this).classed("brushed")==true && d3.select(this).style('fill')!='rgb(211, 211, 211)') id.style('stroke','blue');
 
-                d3.select("#my_dataviz").selectAll('path').each(function(t){
-                    if (d3.select(this).attr("name") != null){
-                        if(d.trim() == d3.select(this).attr("name").trim()){
-                            d3.select(this).style("stroke", "#d7191c")
-                            d3.select(this).style("stroke-width", "3")
-                            d3.select(this).raise().classed("active", true);
+                if(!brushing){
+                    d3.select("#my_dataviz").selectAll('path').each(function(t){
+                        if (d3.select(this).attr("name") != null){
+                            if(d.trim() == d3.select(this).attr("name").trim()){
+                                d3.select(this).style("stroke", "#d7191c")
+                                d3.select(this).style("stroke-width", "3")
+                                d3.select(this).raise().classed("active", true);
+                            }
                         }
-                    }
-                })
+                    })
+                }
+                else{
+                    d3.select("#my_dataviz").selectAll('path').each(function(t){
+                        if (d3.select(this).attr("name") != null){
+                            if(d.trim() == d3.select(this).attr("name").trim()){
+                                d3.select(this).style("stroke-width", "3")
+                                d3.select(this).raise().classed("active", true);
+                            }
+                        }
+                    })
+                }
                         
             })
             .on("mouseout", function(d) {
