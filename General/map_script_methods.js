@@ -136,6 +136,8 @@ function showTooltipReg(d,flag) {
           if(region.attr("name").trim() == d3.select(this).attr("name").trim()){
             d3.select(this).raise().classed("active", true);
             if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#d7191c")
+            d3.select(this).style("stroke-width", "3")
+            
           }
           else{
             if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#2c7bb6")
@@ -197,9 +199,10 @@ function showTooltipProv(d,flag) {
           if(province.attr("name").trim() == d3.select(this).attr("name").trim()){
             d3.select(this).raise().classed("active", true);
             if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#d7191c")
+            d3.select(this).style("stroke-width", "3")
           }
           else{
-            if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#2c7bb6")
+            if(!MDS_PC_LOCK) d3.select(this).style("stroke", "#2c7bb6")//blu
           }
         }
       })
@@ -282,10 +285,12 @@ function loadMap(newData){
                 d3.select(this)
                   .attr('class','white');
               }
+              
             }
           )
           .on('mouseout',
                 function(region){
+                  
                   if(d3.select(this).attr("clicked") != '1'){
                     d3.select(this)
                     .attr('class','greyOnlyReg');
@@ -299,6 +304,9 @@ function loadMap(newData){
                             d3.select(this).style("stroke", "#2c7bb6")
                         }
                       })}
+                    d3.select("#my_dataviz").selectAll('path').each(function(t){
+                      d3.select(this).style('stroke-width','1.5');
+                    })  
                     //DE-HIGHLIGTH MDS POINTS
                     d3.select("#regions").selectAll("svg").selectAll("#coordination").each(function(d){
                       d3.select(this).attr("id", "null").attr("r","3")
@@ -338,11 +346,16 @@ function loadMap(newData){
                     .classed("hidden", true)
                     .node().innerHTML = null;    
                     //DE-HIGHLIGTH PC PATH
+                   //DE-HIGHLIGTH PC PATH
                   d3.select("#my_dataviz").selectAll('path').each(function(t){
+                    d3.select(this).style('stroke-width','1.5');
+                  }) 
+                   if(!MDS_PC_LOCK){d3.select("#my_dataviz").selectAll('path').each(function(t){
                     if (d3.select(this).attr("name") != null){
                         d3.select(this).style("stroke", "#2c7bb6")
                     }
-                  })
+                  })}
+                  
                   //DE-HIGHLIGTH MDS POINTS
                   d3.select("#regions").selectAll("svg").selectAll("#coordination").each(function(d){
                     d3.select(this).attr("id", "null").attr("r","3")

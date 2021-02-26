@@ -229,7 +229,7 @@ function fillCrimeSelect(dimensions){
 
 
 function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
-    console.log("draw")
+    //console.log("draw")
     //clean and retrieve measuremenets
     d3.select("#my_dataviz").selectAll("*").remove();
     margin = {top: 50, right: 15, bottom: 15, left: 0},
@@ -374,6 +374,9 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                     return terName == name;  
                 });
                 showTooltipProv(id,150);
+                d3.select("#my_dataviz").selectAll('path').each(function(t){
+                    d3.select(this).style("stroke-width", "1.5")
+                })
             }
             else{
                 var id =d3.select('#mapReg').selectAll('path').filter(function(d){
@@ -381,6 +384,9 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                     return terName == name;  
                 });
                 showTooltipReg(id,150);
+                d3.select("#my_dataviz").selectAll('path').each(function(t){
+                    d3.select(this).style("stroke-width", "1.5")
+                })
             }
             brushed_p=[];
             d3.selectAll('.brushed').each(function(d){

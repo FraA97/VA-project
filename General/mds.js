@@ -103,7 +103,8 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
             .on("end", displayLocation)
 
         svg.append("g")
-            .on("mousedown", function(){                                           //eliminate brush
+            .on("mousedown", function(){      
+            MDS_PC_LOCK = false                                     //eliminate brush
             brushing = false;
             d3.selectAll(".brushed").classed("brushed", false);
             d3.selectAll("#text").style("opacity", "0.5");
