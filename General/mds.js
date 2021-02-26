@@ -188,7 +188,6 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                         var terName = d3.select('#'+this['id']).attr('name');
                         return terName==d;  
                     });
-                    console.log(id)
                     id.style('stroke-width','2');
                 }
                 else{//INTERACTIONS WITH MAP
@@ -198,6 +197,8 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                     });
                     id.style('stroke-width','1.5');
                 }
+                //if(d3.select(this).classed("brushed")==true) id.style('stroke','blue');
+
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                     if (d3.select(this).attr("name") != null){
                         if(d.trim() == d3.select(this).attr("name").trim()){
@@ -218,7 +219,6 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                             var terName = d3.select('#'+this['id']).attr('name');
                             return terName==d;
                         });
-                        console.log(id)
                         id.style('stroke-width','0.5');
                     }
                     else{//INTERACTIONS WITH MAP
@@ -226,14 +226,13 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                             var terName = d3.select('#'+this['id']).attr('name');
                             return terName==d;  
                         });
-                        //console.log(id)
                         id.style('stroke-width','0.5');
                     }
                     d3.select("#my_dataviz").selectAll('path').each(function(t){
                         if (d3.select(this).attr("name") != null){
-                        if(d.trim() == d3.select(this).attr("name").trim()){
-                            d3.select(this).style("stroke", "#2c7bb6")
-                        }
+                            if(d.trim() == d3.select(this).attr("name").trim()){
+                                d3.select(this).style("stroke", "#2c7bb6");
+                            }
                         }
                     })
                 }                    
