@@ -229,6 +229,7 @@ function fillCrimeSelect(dimensions){
 
 
 function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
+    console.log("draw")
     //clean and retrieve measuremenets
     d3.select("#my_dataviz").selectAll("*").remove();
     margin = {top: 50, right: 15, bottom: 15, left: 0},
@@ -320,7 +321,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         .enter().append("path")
         .attr("d", path)
         .style("stroke", "grey")
-        .style("stroke-width", "3")
+        .style("stroke-width", "1.5")
         .style("opacity", 0.5);
 
     // Add blue foreground lines for focus.
