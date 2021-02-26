@@ -603,6 +603,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 });
                 // Only render rows that are active across all selectors
                 if(isActive) selected.push(d);
+                console.log(selected)
                 return (isActive) ? null : "none";
             });
             return selected
