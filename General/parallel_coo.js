@@ -245,6 +245,17 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 // populate array if one or more elements is brushed
                 if (d_brushed.length > 0) {
                     d_brushed.forEach(d_row => brushed_points.push(d_row))
+                    brushed_points.forEach(function(d){
+                        d3.select("#my_dataviz").selectAll('path').each(function(t){
+                            if (d3.select(this).attr("name") != null){
+                                if(d.trim() == d3.select(this).attr("name").trim()){
+                                    d3.select(this).style("stroke", "#2c7bb6")
+                                    //console.log(d)
+                                }
+                            }
+                        })
+                    })
+                    brushed_points =[]
                 }
                 else{
                     brushed_points = []
@@ -608,7 +619,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 });
                 // Only render rows that are active across all selectors
                 if(isActive) selected.push(d);
-                console.log(selected)
+                //console.log(selected)
                 return (isActive) ? null : "none";
             });
             return selected
