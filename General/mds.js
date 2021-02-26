@@ -121,6 +121,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                 });
                 id.style('stroke-width','0.5');
             }
+            console.log(brushed_points)
             brushed_points.forEach(function(d){
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                     if (d3.select(this).attr("name") != null){
