@@ -199,7 +199,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                     });
                     id.style('stroke-width','1.5');
                 }
-                if(d3.select(this).classed("brushed")==true) id.style('stroke','blue');
+                if(d3.select(this).classed("brushed")==true && d3.select(this).style('fill')!='rgb(211, 211, 211)') id.style('stroke','blue');
 
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                     if (d3.select(this).attr("name") != null){

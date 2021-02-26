@@ -1037,7 +1037,6 @@ function highlightTer(){ //mouseover on legend rectangles
       });
       mapTer.style('stroke-width','2')
     }
-
     var names=[]
     mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;});
     names.forEach(function(d){
@@ -1149,11 +1148,10 @@ function clickTer(){ //click on legend rectangles
               if(visualization=='0')  return 'greyProv';
               else return 'greyOnlyReg';
             });
-    //valerio (mapTer contiene tutti i territori che devono rimanere selezionati)
     var names=[]
-    mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;})
-    REGIONS = names
-    draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
+    mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;});
+    REGIONS = names;
+    draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE);
 
     d3.select("#selectAll").property('checked',false);
 
