@@ -174,7 +174,8 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
             .enter()
             .append("g");
         
-        nodes.append("circle")
+        nodes.style("display","block")
+            .append("circle")
             .attr("r", pointRadius)
             .attr("cx", function(d, i) { return xScale(xPos[i]); })
             .attr("cy", function(d, i) { return yScale(yPos[i]); })

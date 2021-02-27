@@ -138,6 +138,28 @@ function euclidean_distance(ar1,ar2){
   return Math.sqrt(dis)
 }
 
+function eliminate_add_points_mds(area){
+  d3.select("#regions").selectAll("g").each(function(d){
+    if( area == d){
+      if(d3.select(this).style("display")== "none"){
+        d3.select(this).style("display", "block")
+      }
+      else d3.select(this).style("display", "none")
+    }
+  })
+}
+
+function eliminate_others_mds_point(areas){
+  d3.select("#regions").selectAll("g").each(function(d){
+    if(d!=null){
+      if(areas.includes(d)){
+          d3.select(this).style("display", "block")
+        }
+      else if(d3.select(this).attr("class")!="tick") d3.select(this).style("display", "none")
+    }
+  })
+}
+
 (function(){
   var lastWidth = 0;
   function pollZoomFireEvent() {
