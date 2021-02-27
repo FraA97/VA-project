@@ -228,6 +228,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                         }
                     })
                 }
+                d3.select(this).attr("id", null).attr("r","3")
                         
             })
             .on("mouseout", function(d) {
