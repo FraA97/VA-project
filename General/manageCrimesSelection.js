@@ -79,6 +79,7 @@ d3.text("datasets/dataset_crimes/dataset1219.csv", function(raw) {
                   .property('multiple','multiple')
                   // .style="width: 75%
                   .style('width','100%')
+                  
     //$.fn.select2.defaults.set("theme", "classic");
                   
 

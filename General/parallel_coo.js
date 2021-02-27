@@ -5,6 +5,7 @@ var lastScrolledTop = 0;
 var foreground;
 var background;
 var brushed_points = [];
+var dragging = {};
 
 //  -------------------------------------------parametri globali che l'utente puo cambiare
 YEAR = [2019]
@@ -229,6 +230,7 @@ function fillCrimeSelect(dimensions){
 
 
 function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
+    dragging = {}
     //console.log("draw")
     //clean and retrieve measuremenets
     d3.select("#my_dataviz").selectAll("*").remove();
@@ -475,7 +477,31 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         .data(dimensions)
         .enter().append("g")
         .attr("class", "dimension")
-        .attr("transform", function(d) { return "translate(" + x(d) + ")"; });
+        .attr("transform", function(d) { return "translate(" + x(d) + ")"; })
+        .call(d3.drag()
+        .subject(function(d) { return {x: x(d)}; })
+        .on("start", function(d) {
+          dragging[d] = x(d);
+          background.attr("visibility", "hidden");
+        })
+        .on("drag", function(d) {
+          dragging[d] = Math.min(width, Math.max(0, d3.event.x));
+          foreground.attr("d", path);
+          dimensions.sort(function(a, b) { return position(a) - position(b); });
+          x.domain(dimensions);
+          g.attr("transform", function(d) { return "translate(" + position(d) + ")"; })
+        })
+        .on("end", function(d) {
+          delete dragging[d];
+          transition(d3.select(this)).attr("transform", "translate(" + x(d) + ")");
+          transition(foreground).attr("d", path);
+          background
+              .attr("d", path)
+            .transition()
+              .delay(1000)
+              .duration(0)
+              .attr("visibility", null);
+        }));
     
     // Add an axis and title.
    
@@ -501,14 +527,14 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             if(d.length > 30) d3.select(this).text(d.substring(0,29))
             //document.getElementById("par-coord").style.border = '3px solid black'
             })
-        .on("click",function(d){
+        /* .on("click",function(d){
             //CRIMES.splice(CRIMES.indexOf(d),1)
             //draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
             CRIMES.splice(CRIMES.indexOf(d),1)
             $('.selectCrimes').val(CRIMES).trigger('change');
             draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
             computeColourScales()
-        })
+        }) */
         .style("fill", "black")
         // Add and store a brush for each axis.
     g.append("g")
@@ -678,3 +704,11 @@ function yearMM(){
     createMDS(visualization, computationType, mdsComputationType, YEAR, visibleLabel, true)
     computeColourScales() 
 }
+function position(d) {
+    var v = dragging[d];
+    return v == null ? x(d) : v;
+  }
+  
+  function transition(g) {
+    return g.transition().duration(500);
+  }
