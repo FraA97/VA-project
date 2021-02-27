@@ -199,7 +199,10 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                     });
                     id.style('stroke-width','1.5');
                 }
-                if(d3.select(this).classed("brushed")==true && d3.select(this).style('fill')!='rgb(211, 211, 211)') id.style('stroke','blue');
+                if(d3.select(this).classed("brushed")==true && d3.select(this).style('fill')!='rgb(211, 211, 211)'){
+                    oldSt=id.style('stroke');
+                    id.style('stroke','blue');
+                }
 
                 if(!brushing){
                     d3.select("#my_dataviz").selectAll('path').each(function(t){
@@ -234,7 +237,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                             var terName = d3.select('#'+this['id']).attr('name');
                             return terName==d;
                         });
-                        id.style('stroke','black');
+                        id.style('stroke',oldSt);
                     }
                     else{//INTERACTIONS WITH MAP
                         var id =d3.select('#mapProv').selectAll('path').filter(function(t){
