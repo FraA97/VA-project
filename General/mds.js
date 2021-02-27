@@ -192,6 +192,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                         return terName==d;  
                     });
                     id.style('stroke-width','2');
+                    showTooltipReg(id,150);
                 }
                 else{//INTERACTIONS WITH MAP
                     var id =d3.select('#mapProv').selectAll('path').filter(function(t){
@@ -199,6 +200,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                         return terName==d;  
                     });
                     id.style('stroke-width','1.5');
+                    showTooltipProv(id,150);
                 }
                 if(d3.select(this).classed("brushed")==true && d3.select(this).style('fill')!='rgb(211, 211, 211)'){
                     oldSt=id.style('stroke');
@@ -226,6 +228,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                         }
                     })
                 }
+                d3.select(this).attr("id", null).attr("r","3")
                         
             })
             .on("mouseout", function(d) {
