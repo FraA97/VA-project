@@ -27,8 +27,8 @@ function createMapReg(geojson) {
       .attr('shape_area',function(d){return d.properties.SHAPE_AREA;})
       .attr('shape_leng',function(d){return d.properties.SHAPE_LENG;})
       .attr('clicked',"0")
-      .attr("onclick",function(d,i){
-        return 'updateMapReg("regione",'+d.properties.COD_REG+');' +'add_delete_territory("'+d3.select(this).attr('name')+'");' //DONE (valerio)[on '' add function for manage click of a region---possible parameter = 'd3.select(this).attr('name') = nome della regione]]
+      .attr("onclick",function(d,i){        
+        return 'updateMapReg("regione",'+d.properties.COD_REG+');' +'add_delete_territory("'+d3.select(this).attr('name')+'");' +'eliminate_add_points_mds("'+d3.select(this).attr('name')+'");'//DONE (valerio)[on '' add function for manage click of a region---possible parameter = 'd3.select(this).attr('name') = nome della regione]]
       });
       if(count==0){
         zoom.scaleTo(d3.select("#map").transition().duration(600), 1.8);
@@ -67,7 +67,7 @@ function createMapProv(geojson) {
     .attr('shape_leng',function(d){return d.properties.SHAPE_LENG;})
     .attr('clicked',"0")
     .attr("onclick",function(d,i){
-      return 'updateMapProv("'+d3.select(this).attr('id')+'");'+'add_delete_territory("'+d3.select(this).attr('name')+'");'
+      return 'updateMapProv("'+d3.select(this).attr('id')+'");'+'add_delete_territory("'+d3.select(this).attr('name')+'");'+'eliminate_add_points_mds("'+d3.select(this).attr('name')+'");'
     })
     .on("mousemove", showTooltipProv);
 }
@@ -756,6 +756,9 @@ function selectAllTer(){
           }
         })
     }
+    d3.select("#regions").selectAll("g").each(function(d){
+      d3.select(this).style("display", "block")
+    })
   }
   else{ //unselect all territory
     changeCmdRegions("except")
@@ -790,6 +793,9 @@ function selectAllTer(){
           }
         })
     }
+    d3.select("#regions").selectAll("g").each(function(d){
+      if(d3.select(this).attr("class")!="tick") d3.select(this).style("display", "none")
+    })
   }
 }
 
@@ -1176,6 +1182,7 @@ function clickTer(){ //click on legend rectangles
     mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;});
     REGIONS = names;
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE);
+    eliminate_others_mds_point(names)
 
     d3.select("#selectAll").property('checked',false);
 
