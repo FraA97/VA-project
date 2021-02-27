@@ -1039,14 +1039,26 @@ function highlightTer(){ //mouseover on legend rectangles
     var names=[]
     mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;});
     names.forEach(function(d){
-      d3.select("#my_dataviz").selectAll('path').each(function(t){
-        if (d3.select(this).attr("name") != null){
-          if(d.trim() == d3.select(this).attr("name").trim()){
-            d3.select(this).raise().classed("active", true);
-            d3.select(this).style("stroke", "#d7191c")
+      if(!brushing){
+        d3.select("#my_dataviz").selectAll('path').each(function(t){
+          if (d3.select(this).attr("name") != null){
+            if(d.trim() == d3.select(this).attr("name").trim()){
+              d3.select(this).raise().classed("active", true);
+              d3.select(this).style("stroke", "#d7191c")
+            }
           }
-        }
-      })
+        })
+      }
+      else{
+        d3.select("#my_dataviz").selectAll('path').each(function(t){
+          if (d3.select(this).attr("name") != null){
+            if(d.trim() == d3.select(this).attr("name").trim()){
+              d3.select(this).raise().classed("active", true);
+              d3.select(this).style("stroke-width", "3")
+            }
+          }
+        })
+      }
     })
     //HIGHLIGTH MDS POINTS
     names.forEach(function(d){
@@ -1085,13 +1097,24 @@ function unlightTer(){ //mouseout on legend rectangles
     var names=[]
     mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;})
     names.forEach(function(d){
-      d3.select("#my_dataviz").selectAll('path').each(function(t){
-        if (d3.select(this).attr("name") != null){
-          if(d.trim() == d3.select(this).attr("name").trim()){
-            d3.select(this).style("stroke", "#2c7bb6")
+      if(!brushing){
+        d3.select("#my_dataviz").selectAll('path').each(function(t){
+          if (d3.select(this).attr("name") != null){
+            if(d.trim() == d3.select(this).attr("name").trim()){
+              d3.select(this).style("stroke", "#2c7bb6")
+            }
           }
-        }
-      })
+        })
+      }
+      else{
+        d3.select("#my_dataviz").selectAll('path').each(function(t){
+          if (d3.select(this).attr("name") != null){
+            if(d.trim() == d3.select(this).attr("name").trim()){
+              d3.select(this).style("stroke-width", "1.5")
+            }
+          }
+        })
+      }
     })
     //DE-HIGHLIGTH MDS POINTS
     d3.select("#regions").selectAll("svg").selectAll("#coordination").each(function(t){
