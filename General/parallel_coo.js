@@ -245,6 +245,8 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     d3.select("#regions").selectAll(".pc_brushed").each(function(d){        
             d3.select(this).classed("pc_brushed", false);
     })
+    d3.select('#mapReg').selectAll('path').style('opacity','1');
+    d3.select('#mapProv').selectAll('path').style('opacity','1');
     
     svg_PC = svg_pc.append("g")
                     .attr("transform",

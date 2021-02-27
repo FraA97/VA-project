@@ -399,8 +399,7 @@ return 0;
 function computeColourScales(){
   //PROVINCES
   //save all possible values of provinces crimes (seeing the specific query )
-  d3.select('#mapReg').selectAll('path').style('opacity','1');
-  d3.select('#mapProv').selectAll('path').style('opacity','1');
+
   var list_provinces=[]
   d3.text(dataset_path, function(raw) {
     var dsv = d3.dsvFormat(';');
