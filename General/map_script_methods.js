@@ -1092,8 +1092,10 @@ function unlightTer(){ //mouseout on legend rectangles
         var terFill = d3.select('#'+this['id']).style('stroke-width');
         return terFill == '2';  
       });
-    } 
-    mapTer.style('stroke-width','0.5');
+    }
+    mapTer.each(function(d){
+      if(!brushed_points.includes(d3.select(this).attr('name'))) d3.select(this).style('stroke-width','0.5');
+    }) 
     var names=[]
     mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;})
     names.forEach(function(d){
