@@ -103,6 +103,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
             .on("end", displayLocation)
 
         svg.append("g")
+            .attr("class", "mdsbrush")
             .on("mousedown", function(){      
             MDS_PC_LOCK = false                                     //eliminate brush
             brushing = false;
@@ -175,6 +176,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
             .append("g");
         
         nodes.style("display","block")
+            .attr("class", "dot")
             .append("circle")
             .attr("r", pointRadius)
             .attr("cx", function(d, i) { return xScale(xPos[i]); })
@@ -376,6 +378,16 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                         return isBrushed(brush_coords, cx, cy);
                     })
                     .style("opacity", "1.0");
+
+            element.selectAll(".dot").each(function(d){
+                if(d3.select(this).style("display")=="none" && d3.select(this).select("circle").classed("brushed")==true){
+                    d3.select(this).select("circle").classed("brushed", false)
+                }
+            })
+            element.selectAll(".brushed").each(function(d){
+                if(d3.select(this).style('fill')=='rgb(211, 211, 211)')
+                d3.select(this).classed("brushed", false)
+            })
         }
     }
     function displayLocation() {
@@ -393,10 +405,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
         brushed_points=[]
         brushing = true;
 
-        var d_brushed =  d3.selectAll(".brushed").filter(function(d){
-            console.log(d3.select(this).style('fill'))
-            return d3.select(this).style('fill')!='rgb(211, 211, 211)';
-        }).data();
+        var d_brushed =  d3.selectAll(".brushed").data();
         
         // populate array if one or more elements is brushed
         if (d_brushed.length > 0) {

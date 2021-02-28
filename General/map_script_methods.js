@@ -759,7 +759,7 @@ function selectAllTer(){
           }
         })
     }
-    d3.select("#regions").selectAll("g").each(function(d){
+    d3.select("#regions").selectAll(".dot").each(function(d){
       d3.select(this).style("display", "block")
     })
   }
@@ -796,8 +796,8 @@ function selectAllTer(){
           }
         })
     }
-    d3.select("#regions").selectAll("g").each(function(d){
-      if(d3.select(this).attr("class")!="tick" && d3.select(this).attr("class")!="axis") d3.select(this).style("display", "none")
+    d3.select("#regions").selectAll(".dot").each(function(d){
+      d3.select(this).style("display", "none")
     })
   }
 }
