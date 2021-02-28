@@ -587,7 +587,7 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
               .filter(function(d) {
                     y[d].brushSelectionValue = d3.brushSelection(this);
                     return d3.brushSelection(this);
-              })
+              })    
               .each(function(d) {
                   // Get extents of brush along each active selection axis (the Y axes)
                     actives.push({
@@ -595,6 +595,8 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                         extent: d3.brushSelection(this).map(y[d].invert)
                     });
               });
+            svg_pc.selectAll(".selection").style("fill","yellow")
+            svg_pc.selectAll(".selection").style("stroke","black")
             var selected = [];
             //console.log(actives)
             // Update foreground to only display selected values
