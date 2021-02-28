@@ -250,7 +250,7 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                             var terName = d3.select('#'+this['id']).attr('name');
                             return terName==d;  
                         });
-                        id.style('stroke','rgb(116, 110, 110)');
+                        id.style('stroke', oldSt);
                     }
                 }
                 if(d3.select(this).classed("brushed")!= true ||d3.select(this).style('fill')=='rgb(211, 211, 211)'){
