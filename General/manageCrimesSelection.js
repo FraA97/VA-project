@@ -6,7 +6,7 @@ var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-pro
 //var dataset_path = "datasets/dataset_crimes/dataset1219.csv"
 diz_selected_crimes={}
 colorCrime= null;
-d3.text("datasets/dataset_crimes/dataset1219.csv", function(raw) {
+d3.text(dataset_path, function(raw) {
     var dsv = d3.dsvFormat(';');
     var data =dsv.parse(raw);
     //data = data.sort(function(a,b){return b.Coeff_reato - a.Coeff_reato})   //sort according to coeff of danger
