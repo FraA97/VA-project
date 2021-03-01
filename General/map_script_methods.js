@@ -1090,14 +1090,14 @@ function unlightTer(){ //mouseout on legend rectangles
   else{
     if(visualization==0){
       var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
-        var terFill = d3.select('#'+this['id']).style('stroke-width').slice(0,-2);
-        return terFill == '1.5';  
+        var terFill = d3.select('#'+this['id']).style('stroke-width');
+        return terFill.includes('1.5');  
       });
     } 
     else{
       var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
-        var terFill = d3.select('#'+this['id']).style('stroke-width').slice(0,-2);
-        return terFill == '2';  
+        var terFill = d3.select('#'+this['id']).style('stroke-width');
+        return terFill.includes('2');  
       });
     }
     mapTer.each(function(d){
