@@ -34,7 +34,6 @@ for (let i = 2012; i < 2020; i++) {
 var margin = {top: 50, right: 15, bottom: 15, left: 0},
     width = document.getElementById("my_dataviz").clientWidth+ margin.left + margin.right 
     height = document.getElementById("my_dataviz").clientHeight - margin.top - margin.bottom;
-    //console.log(width)
 // append the svg_PC object to the body of the page
 var svg_pc = d3.select("#my_dataviz")
             .append("svg")
@@ -80,13 +79,11 @@ function changeKindOfTerritory(newData){
             }
         }
     })
-    //console.log(REGIONS)
     return REGIONS
 }
 function add_delete_territory(territory){ //when user click on a territory in a map it will be added or deleted from regions
     if(REGIONS.includes(territory.trim())) {
         REGIONS.splice(REGIONS.indexOf(territory.trim()), 1);
-        console.log(REGIONS)
     }
     else REGIONS.push(territory)
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
@@ -112,7 +109,6 @@ function changeCrimes(crime){
     }
     })
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
-    console.log(REGIONS)
 }
 //filtra il le P.c. con l'year scelto dall'utente
 function filterByYear(year,data){
@@ -122,12 +118,10 @@ function filterByYear(year,data){
             if(data[i].year == ""+y) data_filtered.push(data[i])
         })
     }
-    //console.log(data_filtered)
     return data_filtered
 } 
 //filtra in base al territory, only fa solo le regioni passate, except fa tutte tranne quelle passate
-function filterByRegion(command,regions,data,kindOfTerr){
-    //console.log(regions)    
+function filterByRegion(command,regions,data,kindOfTerr){    
     list_all_territories = []
     for (let i = 0; i < data.length; i++) {
         length_name =  (data[i].territory.substring(0,7).match(/\s/g) || []).length
@@ -139,7 +133,6 @@ function filterByRegion(command,regions,data,kindOfTerr){
         }
     }
     data_filtered = []
-    //console.log(list_all_territories)
     for (let i = 0; i < list_all_territories.length; i++) {
         const terr = list_all_territories[i];
         for (let r = 0; r < regions.length; r++) {
@@ -170,9 +163,7 @@ function filterByCrime(command,crimes,data){
     }
     }
     
-    dimensions = dimensions.filter(filterCrimes)
-    //console.log(dimensions)
-    
+    dimensions = dimensions.filter(filterCrimes)    
     return dimensions
 
 }
@@ -191,7 +182,6 @@ function fillRegionSelect(dataset_path){
             }
         }
         regioni.sort()
-        console.log
         for (let i = 0; i < regioni.length; i++) {
             var el = document.createElement("option");
             region = regioni[i]
@@ -231,7 +221,6 @@ function fillCrimeSelect(dimensions){
 
 function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     dragging = {}
-    //console.log("draw")
     //clean and retrieve measuremenets
     d3.select("#my_dataviz").selectAll("*").remove();
     margin = {top: 50, right: 15, bottom: 15, left: 0},
@@ -253,7 +242,6 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     svg_PC = svg_pc.append("g")
                     .attr("transform",
                         "translate(" + margin.left + "," + margin.top + ")");
-    //console.log(REGIONS)
     const PCtooltip = d3.select('#PCtooltip');
     d3.text(dataset_path, function(raw) {//retrive sum of delicts
         var dsv = d3.dsvFormat(';');
@@ -266,8 +254,6 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     dimensions = d3.keys(data[0]).filter(function(d) { return d != "territory" && d!= "total" && d!="year" && d!= "population"})
     //fillCrimeSelect(dimensions)
     dimensions = filterByCrime(command_crimes,crimes,data)
-    //console.log(dimensions)
-
 
     //ogni asse verticale delle parallel coo. lo salvo dentro y 
     var y = {}
@@ -291,7 +277,6 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
     //asse x -> it find the best position for each Y axis
     right_pad = 0
     last_crime = Object.keys(y)[Object.keys(y).length-1]
-    //console.log(last_crime)
     if(last_crime != null && last_crime.length > 11) right_pad = 2.5*last_crime.length
     x = d3.scalePoint() //Ordinal ranges can be derived from continuous ranges: ex .domain(["A", "B", "C", "D"]) .range([0, 720]); ---> x("B") == 240
         .domain(dimensions)  ///.domain(["territory", "year", "population",..])
@@ -300,10 +285,8 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
         .padding(0.5);
         //.range([0, (350-11*dimensions.length)*dimensions.length])///general width of the graph, varia a seconda di quanti crimini metti
 
-    //console.log(document.getElementById("my_dataviz").clientWidth)
     function path(d) {
         return d3.line()(dimensions.map(function(p) {
-        //console.log(x(p))
         //p è il nome del crimine
         //y[p] e x sono le funzioni interpolatrici tra dominio e range, una per asse
         //d[p] è il valore del crimine nella riga d, tipo d = data[i] e p = omicidio, d[p] = 30
@@ -598,7 +581,6 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
             svg_pc.selectAll(".selection").style("fill","yellow")
             svg_pc.selectAll(".selection").style("stroke","black")
             var selected = [];
-            //console.log(actives)
             // Update foreground to only display selected values
             foreground.style("display", function(d) {
                 let isActive = actives.every(function(active) {
@@ -613,14 +595,13 @@ function draw(year,command_regions,regions,command_crimes,crimes,isAbsolute) {
                 });
                 // Only render rows that are active across all selectors
                 if(isActive) selected.push(d);
-                //console.log(selected)
                 return (isActive) ? null : "none";
             });
             return selected
         }
     })        
 }
-function updLeg(){if(legC==0) {legC+=1;console.log('iii'); return null;}
+function updLeg(){if(legC==0) {legC+=1; return null;}
                   else  return updateLegend( split(d3.select('#mapReg').attr('minMax')) )}
 (function(){
   var lastWidth = 0;
@@ -653,7 +634,6 @@ function yearPP(){
                     i++
                 }
             }
-            //console.log(c_y)
             to_b_ckd.push(c_y)
             d3.select(this).property("checked",false)
         } 
@@ -691,7 +671,6 @@ function yearMM(){
                     i++
                 }
             }
-            //console.log(c_y)
             to_b_ckd.push(c_y)
             e.property("checked",false)
         } 
@@ -702,7 +681,6 @@ function yearMM(){
     YEAR = to_b_ckd
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
     selectedYears = to_b_ckd.map(String)
-    //console.log(selectedYears)
     createMDS(visualization, computationType, mdsComputationType, YEAR, visibleLabel, true)
     computeColourScales() 
 }

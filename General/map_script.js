@@ -216,7 +216,6 @@ d3.select('#play').on("click", function() {
   }
 })
 
-//console.log(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)
 REGIONS = changeKindOfTerritory(visualization)
 draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE)//<------ first draw
 loadMap(visualization);//Region map

@@ -695,7 +695,6 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
             .attr('population',population/selectedYears.length)
             /*.style('fill',function(d){return d3.select(this).style('fill');})*///.transition().duration(500).delay('1000')
             .style("fill", function(){
-              //console.log('iii')
               if (computationType==0){
                 if(typeOfTer==0) return colorProv(sumDel);
                 else return  colorReg(sumDel);
@@ -707,7 +706,6 @@ function reComputeSumDel(territory,id,typeOfTer){ //typeOfTer=0 if function call
             })//.on('end',changeStroke())
             //.style('stroke', function(d){return d3.select(this).style('stroke');})//.transition().delay('50000')
             .style('stroke',function(d){
-              //console.log(d3.select(this).style('fill')+'    '+oldFill)
               if(oldFill!='rgb(221, 221, 221)'  & ( oldFill!='rgb(190, 189, 189)' || (oldFill=='rgb(190, 189, 189)' & d3.select(this).style('stroke')=='rgb(0, 127, 95)') ) & (selY[1].length>0 && selY[0].length>0) & d3.select(this).style('fill') != oldFill){
                 return'#007f5f';
               }
@@ -1184,7 +1182,6 @@ function clickTer(){ //click on legend rectangles
     var names=[]
     mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;});
     REGIONS = names;
-    console.log(REGIONS)
     CMD_REGIONS='only';
     draw(YEAR,CMD_REGIONS,REGIONS,CMD_CRIMES,CRIMES,ABSOLUTE);
     eliminate_others_mds_point(names)

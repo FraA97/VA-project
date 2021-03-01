@@ -123,13 +123,11 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
                 });
                 id.style('stroke-width','0.5');
             }
-            console.log(brushed_points)
             brushed_points.forEach(function(d){
                 d3.select("#my_dataviz").selectAll('path').each(function(t){
                     if (d3.select(this).attr("name") != null){
                         if(d.trim() == d3.select(this).attr("name").trim()){
                             d3.select(this).style("stroke", "#2c7bb6")
-                            //console.log(d)
                         }
                     }
                 })
@@ -295,8 +293,6 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
             .style("font", "14px times")  // Font size
             .style("visibility", "hidden")
 
-        console.log(changedVisualization)
-
         if(!brushing || changedVisualization){
             d3.selectAll("circle").classed("brushed", false)
             MDS_PC_LOCK = false;
@@ -424,22 +420,18 @@ function drawD3ScatterPlot(element, xPos, yPos, labels, params) {
         else{//INTERACTIONS WITH MAP
             var id =d3.select('#mapProv').selectAll('path').filter(function(d){
                 var terName = d3.select('#'+this['id']).attr('name');
-                //console.log(terName)
                 return brushed_points.includes(terName);  
             });
-            //console.log(id)
             id.style('stroke-width','1.5');
         }
         //INTERACTIONS WITH PC
         MDS_PC_LOCK = true
-        //console.log(MDS_PC_LOCK)
         brushed_points.forEach(function(d){
             d3.select("#my_dataviz").selectAll('path').each(function(t){
                 if (d3.select(this).attr("name") != null){
                 if(d.trim() == d3.select(this).attr("name").trim()){
                     d3.select(this).style("stroke", "#d7191c")
                     d3.select(this).raise().classed("active", true);
-                    //console.log(d)
                 }
                 }
             })

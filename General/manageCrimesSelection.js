@@ -84,7 +84,6 @@ d3.text("datasets/dataset_crimes/dataset1219.csv", function(raw) {
                   
 
     var options = select.selectAll("option").data(list_crimes)
-    //console.log(options)
     options.enter()
          .append('option')
          //.attr('class','cr')
@@ -235,7 +234,6 @@ function updateLegCr(minMax){ //update the legend of map
     var str2 = '<'+Number(Math.ceil(maxvalue) ).toLocaleString()+'>'
     keys.push(str2);
   }
- // console.log(keys)
   
   var legendCr = d3.select("#svgLegCr")//.style('font-family','verdana')
   legendCr.selectAll('text').remove();
@@ -369,7 +367,6 @@ function clickCr(){ //click on legend crimes
   var corrCr=[];
   crimes.each(function(d,i){
       var crimeStr = d3.select(this).style('-webkit-text-stroke-width').slice(0,-2);
-      console.log(typeof(crimeStr))
       if(crimeStr=='0.8') corrCr.push( d3.select(this).node().outerText.slice(2,) );
   })
   selected_crimes = corrCr; //add all crimes to the list
