@@ -1088,7 +1088,7 @@ function unlightTer(){ //mouseout on legend rectangles
     terDens.style('stroke',null).style('stroke-width',null)
   } 
   else{
-    if(visualization=='0'){
+    if(visualization==0){
       var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
         var terFill = d3.select('#'+this['id']).style('stroke-width');
         return terFill == '1.5';  
@@ -1096,21 +1096,21 @@ function unlightTer(){ //mouseout on legend rectangles
     } 
     else{
       var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
-        var terFill = d3.select('#'+this['id']).style('stroke-width');
+        var terFill = d3.select('#'+this['id']).style('stroke-width').slice(0,-2);
         return terFill == '2';  
       });
     }
     mapTer.each(function(d){
       if(!brushed_points.includes(d3.select(this).attr('name'))) d3.select(this).style('stroke-width','0.5');
     }) 
-    var names=[]
+    var names=[];
     mapTer.each(function(d){names.push(d3.select('#'+this['id']).attr('name'));return 0;})
     names.forEach(function(d){
       if(!brushing){
         d3.select("#my_dataviz").selectAll('path').each(function(t){
           if (d3.select(this).attr("name") != null){
             if(d.trim() == d3.select(this).attr("name").trim()){
-              d3.select(this).style("stroke", "#2c7bb6")
+              d3.select(this).style("stroke", "#2c7bb6");
             }
           }
         })
@@ -1119,7 +1119,7 @@ function unlightTer(){ //mouseout on legend rectangles
         d3.select("#my_dataviz").selectAll('path').each(function(t){
           if (d3.select(this).attr("name") != null){
             if(d.trim() == d3.select(this).attr("name").trim()){
-              d3.select(this).style("stroke-width", "1.5")
+              d3.select(this).style("stroke-width", "1.5");
             }
           }
         })
