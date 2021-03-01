@@ -1029,7 +1029,7 @@ function highlightTer(){ //mouseover on legend rectangles
     if(visualization=='0'){
       if(color =="rgb(0, 0, 0)") color="rgb(116, 110, 110)";
       var mapTer=d3.select('#mapProv').selectAll('path').filter(function(d){
-        if(rect.style('stroke-width')!=7) var terFill = d3.select('#'+this['id']).style('fill');
+        if(!rect.style('stroke-width').includes('7')) var terFill = d3.select('#'+this['id']).style('fill');
         else var terFill = d3.select('#'+this['id']).style('stroke');
         return terFill == color;  
       });
@@ -1037,7 +1037,7 @@ function highlightTer(){ //mouseover on legend rectangles
     } 
     else{
       var mapTer=d3.select('#mapReg').selectAll('path').filter(function(d){
-        if(rect.style('stroke-width')!=7) var terFill = d3.select('#'+this['id']).style('fill');
+        if(!rect.style('stroke-width').includes('7')) var terFill = d3.select('#'+this['id']).style('fill');
         else var terFill = d3.select('#'+this['id']).style('stroke');
         return terFill == color;  
       });
