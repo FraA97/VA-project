@@ -1,5 +1,5 @@
-//var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/dataset1219.csv"
-var dataset_path = "datasets/dataset_crimes/dataset1219.csv"
+var dataset_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/dataset_crimes/dataset1219.csv"
+//var dataset_path = "datasets/dataset_crimes/dataset1219.csv"
 function createMDS(vis, pop, coeff, year, visibleLabel, evolutionMode){
 
   d3.text(dataset_path, function(raw) {
@@ -20,8 +20,8 @@ function createMDS(vis, pop, coeff, year, visibleLabel, evolutionMode){
       regions.forEach( d => delete d.population);                                        //eliminate column population
     }
     regions.forEach( d => delete d.total);                                               //eliminate column total
-    //var coeff_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/coefficienti.csv"
-    var coeff_path = "datasets/coefficienti.csv"
+    var coeff_path = "https://raw.githubusercontent.com/FrancescoArtibani97/VA-project/main/General/datasets/coefficienti.csv"
+    //var coeff_path = "datasets/coefficienti.csv"
     d3.text(coeff_path, function(raw) {//retrive sum of delicts
         var dsv = d3.dsvFormat(';')
         var dataCoeff =dsv.parse(raw)
